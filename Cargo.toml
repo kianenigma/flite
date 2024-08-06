@@ -1,0 +1,9 @@
+[workspace]
+members = ["flite", "runtime"]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+
+[patch.crates-io]
+"polkadot-sdk" = { path = "../polkadot-sdk-2/umbrella", version = "0.1.0" }
