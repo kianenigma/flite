@@ -1,0 +1,16 @@
+[package]
+name = "flite"
+version = "0.1.0"
+edition.workspace = true
+
+[dependencies]
+parity-scale-codec = { version = "3.6.12", features = ["derive"], default-features = false}
+scale-info = { version = "2.11.3", default-features = false}
+polkadot-sdk = { version = "*", features = ["runtime", "experimental"], default-features = false}
+
+[features]
+default = ["std"]
+std = ["polkadot-sdk/std", "parity-scale-codec/std", "scale-info/std"]
+
+[patch.crates-io]
+"polkadot-sdk" = { path = "../polkadot-sdk-2/umbrella", version = "0.1.0" }
