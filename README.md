@@ -11,7 +11,7 @@ abstractions.
   `frame_system`.
 - `runtime` is a runtime containing both of the aforementioned.
 
-> [!INFO]
+> [!TIP]
 > None of the code provided here is production-ready, but is merely for demonstrating
 > techniques. The main audience of this is educators and creative builders in the Polkadot
 > ecosystem.
