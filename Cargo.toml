@@ -1,5 +1,5 @@
 [workspace]
-members = ["flite", "runtime"]
+members = ["flite", "runtime", "simple-pallet"]
 resolver = "2"
 
 [workspace.package]
