@@ -2,6 +2,9 @@
 members = ["flite", "runtime", "simple-pallet"]
 resolver = "2"
 
+[workspace.dependencies]
+docify = "0.2.8"
+
 [workspace.package]
 edition = "2021"
 

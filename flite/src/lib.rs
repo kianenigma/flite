@@ -1,46 +1,198 @@
-//! FRAME, but opinionated af.
+//! FLITE / FRAME-LITE
 //!
-//! > This is an experimental library, build on top of [`frame-system`]
+//! Polkadot-SDK's FRAME, but low on the dose of complexity, therefore lite.
 //!
-//! ## Overview
+//! This is a an experimental library meant only for demonstration purposes, and is not meant for
+//! production use. Yet, it might influence the decision making to those who want to build
+//! **reusable** FRAME-based libraries.
 //!
-//! - [ ] Provide many pallets together, a `super-pallet` system.
-//!     - Timestamp
-//!     - Randomness
-//!     - Aura
-//!     - Authorship
-//! - [ ] More helper function
-//! - [ ] Less Generic types: No `T::BlockNumberFor`, No `T::AccountId`, No `RuntimeOrigin`.
-//! - [ ] Parachain ready
+//! Put differently, this crate demonstrates a number of techniques that can be used to build more
+//! opinionated, yet simpler variants of FRAME.
 //!
-//! ## Realization
+//! ## Techniques
 //!
-//! * `#[pallet::disable_frame_system_supertrait_check]`, the fact that you can build a FRAME pallet
-//! that is not reliant on `frame-system`. Our `frame-system` is pretty opinionated, and in a very
-//! specific way.
-//! * _Constrained associated types in Rust_.
-//! * `derive_impl` outside of the pallet context.
-//! * You *don't need* a runtime template.
+//! The main techniques used in this library are as follows:
 //!
-//! Note: you only parameterize `flite_system` in runtime, and you guarantee to not parameterize any
-//! other pallet. This is the underlying premise of this tool. We could wrap this with a further
-//! macro for you at the runtime level.
+//! ### NOT Relying on `frame_system` (and `cumulus::parachain_system`).
 //!
+//! FRAME comes with an underrated macro: `#[pallet::disable_frame_system_supertrait_check]`. This
+//! macro enables a pallet to rely on a pallet other than `frame_system`. This opens the door for a
+//! team to write an "opinionated flavor" of `frame_system` for their own use.
 //!
-//! ## Aux Tools
+//! In this crate, we introduce [`flite_system`], an opinionated alternative to
+//! [`polkadot_sdk::frame_system`].
 //!
-//! - cargo-generate
+//! ### Constrained Associated Types
+//!
+//! Constrained associated types are a powerful and an underrated feature of Rust, and they are
+//! crucially important for FRAME.
+//!
+//! FRAME expresses the majority of its flexibility through associated types. Constrained associated
+//! types are then therefore a way for one to express limitations on those associated types.
+//!
+//! The downside of this would be that the users would have less flexibility. Yet, the benefit would
+//! be that the syntax would be less generic, and more concrete.
+//!
+//! We argue that for a starter FRAME template, and for beginner users it is much easier to work
+//! with concrete types for common concepts like `AccountId` and `Balance`, rather than generic
+//! variants.
+//!
+//! ```rust
+//! trait Currency {
+//!     type Balance;
+//!
+//!     fn get() -> Balance {};
+//! }
+//!
+//! /// A pallet that is not constraining `Currency::Balance`, and must always refer to it as
+//! trait Config {
+//!     type Currency: Currency
+//!
+//!     fn usage() {
+//!         // This pallet doesn't really now what `<Self::Currency as Currency>::Balance` is.
+//!         let _: <Self::Currency as Currency>::Balance = T::Currency::get();
+//!     }
+//! }
+//!
+//! /// A pallet that is constraining `Currency::Balance`, to JUST `u128`.
+//! trait Config {
+//!     type Currency: Currency<Balance = u128>;
+//!
+//!     fn usage() {
+//!         // This pallet knows that `Self::Currency::Balance` is `u128`.
+//!         let _: u128 = T::Currency::get();
+//!     }
+//! }
+//! ```
+//!
+//! [`flite_system`] constraints a number of important associated types, to be seen in the example
+//! further below.
+//!
+//! ### Tight Coupling To Our Benefit
+//!
+//! Generally, [tight
+//! coupling](https://paritytech.github.io/polkadot-sdk/master/polkadot_sdk_docs/reference_docs/frame_pallet_coupling/index.html)
+//! is considered a bad thing. Yet, in the context of a library like `flite`, we can use it to our
+//! advantage. If we tightly couple [`flite_system`] with a number of pallets, we achieve:
+//!
+//! * We can express that a runtime can only work if [`flite_system`] and the tightly coupled
+//!   pallets are present in it.
+//! * We can safely provide a set of default for all the configurations of the tightly coupled
+//!   pallets.
+//! * We can also express constrains on the configurations as constraints on the associated types,
+//!   as explained above.
+//!
+//! ### Example: `flite_system`
+//!
+//! With the above context in mind, let's look and analyze [`flite_system::Config`], which puts all
+//! of the above practices in one place.
+#![doc = docify::embed!("./src/lib.rs", FliteSystemConfigExport)]
+//!
+//! Notice how `flite` is constraining the `AccountId` to be [`types::AccountId`], the `Balance` to
+//! be [`types::Balance`], and even more advance things like `HoldReason`.
+//!
+//! This means `flite_system` can only be used in a runtime with such constants. More nicely, a
+//! pallet using `flite_system` can already be written with these concrete types in mind.
+//!
+//! ### Simplifying a New Pallet
+//!
+//! Let's see how now we can simplify the process of writing a new pallet using that relies on
+//! [`flite_system`].
+//!
+//! First, this pallet is indeed declared as such:
+#![doc = docify::embed!("../simple-pallet/src/lib.rs", DemonstrationConfig)]
+//!
+//! This then allows the pallet to be written with concrete types in mind:
+//!
+//! #### Currency Simplification
+//!
+//! We also present two ideas on how a simpler currency system can be built on top of the above
+//! abstractions. These are discussed in [`native_currency`].
+//!
+//! First, a pallet can import and use FRAME's currency abstractions in the *old school* way. That
+//! is, pull the currency abstractions via `trait Config`:
+#![doc = docify::embed!("../simple-pallet/src/lib.rs", Config)]
+//!
+//! And then use them as such:
+#![doc = docify::embed!("../simple-pallet/src/lib.rs", advance_currency_usage)]
+//!
+//! Note that this already comes with some improvements. This code so far looks just like the normal
+//! FRAME code, except there is no trace of the notorious `BalanceOf` type. Moreover, there is no
+//! special consideration needed for `RuntimeHoldReason` conversion. `RuntimeHoldReason` is simply a
+//! `u8`. All of this is because [`flite_system`] has already constrained these types.
+//!
+//! `flite` can also provide even simpler, even more opinionated currency abstractions, such as
+//! [`native_currency::Simple`]. The usage of such a simple abstraction can look like:
+#![doc = docify::embed!("../simple-pallet/src/lib.rs", simple_currency_usage)]
+//!
+//! ### A Step Further: Defaults For Tightly Coupled Pallets
+//!
+//! As the final step, `flite` could also simplify the process of runtime configuration, if it could
+//! provide defaults for all the pallets that it is tightly coupling itself with.
+//!
+//! All of these defaults can be audited and guaranteed to work nicely together, as long as none of
+//! them is tweaked by the end user. If a mild degree of flexibility is needed, we instead provide a
+//! separate, higher level trait that can be used to parameterize all other pallets with.
+//!
+//! In [`default_configs`], we provide one such example. The end-user entry-point is merely
+//! [`default_configs::FliteConfigurations`]. This is one trait that we expect the end user to
+//! parameterize for us. Instead of a lot of the technical nitty-gritty details that
+//! [`polkadot_sdk::frame_system`] exposes, this trait is meant to be very easy to comprehend to a
+//! novice developer.
+//!
+//! Then, based on `FliteConfigurations`, we provide defaults for each pallet's `Config` traits:
+//!
+//! - [`struct@default_configs::FliteFrameSystem`]
+//! - [`struct@default_configs::FliteTimestamp`]
+//! - [`struct@default_configs::FliteAura`]
+//! - [`struct@default_configs::FliteBalances`]
+//!
+//! > These defaults are provided in a format that should be compatible with `FRAME`'s native
+//! > `derive_impl` (or the underlying `macro_magic` crate), yet this part is not yet working in
+//! > this demo and therefore the runtime file contains a lot of boilerplate.
+//!
+//! Notice how all of these types are generic over `F`, which is a [`FliteConfigurations`].
+//!
+//! This technique allows us to retain some degree fo flexibility, and abstract over complicated
+//! relationships. For example, (almost) all runtimes have
+//! [`polkadot_sdk::pallet_timestamp::Config::MinimumPeriod`] set to half of
+//! [`polkadot_sdk::pallet_aura::Config::SlotDuration`]. We abstract over this needless complication
+//! by providing one simple configuration to the user [`FliteConfigurations::BlockTime`] (which is
+//! what we mean by `SlotDuration`). Under the hood, we take care of providing the correct defaults
+//! to each of the aforementioned pallets.
+//!
 //!
 //! ## Dependencies
 //!
 //! This work is dependent on the following PR(s)
-//! - https://github.com/paritytech/polkadot-sdk/pull/5246
+//! - <https://github.com/paritytech/polkadot-sdk/pull/5246>
+//!
+//! ## Further Ideas
+//!
+//! - Create abstractions over [`polkadot_sdk::pallet_assets`], and the
+//!   [`polkadot_sdk::polkadot_sdk_frame::traits::fungibles`] as well, for example hardcoding the
+//!   `AssetId` to be `u32`.
+//! - More pallets that are reasonable always needed: `authorship`, `session`, etc.
+//! - `flite`, and `flite-parachain`. If one has to be chosen, we care more about parachain.
+//! - `flite` can provide a single set of weights that are safe to use in [`weights`].
+//! - [`flite_system::Pallet`] can provide further standalone helper functions, such as
+//!   [`flite_system::Pallet::block_author`].
+//! - `integrity_test` in `flite_system` is super important, as it is the one place where we can
+//!   check the configuration of all pallets. For example, the relationship between `BlockTime`,
+//!   `SlotDuration` and `MinimumPeriod` can be expressed here. The ability to check these within a
+//!   pallet is yet another benefit of tight coupling.
+//!
+//! ## Reflection
+//!
+//! - Everything here is backwards compatible, and a developer who is advance can always fallback
+//!   into the ADVANCE-FRAME-land.
 #![cfg_attr(not(feature = "std"), no_std)]
 
-pub use flite_system::FliteConfigurations;
+pub use default_configs::FliteConfigurations;
 use polkadot_sdk::{self as psdk, polkadot_sdk_frame as frame};
 
 /// The opinionated types that we dictate.
+///
 /// [`polkadot_sdk::polkadot_sdk_frame::runtime::types_common`] already defined a lot of such types,
 /// so we re-use them as much as possible.
 pub mod types {
@@ -52,13 +204,25 @@ pub mod types {
 	pub type AuraId = psdk::sp_consensus_aura::sr25519::AuthorityId;
 }
 
-/// Default configurations for the pallets used.
+/// Default configurations for the pallets that [`flite_system::Config`] is tightly coupled with.
 pub mod default_configs {
 	use super::*;
 	use frame::{arithmetic::Perbill, deps::frame_support::register_default_impl, prelude::*};
 	use frame_system::limits::{BlockLength, BlockWeights};
 	use psdk::{frame_support::weights::constants::RocksDbWeight, pallet_balances::AccountData};
 
+	/// The master `flite` configurations. This is the only thing that the user is meant to
+	/// override.
+	pub trait FliteConfigurations {
+		type BlockWeight: Get<Weight>;
+		type BlockTime: Get<types::Moment>;
+		type BlockLength: Get<u32>;
+		type MinimumBalance: Get<types::Balance>;
+		type Ss58: Get<u16>;
+		type Version: Get<psdk::sp_version::RuntimeVersion>;
+	}
+
+	#[doc(hidden)]
 	pub struct RuntimeBlockWeights<F: FliteConfigurations>(core::marker::PhantomData<F>);
 	impl<F: FliteConfigurations> Get<BlockWeights> for RuntimeBlockWeights<F> {
 		fn get() -> BlockWeights {
@@ -68,6 +232,7 @@ pub mod default_configs {
 		}
 	}
 
+	#[doc(hidden)]
 	pub struct RuntimeBlockLength<F: FliteConfigurations>(core::marker::PhantomData<F>);
 	impl<F: FliteConfigurations> Get<BlockLength> for RuntimeBlockLength<F> {
 		fn get() -> BlockLength {
@@ -75,10 +240,12 @@ pub mod default_configs {
 		}
 	}
 
+	/// Default for [`polkadot_sdk::frame_system::DefaultConfig`].
+	///
+	/// TODO: we could define our own `trait FliteFrameSystemDefaultConfig`, but the one provided in
+	/// `frame_system::DefaultConfig` is good enough.
 	pub struct FliteFrameSystem<F>(core::marker::PhantomData<F>);
 
-	// TODO: we could define our own `trait FliteFrameSystemDefaultConfig`, but the one provided in
-	// `frame_system::DefaultConfig` is good enough.
 	#[register_default_impl(FliteFrameSystem)]
 	impl<F: FliteConfigurations> frame_system::DefaultConfig for FliteFrameSystem<F> {
 		/// Flite might decide to force its users to
@@ -127,7 +294,7 @@ pub mod default_configs {
 		type PalletInfo = ();
 	}
 
-	/// Default for [`polkadot_sdk::pallet_timestamp`]
+	/// Default for [`polkadot_sdk::pallet_timestamp`] through [`FliteTimestampDefaultConfig`].
 	///
 	/// We want the `FliteTimestamp` to be generic over `F: FliteConfigurations`.
 	/// The default `pallet_timestamp::DefaultConfig` is constrained by
@@ -135,13 +302,13 @@ pub mod default_configs {
 	/// all a dead end, and we need to define our own `trait FliteTimestampDefaultConfig`. This is
 	/// more or less a copy of `pallet_timestamp::DefaultConfig`, and that is fine.
 	///
-	/// See: https://paritytech.github.io/polkadot-sdk/master/pallet_timestamp/pallet/trait.DefaultConfig.html
+	/// See: <https://paritytech.github.io/polkadot-sdk/master/pallet_timestamp/pallet/trait.DefaultConfig.html>
 	pub struct FliteTimestamp<F: FliteConfigurations>(core::marker::PhantomData<F>);
 
 	pub trait FliteTimestampDefaultConfig {
 		/// See [`polkadot_sdk::pallet_timestamp::Config::Moment`].
 		type Moment;
-		/// See [`polkadot_sdk::pallet_timestamp::Config::OnTimeStampSet`].
+		/// See [`polkadot_sdk::pallet_timestamp::Config::OnTimestampSet`].
 		type OnTimestampSet;
 		/// See [`polkadot_sdk::pallet_timestamp::Config::MinimumPeriod`].
 		type MinimumPeriod;
@@ -149,6 +316,7 @@ pub mod default_configs {
 		type WeightInfo;
 	}
 
+	#[doc(hidden)]
 	#[deprecated(
 		note = "This is a placeholder type, you need to replace it with the name assigned to
 	`pallet_aura`."
@@ -167,25 +335,26 @@ pub mod default_configs {
 		type OnTimestampSet = ReplaceWithAuraPalletName;
 	}
 
+	/// Default for [`polkadot_sdk::pallet_aura`] through [`FliteAuraDefaultConfig`].
 	pub struct FliteAura<F: FliteConfigurations>(core::marker::PhantomData<F>);
 
-	/// A `flite` representative of [`pallet_aura::Config`].
+	/// A `flite` representative of [`polkadot_sdk::pallet_aura::Config`].
 	///
 	/// This merely exists because `pallet_aura` itself doesn't have
-	/// `#[pallet::config(with_default)]`. Although, as we established for [`FliteTimestamp`], even
-	/// if it would, it would have not been useful for this case.
+	/// `#[pallet::config(with_default)]`. Although, as we established for
+	/// [`struct@FliteTimestamp`], even if it would, it would have not been useful for this case.
 	///
 	/// We drop all most trait bounds, as we test it and we are professional.
 	pub trait FliteAuraDefaultConfig {
-		/// See [`polkadot_skd::pallet_aura::Config::AuthorityId`].
+		/// See [`polkadot_sdk::pallet_aura::Config::AuthorityId`].
 		type AuthorityId;
-		/// See [`polkadot_skd::pallet_aura::Config::MaxAuthorities`].
+		/// See [`polkadot_sdk::pallet_aura::Config::MaxAuthorities`].
 		type MaxAuthorities;
-		/// See [`polkadot_skd::pallet_aura::Config::DisabledValidators`].
+		/// See [`polkadot_sdk::pallet_aura::Config::DisabledValidators`].
 		type DisabledValidators;
-		/// See [`polkadot_skd::pallet_aura::Config::AllowMultipleBlocksPerSlot`].
+		/// See [`polkadot_sdk::pallet_aura::Config::AllowMultipleBlocksPerSlot`].
 		type AllowMultipleBlocksPerSlot;
-		/// See [`polkadot_skd::pallet_aura::Config::SlotDuration`].
+		/// See [`polkadot_sdk::pallet_aura::Config::SlotDuration`].
 		type SlotDuration;
 	}
 
@@ -199,6 +368,7 @@ pub mod default_configs {
 		type SlotDuration = F::BlockTime;
 	}
 
+	/// Defaults for [`polkadot_sdk::pallet_balances`] through [`FliteBalancesDefaultConfig`].
 	pub struct FliteBalances<F: FliteConfigurations>(core::marker::PhantomData<F>);
 	pub trait FliteBalancesDefaultConfig {
 		type RuntimeHoldReason;
@@ -215,11 +385,13 @@ pub mod default_configs {
 		type MaxFreezes;
 	}
 
+	#[doc(hidden)]
 	#[deprecated(
 		note = "This is a placeholder type, you need to replace it with the name assigned to
 		`frame_system`."
 	)]
 	pub struct ReplaceWithFrameSystemPalletName;
+
 	#[register_default_impl(FliteBalances)]
 	impl<F: FliteConfigurations> FliteBalancesDefaultConfig for FliteBalances<F> {
 		type RuntimeHoldReason = u8;
@@ -230,6 +402,7 @@ pub mod default_configs {
 		type DustRemoval = ();
 		#[allow(deprecated)]
 		type AccountStore = ReplaceWithAuraPalletName;
+
 		// TODO: must be RuntimeFreezeReason
 		type FreezeIdentifier = ();
 
@@ -309,17 +482,7 @@ pub mod flite_system {
 	use super::*;
 	use frame::prelude::*;
 
-	/// The master `flite` configurations. This is the only thing that the user is meant to
-	/// override.
-	pub trait FliteConfigurations {
-		type BlockWeight: Get<Weight>;
-		type BlockTime: Get<types::Moment>;
-		type BlockLength: Get<u32>;
-		type MinimumBalance: Get<types::Balance>;
-		type Ss58: Get<u16>;
-		type Version: Get<psdk::sp_version::RuntimeVersion>;
-	}
-
+	#[docify::export(FliteSystemConfigExport)]
 	/// Flite puts a lot of restrictions on what types are fed to account Id. All of this is fine as
 	/// long as the users use the provided [`config_preludes::FliteFrameSystem`].
 	#[pallet::config]

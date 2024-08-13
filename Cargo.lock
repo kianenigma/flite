@@ -7016,6 +7016,7 @@ checksum = "620a1d43d70e142b1d46a929af51d44f383db9c7a2ec122de2cd992ccfcf3c18"
 name = "simple-pallet"
 version = "0.1.0"
 dependencies = [
+ "docify",
  "flite",
  "parity-scale-codec",
  "polkadot-sdk",

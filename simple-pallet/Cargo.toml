@@ -10,6 +10,7 @@ parity-scale-codec = { version = "3.6.12", features = ["derive"], default-featur
 scale-info = { version = "2.11.3", default-features = false}
 polkadot-sdk = { version =  "*", features = ["runtime", "experimental"], default-features = false}
 flite = { path = "../flite", default-features = false }
+docify = { workspace = true }
 
 [features]
 default = ["std"]

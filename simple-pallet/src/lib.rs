@@ -3,12 +3,24 @@
 use polkadot_sdk::polkadot_sdk_frame::{self as frame, prelude::*};
 
 #[frame::pallet(dev_mode)]
+pub mod demonstrative_pallet {
+	#[pallet::pallet]
+	pub struct Pallet<T>(_);
+
+	#[docify::export(DemonstrationConfig)]
+	#[pallet::config]
+	#[pallet::disable_frame_system_supertrait_check]
+	pub trait Config: flite::flite_system::Config {}
+}
+
+#[frame::pallet(dev_mode)]
 pub mod pallet {
 	use super::*;
 
 	#[pallet::pallet]
 	pub struct Pallet<T>(_);
 
+	#[docify::export]
 	#[pallet::config]
 	#[pallet::disable_frame_system_supertrait_check]
 	pub trait Config: flite::flite_system::Config {
@@ -17,6 +29,7 @@ pub mod pallet {
 
 	#[pallet::call]
 	impl<T: Config> Pallet<T> {
+		#[docify::export]
 		pub fn dispatching(origin: OriginFor<T>) -> DispatchResult {
 			// Yes, the account id type is no longer generic, because `flite` uses constrained
 			// associated types.
@@ -25,6 +38,7 @@ pub mod pallet {
 			Ok(())
 		}
 
+		#[docify::export]
 		/// simple-pallet can use the very very basic flite currency primitives.
 		pub fn simple_currency_usage(
 			origin: OriginFor<T>,
@@ -46,6 +60,7 @@ pub mod pallet {
 		/// Or it can tap into the default FRAME currency, although as constrained by flite. For
 		/// example, `Balance` is still `u128`, `RuntimeHoldReason` is still `&static str` adn so
 		/// on.
+		#[docify::export]
 		pub fn advance_currency_usage(
 			origin: OriginFor<T>,
 			to: flite::types::AccountId,
