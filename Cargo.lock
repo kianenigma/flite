@@ -2453,6 +2453,7 @@ dependencies = [
 name = "flite"
 version = "0.1.0"
 dependencies = [
+ "docify",
  "parity-scale-codec",
  "polkadot-sdk",
  "scale-info",

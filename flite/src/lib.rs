@@ -22,6 +22,10 @@
 //! * `derive_impl` outside of the pallet context.
 //! * You *don't need* a runtime template.
 //!
+//! Note: you only parameterize `flite_system` in runtime, and you guarantee to not parameterize any
+//! other pallet. This is the underlying premise of this tool. We could wrap this with a further
+//! macro for you at the runtime level.
+//!
 //!
 //! ## Aux Tools
 //!
@@ -33,106 +37,56 @@
 //! - https://github.com/paritytech/polkadot-sdk/pull/5246
 #![cfg_attr(not(feature = "std"), no_std)]
 
+pub use flite_system::FliteConfigurations;
 use polkadot_sdk::{self as psdk, polkadot_sdk_frame as frame};
 
 /// The opinionated types that we dictate.
 /// [`polkadot_sdk::polkadot_sdk_frame::runtime::types_common`] already defined a lot of such types,
 /// so we re-use them as much as possible.
 pub mod types {
-	pub use polkadot_sdk::polkadot_sdk_frame::runtime::types_common::{
-		AccountId, BlockNumber, BlockOf,
-	};
+	use super::*;
+	pub use frame::runtime::types_common::{AccountId, BlockNumber, BlockOf};
+
 	pub type Balance = u128;
 	pub type Moment = u64;
+	pub type AuraId = psdk::sp_consensus_aura::sr25519::AuthorityId;
 }
 
 /// Default configurations for the pallets used.
 pub mod default_configs {
 	use super::*;
-	use flite_system::Config;
-	use frame::{
-		arithmetic::Perbill,
-		deps::frame_support::{derive_impl, register_default_impl},
-		prelude::*,
-		runtime::prelude::*,
-	};
+	use frame::{arithmetic::Perbill, deps::frame_support::register_default_impl, prelude::*};
 	use frame_system::limits::{BlockLength, BlockWeights};
-	use psdk::{
-		frame_support::weights::constants::RocksDbWeight,
-		pallet_balances::AccountData,
-		sp_weights::constants::{WEIGHT_PROOF_SIZE_PER_MB, WEIGHT_REF_TIME_PER_MILLIS},
-	};
+	use psdk::{frame_support::weights::constants::RocksDbWeight, pallet_balances::AccountData};
 
-	#[register_default_impl(FliteSystem)]
-	impl flite_system::DefaultConfig for FliteSystem {
-		type BlockWeight = DefaultBlockWeight;
-		type BlockLength = DefaultBlockLength;
-		type BlockTime = BlockTime;
-	}
-
-	pub struct RuntimeBlockWeights<T: Config>(core::marker::PhantomData<T>);
-	impl<T: Config> Get<BlockWeights> for RuntimeBlockWeights<T> {
+	pub struct RuntimeBlockWeights<F: FliteConfigurations>(core::marker::PhantomData<F>);
+	impl<F: FliteConfigurations> Get<BlockWeights> for RuntimeBlockWeights<F> {
 		fn get() -> BlockWeights {
 			// TODO: hypothetically, we should use very safe and sane and audited values here, but
-			// for now we go with a simple model. Use Operational later.
-			BlockWeights::with_sensible_defaults(T::BlockWeight::get(), Perbill::one())
+			// for now we go with a simple model.
+			BlockWeights::with_sensible_defaults(F::BlockWeight::get(), Perbill::one())
 		}
 	}
 
-	pub struct RuntimeBlockLength<T: Config>(core::marker::PhantomData<T>);
-	impl<T: Config> Get<BlockLength> for RuntimeBlockLength<T> {
+	pub struct RuntimeBlockLength<F: FliteConfigurations>(core::marker::PhantomData<F>);
+	impl<F: FliteConfigurations> Get<BlockLength> for RuntimeBlockLength<F> {
 		fn get() -> BlockLength {
-			BlockLength::max(<T as flite_system::Config>::BlockLength::get())
+			BlockLength::max(F::BlockLength::get())
 		}
 	}
 
-	#[deprecated(
-		note = "This is a placeholder type, you need to provide your own weights before launching, but for testing this will just do fine."
-	)]
-	#[allow(non_camel_case_types)]
-	pub type ThisWillCompile_ButYouNeedYourOwn_SystemWeightInfo = ();
+	pub struct FliteFrameSystem<F>(core::marker::PhantomData<F>);
 
-	#[deprecated(
-		note = "This is a placeholder type, you need to provide your own SS58Prefix before launching, but for testing this will just do fine."
-	)]
-	#[allow(non_camel_case_types)]
-	pub type ThisWillCompile_ButYouWillNeedYourOwn_SS58Prefix = ();
-
-	#[deprecated(
-		note = "This is a placeholder type, you need to provide your own Version before launching, but for testing this will just do fine."
-	)]
-	#[allow(non_camel_case_types)]
-	pub type ThisWillCompile_ButYouWillNeedYourOwn_Version = ();
-
-	#[deprecated(
-		note = "This is a placeholder type, you need to provide your own BlockWeights before launching, but for testing this will just do fine. An easy option is `flite_system::RuntimeBlockWeights<Runtime>`."
-	)]
-	#[allow(non_camel_case_types)]
-	pub type ThisWillCompile_ButYouNeedYourOwn_BlockWeights = ();
-
-	// TODO: I kinda donno how this work in the `runtime` if I am being honest.
-	#[deprecated(
-		note = "This is a placeholder type, you need to provide your own BlockLength before launching, but for testing this will just do fine. An easy option is `flite_system::RuntimeBlockLength<Runtime>`."
-	)]
-	#[allow(non_camel_case_types)]
-	pub type ThisWillCompile_ButYouNeedYourOwn_BlockLength = ();
-
-	pub struct FliteFrameSystem;
-
-	// #[derive_impl(
-	//     frame_system::config_preludes::SolochainDefaultConfig,
-	//     no_aggregated_types
-	// )]
-	// TODO: fml the order of these two matters! Perhaps explore nested derive impl again, but it
-	// seems to hairy for now.
+	// TODO: we could define our own `trait FliteFrameSystemDefaultConfig`, but the one provided in
+	// `frame_system::DefaultConfig` is good enough.
 	#[register_default_impl(FliteFrameSystem)]
-	impl frame_system::DefaultConfig for FliteFrameSystem {
+	impl<F: FliteConfigurations> frame_system::DefaultConfig for FliteFrameSystem<F> {
 		/// Flite might decide to force its users to
 		type SystemWeightInfo = weights::FliteFrameSystemWeights;
-		type SS58Prefix = ThisWillCompile_ButYouWillNeedYourOwn_SS58Prefix;
-		type Version = ThisWillCompile_ButYouWillNeedYourOwn_Version;
-		type BlockWeights = ThisWillCompile_ButYouNeedYourOwn_BlockWeights;
-		type BlockLength = ThisWillCompile_ButYouNeedYourOwn_BlockLength;
+		type SS58Prefix = F::Ss58;
+		type Version = F::Version;
+		type BlockWeights = RuntimeBlockWeights<F>;
+		type BlockLength = RuntimeBlockLength<F>;
 
 		// opinionated
 		type AccountId = types::AccountId;
@@ -141,14 +95,16 @@ pub mod default_configs {
 		type Nonce = u32;
 		type Hash = psdk::sp_core::hash::H256;
 		type Hashing = psdk::sp_runtime::traits::BlakeTwo256;
+
 		// TODO: this is super pesky and causes very hard compiler errors, if we add the second
 		// parameter wrt. account index. Make sure to elaborate on this.
 		type Lookup = psdk::sp_runtime::traits::AccountIdLookup<Self::AccountId, ()>;
+
+		// TODO: For now we don't set them, but if need be, you can let the user configure them
+		// via `F`, hopefully in a simpler manner.
 		type MaxConsumers = psdk::frame_support::traits::ConstU32<128>;
 		type BaseCallFilter = psdk::frame_support::traits::Everything;
 		type BlockHashCount = psdk::frame_support::traits::ConstU32<256>;
-
-		// trivial
 		type OnSetCode = ();
 		type SingleBlockMigrations = ();
 		type MultiBlockMigrator = ();
@@ -171,31 +127,16 @@ pub mod default_configs {
 		type PalletInfo = ();
 	}
 
-	parameter_types! {
-		pub const DefaultBlockWeight: Weight = Weight::from_parts(
-			WEIGHT_REF_TIME_PER_MILLIS * 500,
-			WEIGHT_PROOF_SIZE_PER_MB * 2
-		);
-		pub const DefaultBlockLength: u32 = 5 * 1024 * 1024;
-		pub const BlockTime: types::Moment = 6000;
-	}
-
-	pub struct FliteSystem;
-
-	#[derive_impl(crate::default_configs::FliteFrameSystem as frame_system::DefaultConfig, no_aggregated_types)]
-	impl frame_system::DefaultConfig for FliteSystem {}
-
 	/// Default for [`polkadot_sdk::pallet_timestamp`]
 	///
-	/// This pallet provides [`polkadot_sdk::pallet_timestamp::DefaultConfig`], but we don't use it
-	/// because the trick we pull below wrt `OnTimeStampSet` will not work otherwise.
-	pub struct FliteTimestamp;
-
-	#[derive_impl(FliteFrameSystem as frame_system::DefaultConfig, no_aggregated_types)]
-	impl frame_system::DefaultConfig for FliteTimestamp {}
-
-	#[derive_impl(FliteSystem as flite_system::DefaultConfig, no_aggregated_types)]
-	impl flite_system::DefaultConfig for FliteTimestamp {}
+	/// We want the `FliteTimestamp` to be generic over `F: FliteConfigurations`.
+	/// The default `pallet_timestamp::DefaultConfig` is constrained by
+	/// `frame_system::DefaultConfig`, which itself relies on `<F: FliteConfigurations>`, so it is
+	/// all a dead end, and we need to define our own `trait FliteTimestampDefaultConfig`. This is
+	/// more or less a copy of `pallet_timestamp::DefaultConfig`, and that is fine.
+	///
+	/// See: https://paritytech.github.io/polkadot-sdk/master/pallet_timestamp/pallet/trait.DefaultConfig.html
+	pub struct FliteTimestamp<F: FliteConfigurations>(core::marker::PhantomData<F>);
 
 	pub trait FliteTimestampDefaultConfig {
 		/// See [`polkadot_sdk::pallet_timestamp::Config::Moment`].
@@ -209,36 +150,30 @@ pub mod default_configs {
 	}
 
 	#[deprecated(
-		note = "This is a placeholder type, you need to replace it with the name assigned to `pallet_aura`."
+		note = "This is a placeholder type, you need to replace it with the name assigned to
+	`pallet_aura`."
 	)]
 	pub struct ReplaceWithAuraPalletName;
 
 	#[register_default_impl(FliteTimestamp)]
-	impl FliteTimestampDefaultConfig for FliteTimestamp {
+	impl<F: FliteConfigurations> FliteTimestampDefaultConfig for FliteTimestamp<F> {
 		type Moment = types::Moment;
+		// We can use
+		type MinimumPeriod = F::BlockTime;
+		type WeightInfo = weights::FliteTimestampWeights;
 		// #[inject_custom_runtime_type("Aura")] -> should replace it with `Type OnTimestampSet =
 		// Aura` in the runtime.
+		#[allow(deprecated)]
 		type OnTimestampSet = ReplaceWithAuraPalletName;
-		// We can use
-		type MinimumPeriod = <FliteSystem as flite_system::DefaultConfig>::BlockTime;
-		type WeightInfo = weights::FliteTimestampWeights;
 	}
 
-	pub struct FliteAura;
-	#[derive_impl(FliteFrameSystem as frame_system::DefaultConfig, no_aggregated_types)]
-	impl frame_system::DefaultConfig for FliteAura {}
+	pub struct FliteAura<F: FliteConfigurations>(core::marker::PhantomData<F>);
 
-	#[derive_impl(FliteSystem as flite_system::DefaultConfig, no_aggregated_types)]
-	impl flite_system::DefaultConfig for FliteAura {}
-
-	// Some pallets in FRAME do not yet expose this `DefaultConfig` trait. No issue though, you can
-	// use these macros on top of any trait! Pitfalls: If you decide to attempt to impl defaults for
-	// `Config` of a pallet directly, you don't have `no_defaults`.
-
-	/// A `flite` representative of `pallet_aura::Config`.
+	/// A `flite` representative of [`pallet_aura::Config`].
 	///
 	/// This merely exists because `pallet_aura` itself doesn't have
-	/// `#[pallet::config(with_default)]`.
+	/// `#[pallet::config(with_default)]`. Although, as we established for [`FliteTimestamp`], even
+	/// if it would, it would have not been useful for this case.
 	///
 	/// We drop all most trait bounds, as we test it and we are professional.
 	pub trait FliteAuraDefaultConfig {
@@ -255,13 +190,55 @@ pub mod default_configs {
 	}
 
 	#[register_default_impl(FliteAura)]
-	impl FliteAuraDefaultConfig for FliteAura {
-		type AuthorityId = psdk::sp_consensus_aura::sr25519::AuthorityId;
+	impl<F: FliteConfigurations> FliteAuraDefaultConfig for FliteAura<F> {
+		type AuthorityId = types::AuraId;
 		type DisabledValidators = ();
 		type MaxAuthorities = psdk::frame_support::traits::ConstU32<1024>;
 		// NOTE: in a parachain, this has to be `true`.
 		type AllowMultipleBlocksPerSlot = psdk::frame_support::traits::ConstBool<false>;
-		type SlotDuration = <FliteSystem as flite_system::DefaultConfig>::BlockTime;
+		type SlotDuration = F::BlockTime;
+	}
+
+	pub struct FliteBalances<F: FliteConfigurations>(core::marker::PhantomData<F>);
+	pub trait FliteBalancesDefaultConfig {
+		type RuntimeHoldReason;
+		type RuntimeFreezeReason;
+		type WeightInfo;
+		type Balance;
+		type DustRemoval;
+		type ExistentialDeposit;
+		type AccountStore;
+		type ReserveIdentifier;
+		type FreezeIdentifier;
+		type MaxLocks;
+		type MaxReserves;
+		type MaxFreezes;
+	}
+
+	#[deprecated(
+		note = "This is a placeholder type, you need to replace it with the name assigned to
+		`frame_system`."
+	)]
+	pub struct ReplaceWithFrameSystemPalletName;
+	#[register_default_impl(FliteBalances)]
+	impl<F: FliteConfigurations> FliteBalancesDefaultConfig for FliteBalances<F> {
+		type RuntimeHoldReason = u8;
+		type RuntimeFreezeReason = u8;
+		type WeightInfo = weights::FliteDbWeights;
+		type Balance = types::Balance;
+		type ExistentialDeposit = F::MinimumBalance;
+		type DustRemoval = ();
+		#[allow(deprecated)]
+		type AccountStore = ReplaceWithAuraPalletName;
+		// TODO: must be RuntimeFreezeReason
+		type FreezeIdentifier = ();
+
+		// Flite wants to provide only Hold and Freezes, so no reserves or locks are allowed.
+		type MaxFreezes = ConstU32<128>;
+
+		type MaxLocks = ();
+		type MaxReserves = ();
+		type ReserveIdentifier = ();
 	}
 }
 
@@ -277,32 +254,98 @@ pub mod weights {
 	pub type FliteAuraWeights = ();
 }
 
+pub mod native_currency {
+	use super::*;
+	use frame::{
+		prelude::*,
+		traits::fungible::{self, *},
+	};
+
+	/// Trait to give you access to the advance underlying FRAME currency primitives. You can also
+	/// import all of these manually into your trait, this is merely a syntactic sugar.
+	pub trait Advance:
+		fungible::Inspect<types::AccountId, Balance = types::Balance>
+		+ fungible::Mutate<types::AccountId>
+		+ fungible::InspectHold<types::AccountId, Reason = u8>
+		+ fungible::MutateHold<types::AccountId>
+	{
+	}
+
+	/// A simple native currency abstraction.
+	pub struct Simple<T: flite_system::Config>(core::marker::PhantomData<T>);
+	impl<T: flite_system::Config> Simple<T> {
+		/// Flite can go down the path of providing its own wrappers around the FRAME advanced
+		/// currency system.
+		pub fn balance_of(account: &types::AccountId) -> types::Balance {
+			<psdk::pallet_balances::Pallet<T> as fungible::Inspect<types::AccountId>>::balance(
+				account,
+			)
+		}
+
+		pub fn transfer(
+			from: &types::AccountId,
+			to: &types::AccountId,
+			amount: types::Balance,
+		) -> DispatchResult {
+			<psdk::pallet_balances::Pallet<T> as fungible::Mutate<types::AccountId>>::transfer(
+				from,
+				to,
+				amount,
+				frame::traits::tokens::Preservation::Expendable,
+			)
+			.map(|_| ())
+		}
+
+		pub fn lock(from: &types::AccountId, amount: types::Balance) -> DispatchResult {
+			<psdk::pallet_balances::Pallet<T> as fungible::MutateHold<types::AccountId>>::hold(
+				&0u8, from, amount,
+			)
+		}
+	}
+}
+
 #[frame::pallet]
 pub mod flite_system {
 	use super::*;
 	use frame::prelude::*;
 
+	/// The master `flite` configurations. This is the only thing that the user is meant to
+	/// override.
+	pub trait FliteConfigurations {
+		type BlockWeight: Get<Weight>;
+		type BlockTime: Get<types::Moment>;
+		type BlockLength: Get<u32>;
+		type MinimumBalance: Get<types::Balance>;
+		type Ss58: Get<u16>;
+		type Version: Get<psdk::sp_version::RuntimeVersion>;
+	}
+
 	/// Flite puts a lot of restrictions on what types are fed to account Id. All of this is fine as
 	/// long as the users use the provided [`config_preludes::FliteFrameSystem`].
-	#[pallet::config(with_default)]
+	#[pallet::config]
 	pub trait Config:
 		polkadot_sdk::frame_system::Config<AccountId = types::AccountId>
 		+ psdk::pallet_timestamp::Config
 		+ psdk::pallet_aura::Config
+		+ psdk::pallet_balances::Config<
+			Balance = types::Balance,
+			RuntimeHoldReason = u8,
+			RuntimeFreezeReason = u8,
+		>
 	{
-		type BlockWeight: Get<Weight>;
-		type BlockLength: Get<u32>;
-		type BlockTime: Get<types::Moment>;
 	}
 
 	#[pallet::pallet]
 	pub struct Pallet<T>(_);
 
 	impl<T: Config> Pallet<T> {
-		fn block_author() {
-			todo!("A useful helper function for flite to provide");
+		pub fn block_author() {
+			todo!(
+				"A useful helper function for flite to provide. Think of similar helper functions"
+			);
 		}
 	}
+
 	#[pallet::hooks]
 	impl<T: Config> Hooks<BlockNumberFor<T>> for Pallet<T> {
 		fn integrity_test() {

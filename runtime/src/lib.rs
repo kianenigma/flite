@@ -9,6 +9,7 @@ use polkadot_sdk::{
 		runtime::{apis, prelude::*},
 	},
 	sp_genesis_builder,
+	sp_weights::constants::WEIGHT_REF_TIME_PER_MILLIS,
 };
 
 #[polkadot_sdk::frame_support::runtime]
@@ -20,16 +21,17 @@ pub mod runtime {
 		RuntimeEvent,
 		RuntimeError,
 		RuntimeOrigin,
-		RuntimeFreezeReason,
-		RuntimeHoldReason,
-		RuntimeSlashReason,
-		RuntimeLockId,
 		RuntimeTask
+		// Note that we don't need some of these, so we don't ask them to be generated for simplicity.
+		// RuntimeFreezeReason,
+		// RuntimeHoldReason,
+		// RuntimeSlashReason,
+		// RuntimeLockId,
 	)]
 	pub struct Runtime;
 
 	#[runtime::pallet_index(0)]
-	pub type System = frame_system;
+	pub type System = polkadot_sdk::frame_system;
 
 	#[runtime::pallet_index(1)]
 	pub type FliteSystem = flite::flite_system;
@@ -39,22 +41,132 @@ pub mod runtime {
 
 	#[runtime::pallet_index(3)]
 	pub type Timestamp = polkadot_sdk::pallet_timestamp;
+
+	#[runtime::pallet_index(4)]
+	pub type Balances = polkadot_sdk::pallet_balances;
 }
 
-#[derive_impl(flite::default_configs::FliteFrameSystem as frame_system::DefaultConfig)]
+parameter_types! {
+	pub const BlockTime: flite::types::Moment = 6000;
+	pub const BlockWeight: Weight = Weight::from_parts(
+		BlockTime::get() / 2 * WEIGHT_REF_TIME_PER_MILLIS,
+		0
+	);
+	pub const Version: RuntimeVersion = VERSION;
+}
+pub struct Configuration;
+impl flite::FliteConfigurations for Configuration {
+	type BlockLength = ConstU32<{ 5 * 1024 * 1024 }>;
+	type BlockWeight = BlockWeight;
+	type BlockTime = BlockTime;
+	type Ss58 = ConstU16<42>;
+	type Version = Version;
+	type MinimumBalance = ConstU128<1_000_000>;
+}
+
+use flite::default_configs::FliteFrameSystem;
 impl frame_system::Config for Runtime {
 	type Block = Block;
+
+	// Everything after this should be elided by a macro. I am 100% sure `derive_impl` can be
+	// adapter to do this, or we use directly `macro_magic`, but for now I will just copy-paste it.
+
+	// inject types.
+	type RuntimeEvent = RuntimeEvent;
+	type RuntimeOrigin = RuntimeOrigin;
+	type RuntimeCall = RuntimeCall;
+	type RuntimeTask = RuntimeTask;
+	type PalletInfo = PalletInfo;
+
+	// coming from a macro.
+	type AccountData =
+		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::AccountData;
+	type BaseCallFilter =
+		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::BaseCallFilter;
+	type BlockWeights =
+		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::BlockWeights;
+	type BlockLength =
+		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::BlockLength;
+	type Nonce = <FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::Nonce;
+	type Hash = <FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::Hash;
+	type Hashing = <FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::Hashing;
+	type AccountId = <FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::AccountId;
+	type Lookup = <FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::Lookup;
+	type BlockHashCount =
+		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::BlockHashCount;
+	type DbWeight = <FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::DbWeight;
+	type Version = <FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::Version;
+	type OnNewAccount =
+		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::OnNewAccount;
+	type OnKilledAccount =
+		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::OnKilledAccount;
+	type SystemWeightInfo =
+		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::SystemWeightInfo;
+	type SS58Prefix = <FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::SS58Prefix;
+	type OnSetCode = <FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::OnSetCode;
+	type MaxConsumers =
+		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::MaxConsumers;
+	type SingleBlockMigrations =
+		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::SingleBlockMigrations;
+	type MultiBlockMigrator =
+		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::MultiBlockMigrator;
+	type PreInherents =
+		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::PreInherents;
+	type PostInherents =
+		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::PostInherents;
+	type PostTransactions =
+		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::PostTransactions;
 }
 
-#[derive_impl(flite::default_configs::FliteSystem as flite::flite_system::DefaultConfig)]
 impl flite::flite_system::Config for Runtime {}
 
-#[derive_impl(flite::default_configs::FliteAura as flite::default_configs::FliteAuraDefaultConfig)]
-impl polkadot_sdk::pallet_aura::Config for Runtime {}
-
-#[derive_impl(flite::default_configs::FliteTimestamp as flite::default_configs::FliteTimestampDefaultConfig)]
+use flite::default_configs::{FliteTimestamp, FliteTimestampDefaultConfig};
 impl polkadot_sdk::pallet_timestamp::Config for Runtime {
 	type OnTimestampSet = Aura;
+
+	// macro.
+	type Moment = <FliteTimestamp<Configuration> as FliteTimestampDefaultConfig>::Moment;
+	type MinimumPeriod =
+		<FliteTimestamp<Configuration> as FliteTimestampDefaultConfig>::MinimumPeriod;
+	type WeightInfo = <FliteTimestamp<Configuration> as FliteTimestampDefaultConfig>::WeightInfo;
+}
+
+use flite::default_configs::{FliteAura, FliteAuraDefaultConfig};
+impl polkadot_sdk::pallet_aura::Config for Runtime {
+	type AuthorityId = <FliteAura<Configuration> as FliteAuraDefaultConfig>::AuthorityId;
+	type MaxAuthorities = <FliteAura<Configuration> as FliteAuraDefaultConfig>::MaxAuthorities;
+	type DisabledValidators =
+		<FliteAura<Configuration> as FliteAuraDefaultConfig>::DisabledValidators;
+	type AllowMultipleBlocksPerSlot =
+		<FliteAura<Configuration> as FliteAuraDefaultConfig>::AllowMultipleBlocksPerSlot;
+	type SlotDuration = <FliteAura<Configuration> as FliteAuraDefaultConfig>::SlotDuration;
+}
+
+use flite::default_configs::{FliteBalances, FliteBalancesDefaultConfig};
+impl polkadot_sdk::pallet_balances::Config for Runtime {
+	// inject identical
+
+	type RuntimeEvent = RuntimeEvent;
+	// special inject
+	type AccountStore = System;
+	type FreezeIdentifier = Self::RuntimeFreezeReason;
+
+	// macro should handle.
+	type RuntimeHoldReason =
+		<FliteBalances<Configuration> as FliteBalancesDefaultConfig>::RuntimeHoldReason;
+	type RuntimeFreezeReason =
+		<FliteBalances<Configuration> as FliteBalancesDefaultConfig>::RuntimeFreezeReason;
+	type WeightInfo = <FliteBalances<Configuration> as FliteBalancesDefaultConfig>::WeightInfo;
+	type Balance = <FliteBalances<Configuration> as FliteBalancesDefaultConfig>::Balance;
+	type ExistentialDeposit =
+		<FliteBalances<Configuration> as FliteBalancesDefaultConfig>::ExistentialDeposit;
+	type DustRemoval = <FliteBalances<Configuration> as FliteBalancesDefaultConfig>::DustRemoval;
+	type MaxFreezes = <FliteBalances<Configuration> as FliteBalancesDefaultConfig>::MaxFreezes;
+
+	type MaxLocks = <FliteBalances<Configuration> as FliteBalancesDefaultConfig>::MaxLocks;
+	type MaxReserves = <FliteBalances<Configuration> as FliteBalancesDefaultConfig>::MaxReserves;
+	type ReserveIdentifier =
+		<FliteBalances<Configuration> as FliteBalancesDefaultConfig>::ReserveIdentifier;
 }
 
 // TODO: mixing the two will work? not sure.
