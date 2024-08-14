@@ -2,11 +2,16 @@
 
 extern crate alloc;
 use alloc::{vec, vec::Vec};
+// TODO: remove and simplify after https://github.com/paritytech/polkadot-sdk/pull/5155/files si merged.
 use polkadot_sdk::{
+	frame_support::genesis_builder_helper::*,
 	polkadot_sdk_frame::{
 		self as frame,
 		prelude::*,
-		runtime::{apis, prelude::*},
+		runtime::{
+			apis::{self, *},
+			prelude::*,
+		},
 	},
 	sp_genesis_builder,
 	sp_weights::constants::WEIGHT_REF_TIME_PER_MILLIS,
@@ -205,7 +210,7 @@ impl_runtime_apis! {
 			RuntimeExecutive::execute_block(block)
 		}
 
-		fn initialize_block(header: &Header) -> ExtrinsicInclusionMode {
+		fn initialize_block(header: &Header) -> apis::ExtrinsicInclusionMode {
 			RuntimeExecutive::initialize_block(header)
 		}
 	}

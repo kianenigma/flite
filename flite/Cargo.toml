@@ -6,12 +6,9 @@ edition.workspace = true
 [dependencies]
 parity-scale-codec = { version = "3.6.12", features = ["derive"], default-features = false}
 scale-info = { version = "2.11.3", default-features = false}
-polkadot-sdk = { version = "*", features = ["runtime", "experimental"], default-features = false}
-docify = { workspace = true }
+polkadot-sdk = { git = "https://github.com/paritytech/polkadot-sdk.git", rev = "08f677e401883160b185084ba23d5ccaf670eaeb", features = ["runtime", "experimental"], default-features = false }
+docify = "0.2.8"
 
 [features]
 default = ["std"]
 std = ["polkadot-sdk/std", "parity-scale-codec/std", "scale-info/std"]
-
-[patch.crates-io]
-"polkadot-sdk" = { path = "../polkadot-sdk-2/umbrella", version = "0.1.0" }

@@ -429,10 +429,7 @@ pub mod weights {
 
 pub mod native_currency {
 	use super::*;
-	use frame::{
-		prelude::*,
-		traits::fungible::{self, *},
-	};
+	use frame::{prelude::*, traits::fungible};
 
 	/// Trait to give you access to the advance underlying FRAME currency primitives. You can also
 	/// import all of these manually into your trait, this is merely a syntactic sugar.

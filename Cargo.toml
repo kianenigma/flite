@@ -2,11 +2,5 @@
 members = ["flite", "runtime", "simple-pallet"]
 resolver = "2"
 
-[workspace.dependencies]
-docify = "0.2.8"
-
 [workspace.package]
 edition = "2021"
-
-[patch.crates-io]
-"polkadot-sdk" = { path = "../polkadot-sdk-2/umbrella", version = "0.1.0" }
