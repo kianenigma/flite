@@ -17,7 +17,7 @@ jobs:
           toolchain: stable
           override: true
           components: rust-docs
-        #   target: wasm32-unknown-unknown
+          target: wasm32-unknown-unknown
 
       - name: Generate docs
         run: cargo doc
