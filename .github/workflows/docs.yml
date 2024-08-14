@@ -20,7 +20,7 @@ jobs:
           target: wasm32-unknown-unknown
 
       - name: Generate docs
-        run: cargo doc
+        run: SKIP_WASM_BUILD=1 cargo doc
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
