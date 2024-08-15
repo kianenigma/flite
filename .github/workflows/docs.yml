@@ -1,5 +1,9 @@
 name: Rust Docs
 
+# Either provide this, or a GH_TOKEN secret.
+permissions:
+  contents: write
+
 on:
   push:
     branches: [master]
@@ -20,7 +24,7 @@ jobs:
           target: wasm32-unknown-unknown
 
       - name: Generate docs
-        run: SKIP_WASM_BUILD=1 cargo doc
+	  	run: SKIP_WASM_BUILD=1 cargo doc --no-deps
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
