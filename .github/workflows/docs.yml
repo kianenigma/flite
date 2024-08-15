@@ -18,13 +18,13 @@ jobs:
       - name: Setup Rust
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: nightly
           override: true
           components: rust-docs
           target: wasm32-unknown-unknown
 
       - name: Generate docs
-        run: SKIP_WASM_BUILD=1 cargo doc --no-deps
+        run: SKIP_WASM_BUILD=1 RUSTDOCFLAGS="--enable-index-page -Zunstable-options" cargo +nightly doc --no-deps
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
