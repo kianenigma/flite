@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"type":["AccountId","AuraId","Balance","BlockNumber","BlockOf","Moment"]};

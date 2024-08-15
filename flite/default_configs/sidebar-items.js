@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["FliteAura","FliteBalances","FliteFrameSystem","FliteTimestamp"],"trait":["FliteAuraDefaultConfig","FliteBalancesDefaultConfig","FliteConfigurations","FliteTimestampDefaultConfig"]};

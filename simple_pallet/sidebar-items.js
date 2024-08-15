@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["demonstrative_pallet","pallet"]};

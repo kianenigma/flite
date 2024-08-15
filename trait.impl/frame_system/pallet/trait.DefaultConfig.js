@@ -1,0 +1,3 @@
+(function() {var implementors = {
+"flite":[["impl&lt;F: <a class=\"trait\" href=\"flite/default_configs/trait.FliteConfigurations.html\" title=\"trait flite::default_configs::FliteConfigurations\">FliteConfigurations</a>&gt; DefaultConfig for <a class=\"struct\" href=\"flite/default_configs/struct.FliteFrameSystem.html\" title=\"struct flite::default_configs::FliteFrameSystem\">FliteFrameSystem</a>&lt;F&gt;"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

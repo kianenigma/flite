@@ -1,0 +1,212 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="FLITE / FRAME-LITE"><title>flite - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="flite" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.1 (3f5fd8dd4 2024-08-06)" data-channel="1.80.1" data-search-js="search-d52510db62a78183.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../flite/index.html">flite</a><span class="version">0.1.0</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section><ul class="block"><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li></ul></section></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Crate <a class="mod" href="#">flite</a><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><span class="out-of-band"><a class="src" href="../src/flite/lib.rs.html#1-517">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>FLITE / FRAME-LITE</p>
+<p>Polkadot-SDK’s FRAME, but low on the dose of complexity, therefore lite.</p>
+<p>This is a an experimental library meant only for demonstration purposes, and is not meant for
+production use. Yet, it might influence the decision making to those who want to build
+<strong>reusable</strong> FRAME-based libraries.</p>
+<p>Put differently, this crate demonstrates a number of techniques that can be used to build more
+opinionated, yet simpler variants of FRAME.</p>
+<h3 id="techniques"><a class="doc-anchor" href="#techniques">§</a>Techniques</h3>
+<p>The main techniques used in this library are as follows:</p>
+<h4 id="not-relying-on-frame_system-and-cumulusparachain_system"><a class="doc-anchor" href="#not-relying-on-frame_system-and-cumulusparachain_system">§</a>NOT Relying on <code>frame_system</code> (and <code>cumulus::parachain_system</code>).</h4>
+<p>FRAME comes with an underrated macro: <code>#[pallet::disable_frame_system_supertrait_check]</code>. This
+macro enables a pallet to rely on a pallet other than <code>frame_system</code>. This opens the door for a
+team to write an “opinionated flavor” of <code>frame_system</code> for their own use.</p>
+<p>In this crate, we introduce <a href="flite_system/index.html" title="mod flite::flite_system"><code>flite_system</code></a>, an opinionated alternative to
+[<code>polkadot_sdk::frame_system</code>].</p>
+<h4 id="constrained-associated-types"><a class="doc-anchor" href="#constrained-associated-types">§</a>Constrained Associated Types</h4>
+<p>Constrained associated types are a powerful and an underrated feature of Rust, and they are
+crucially important for FRAME.</p>
+<p>FRAME expresses the majority of its flexibility through associated types. Constrained associated
+types are then therefore a way for one to express limitations on those associated types.</p>
+<p>The downside of this would be that the users would have less flexibility. Yet, the benefit would
+be that the syntax would be less generic, and more concrete.</p>
+<p>We argue that for a starter FRAME template, and for beginner users it is much easier to work
+with concrete types for common concepts like <code>AccountId</code> and <code>Balance</code>, rather than generic
+variants.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">trait </span>Currency {
+    <span class="kw">type </span>Balance;
+
+    <span class="kw">fn </span>get() -&gt; Balance {};
+}
+
+<span class="doccomment">/// A pallet that is not constraining `Currency::Balance`, and must always refer to it as
+</span><span class="kw">trait </span>Config {
+    <span class="kw">type </span>Currency: Currency
+
+    <span class="kw">fn </span>usage() {
+        <span class="comment">// This pallet doesn't really now what `&lt;Self::Currency as Currency&gt;::Balance` is.
+        </span><span class="kw">let _</span>: &lt;<span class="self">Self</span>::Currency <span class="kw">as </span>Currency&gt;::Balance = T::Currency::get();
+    }
+}
+
+<span class="doccomment">/// A pallet that is constraining `Currency::Balance`, to JUST `u128`.
+</span><span class="kw">trait </span>Config {
+    <span class="kw">type </span>Currency: Currency&lt;Balance = u128&gt;;
+
+    <span class="kw">fn </span>usage() {
+        <span class="comment">// This pallet knows that `Self::Currency::Balance` is `u128`.
+        </span><span class="kw">let _</span>: u128 = T::Currency::get();
+    }
+}</code></pre></div>
+<p><a href="flite_system/index.html" title="mod flite::flite_system"><code>flite_system</code></a> constraints a number of important associated types, to be seen in the example
+further below.</p>
+<h4 id="tight-coupling-to-our-benefit"><a class="doc-anchor" href="#tight-coupling-to-our-benefit">§</a>Tight Coupling To Our Benefit</h4>
+<p>Generally, <a href="https://paritytech.github.io/polkadot-sdk/master/polkadot_sdk_docs/reference_docs/frame_pallet_coupling/index.html">tight
+coupling</a>
+is considered a bad thing. Yet, in the context of a library like <code>flite</code>, we can use it to our
+advantage. If we tightly couple <a href="flite_system/index.html" title="mod flite::flite_system"><code>flite_system</code></a> with a number of pallets, we achieve:</p>
+<ul>
+<li>We can express that a runtime can only work if <a href="flite_system/index.html" title="mod flite::flite_system"><code>flite_system</code></a> and the tightly coupled
+pallets are present in it.</li>
+<li>We can safely provide a set of default for all the configurations of the tightly coupled
+pallets.</li>
+<li>We can also express constrains on the configurations as constraints on the associated types,
+as explained above.</li>
+</ul>
+<h4 id="example-flite_system"><a class="doc-anchor" href="#example-flite_system">§</a>Example: <code>flite_system</code></h4>
+<p>With the above context in mind, let’s look and analyze <a href="flite_system/trait.Config.html" title="trait flite::flite_system::Config"><code>flite_system::Config</code></a>, which puts all
+of the above practices in one place.</p>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="attr">#[pallet::config]
+</span><span class="kw">pub trait </span>Config:
+	polkadot_sdk::frame_system::Config&lt;AccountId = types::AccountId&gt;
+	+ psdk::pallet_timestamp::Config
+	+ psdk::pallet_aura::Config
+	+ psdk::pallet_balances::Config&lt;
+		Balance = types::Balance,
+		RuntimeHoldReason = u8,
+		RuntimeFreezeReason = u8,
+	&gt;
+{
+}</code></pre></div>
+<p>Notice how <code>flite</code> is constraining the <code>AccountId</code> to be <a href="types/type.AccountId.html" title="type flite::types::AccountId"><code>types::AccountId</code></a>, the <code>Balance</code> to
+be <a href="types/type.Balance.html" title="type flite::types::Balance"><code>types::Balance</code></a>, and even more advance things like <code>HoldReason</code>.</p>
+<p>This means <code>flite_system</code> can only be used in a runtime with such constants. More nicely, a
+pallet using <code>flite_system</code> can already be written with these concrete types in mind.</p>
+<h4 id="simplifying-a-new-pallet"><a class="doc-anchor" href="#simplifying-a-new-pallet">§</a>Simplifying a New Pallet</h4>
+<p>Let’s see how now we can simplify the process of writing a new pallet using that relies on
+<a href="flite_system/index.html" title="mod flite::flite_system"><code>flite_system</code></a>.</p>
+<p>First, this pallet is indeed declared as such:</p>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="attr">#[pallet::config]
+#[pallet::disable_frame_system_supertrait_check]
+</span><span class="kw">pub trait </span>Config: flite::flite_system::Config {}</code></pre></div>
+<p>This then allows the pallet to be written with concrete types in mind:</p>
+<h5 id="currency-simplification"><a class="doc-anchor" href="#currency-simplification">§</a>Currency Simplification</h5>
+<p>We also present two ideas on how a simpler currency system can be built on top of the above
+abstractions. These are discussed in <a href="native_currency/index.html" title="mod flite::native_currency"><code>native_currency</code></a>.</p>
+<p>First, a pallet can import and use FRAME’s currency abstractions in the <em>old school</em> way. That
+is, pull the currency abstractions via <code>trait Config</code>:</p>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="attr">#[pallet::config]
+#[pallet::disable_frame_system_supertrait_check]
+</span><span class="kw">pub trait </span>Config: flite::flite_system::Config {
+	<span class="kw">type </span>AdvanceCurrency: flite::native_currency::Advance;
+}</code></pre></div>
+<p>And then use them as such:</p>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">pub fn </span>advance_currency_usage(
+	origin: OriginFor&lt;T&gt;,
+	to: flite::types::AccountId,
+	amount: flite::types::Balance,
+) -&gt; DispatchResult {
+	<span class="kw">use </span>frame::traits::fungible::<span class="kw-2">*</span>;
+	<span class="kw">let </span>who: flite::types::AccountId = ensure_signed(origin)<span class="question-mark">?</span>;
+
+	<span class="comment">// read
+	</span><span class="kw">let _</span>: flite::types::Balance = T::AdvanceCurrency::balance(<span class="kw-2">&amp;</span>who);
+	<span class="comment">// transfer
+	</span>T::AdvanceCurrency::transfer(
+		<span class="kw-2">&amp;</span>who,
+		<span class="kw-2">&amp;</span>to,
+		amount,
+		frame::traits::tokens::Preservation::Expendable,
+	)<span class="question-mark">?</span>;
+	<span class="comment">// 'hold'.
+	</span>T::AdvanceCurrency::hold(<span class="kw-2">&amp;</span><span class="number">0u8</span>, <span class="kw-2">&amp;</span>who, amount)<span class="question-mark">?</span>;
+
+	<span class="prelude-val">Ok</span>(())
+}</code></pre></div>
+<p>Note that this already comes with some improvements. This code so far looks just like the normal
+FRAME code, except there is no trace of the notorious <code>BalanceOf</code> type. Moreover, there is no
+special consideration needed for <code>RuntimeHoldReason</code> conversion. <code>RuntimeHoldReason</code> is simply a
+<code>u8</code>. All of this is because <a href="flite_system/index.html" title="mod flite::flite_system"><code>flite_system</code></a> has already constrained these types.</p>
+<p><code>flite</code> can also provide even simpler, even more opinionated currency abstractions, such as
+<a href="native_currency/struct.Simple.html" title="struct flite::native_currency::Simple"><code>native_currency::Simple</code></a>. The usage of such a simple abstraction can look like:</p>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">pub fn </span>simple_currency_usage(
+	origin: OriginFor&lt;T&gt;,
+	to: flite::types::AccountId,
+	amount: u128, <span class="comment">// aka. flite::types::Balance
+</span>) -&gt; DispatchResult {
+	<span class="kw">let </span>who: flite::types::AccountId = ensure_signed(origin)<span class="question-mark">?</span>;
+
+	<span class="comment">// read. Yes, the balance types is just `u128`
+	</span><span class="kw">let _</span>: u128 = flite::native_currency::Simple::&lt;T&gt;::balance_of(<span class="kw-2">&amp;</span>who);
+	<span class="comment">// transfer
+	</span>flite::native_currency::Simple::&lt;T&gt;::transfer(<span class="kw-2">&amp;</span>who, <span class="kw-2">&amp;</span>to, amount)<span class="question-mark">?</span>;
+	<span class="comment">// 'lock', which is an abstraction over holding with more opinions
+	</span>flite::native_currency::Simple::&lt;T&gt;::lock(<span class="kw-2">&amp;</span>who, amount)<span class="question-mark">?</span>;
+
+	<span class="prelude-val">Ok</span>(())
+}</code></pre></div>
+<h4 id="a-step-further-defaults-for-tightly-coupled-pallets"><a class="doc-anchor" href="#a-step-further-defaults-for-tightly-coupled-pallets">§</a>A Step Further: Defaults For Tightly Coupled Pallets</h4>
+<p>As the final step, <code>flite</code> could also simplify the process of runtime configuration, if it could
+provide defaults for all the pallets that it is tightly coupling itself with.</p>
+<p>All of these defaults can be audited and guaranteed to work nicely together, as long as none of
+them is tweaked by the end user. If a mild degree of flexibility is needed, we instead provide a
+separate, higher level trait that can be used to parameterize all other pallets with.</p>
+<p>In <a href="default_configs/index.html" title="mod flite::default_configs"><code>default_configs</code></a>, we provide one such example. The end-user entry-point is merely
+<a href="default_configs/trait.FliteConfigurations.html" title="trait flite::default_configs::FliteConfigurations"><code>default_configs::FliteConfigurations</code></a>. This is one trait that we expect the end user to
+parameterize for us. Instead of a lot of the technical nitty-gritty details that
+[<code>polkadot_sdk::frame_system</code>] exposes, this trait is meant to be very easy to comprehend to a
+novice developer.</p>
+<p>Then, based on <code>FliteConfigurations</code>, we provide defaults for each pallet’s <code>Config</code> traits:</p>
+<ul>
+<li><a href="default_configs/struct.FliteFrameSystem.html" title="struct flite::default_configs::FliteFrameSystem"><code>default_configs::FliteFrameSystem</code></a></li>
+<li><a href="default_configs/struct.FliteTimestamp.html" title="struct flite::default_configs::FliteTimestamp"><code>default_configs::FliteTimestamp</code></a></li>
+<li><a href="default_configs/struct.FliteAura.html" title="struct flite::default_configs::FliteAura"><code>default_configs::FliteAura</code></a></li>
+<li><a href="default_configs/struct.FliteBalances.html" title="struct flite::default_configs::FliteBalances"><code>default_configs::FliteBalances</code></a></li>
+</ul>
+<blockquote>
+<p>These defaults are provided in a format that should be compatible with <code>FRAME</code>’s native
+<code>derive_impl</code> (or the underlying <code>macro_magic</code> crate), yet this part is not yet working in
+this demo and therefore the runtime file contains a lot of boilerplate.</p>
+</blockquote>
+<p>Notice how all of these types are generic over <code>F</code>, which is a <a href="default_configs/trait.FliteConfigurations.html" title="trait flite::default_configs::FliteConfigurations"><code>FliteConfigurations</code></a>.</p>
+<p>This technique allows us to retain some degree fo flexibility, and abstract over complicated
+relationships. For example, (almost) all runtimes have
+[<code>polkadot_sdk::pallet_timestamp::Config::MinimumPeriod</code>] set to half of
+[<code>polkadot_sdk::pallet_aura::Config::SlotDuration</code>]. We abstract over this needless complication
+by providing one simple configuration to the user <a href="default_configs/trait.FliteConfigurations.html#associatedtype.BlockTime" title="associated type flite::default_configs::FliteConfigurations::BlockTime"><code>FliteConfigurations::BlockTime</code></a> (which is
+what we mean by <code>SlotDuration</code>). Under the hood, we take care of providing the correct defaults
+to each of the aforementioned pallets.</p>
+<h3 id="dependencies"><a class="doc-anchor" href="#dependencies">§</a>Dependencies</h3>
+<p>This work is dependent on the following PR(s)</p>
+<ul>
+<li><a href="https://github.com/paritytech/polkadot-sdk/pull/5246">https://github.com/paritytech/polkadot-sdk/pull/5246</a></li>
+</ul>
+<h3 id="further-ideas"><a class="doc-anchor" href="#further-ideas">§</a>Further Ideas</h3>
+<ul>
+<li>Create abstractions over [<code>polkadot_sdk::pallet_assets</code>], and the
+[<code>polkadot_sdk::polkadot_sdk_frame::traits::fungibles</code>] as well, for example hardcoding the
+<code>AssetId</code> to be <code>u32</code>.</li>
+<li>More pallets that are reasonable always needed: <code>authorship</code>, <code>session</code>, etc.</li>
+<li><code>flite</code>, and <code>flite-parachain</code>. If one has to be chosen, we care more about parachain.</li>
+<li><code>flite</code> can provide a single set of weights that are safe to use in <a href="weights/index.html" title="mod flite::weights"><code>weights</code></a>.</li>
+<li><a href="flite_system/struct.Pallet.html" title="struct flite::flite_system::Pallet"><code>flite_system::Pallet</code></a> can provide further standalone helper functions, such as
+<a href="flite_system/struct.Pallet.html#method.block_author" title="associated function flite::flite_system::Pallet::block_author"><code>flite_system::Pallet::block_author</code></a>.</li>
+<li><code>integrity_test</code> in <code>flite_system</code> is super important, as it is the one place where we can
+check the configuration of all pallets. For example, the relationship between <code>BlockTime</code>,
+<code>SlotDuration</code> and <code>MinimumPeriod</code> can be expressed here. The ability to check these within a
+pallet is yet another benefit of tight coupling.</li>
+</ul>
+<h3 id="reflection"><a class="doc-anchor" href="#reflection">§</a>Reflection</h3>
+<ul>
+<li>Everything here is backwards compatible, and a developer who is advance can always fallback
+into the ADVANCE-FRAME-land.</li>
+</ul>
+</div></details><h2 id="reexports" class="section-header">Re-exports<a href="#reexports" class="anchor">§</a></h2><ul class="item-table"><li><div class="item-name" id="reexport.FliteConfigurations"><code>pub use default_configs::<a class="trait" href="default_configs/trait.FliteConfigurations.html" title="trait flite::default_configs::FliteConfigurations">FliteConfigurations</a>;</code></div></li></ul><h2 id="modules" class="section-header">Modules<a href="#modules" class="anchor">§</a></h2><ul class="item-table"><li><div class="item-name"><a class="mod" href="default_configs/index.html" title="mod flite::default_configs">default_configs</a></div><div class="desc docblock-short">Default configurations for the pallets that <a href="flite_system/trait.Config.html" title="trait flite::flite_system::Config"><code>flite_system::Config</code></a> is tightly coupled with.</div></li><li><div class="item-name"><a class="mod" href="flite_system/index.html" title="mod flite::flite_system">flite_system</a></div><div class="desc docblock-short">The <code>pallet</code> module in each FRAME pallet hosts the most important items needed
+to construct this pallet.</div></li><li><div class="item-name"><a class="mod" href="native_currency/index.html" title="mod flite::native_currency">native_currency</a></div></li><li><div class="item-name"><a class="mod" href="types/index.html" title="mod flite::types">types</a></div><div class="desc docblock-short">The opinionated types that we dictate.</div></li><li><div class="item-name"><a class="mod" href="weights/index.html" title="mod flite::weights">weights</a></div><div class="desc docblock-short">Flite provides a set of weights for its users. Technically, this should be something like a
+well-benchmarked, audited set of weights that are safe to use.</div></li></ul></section></div></main></body></html>

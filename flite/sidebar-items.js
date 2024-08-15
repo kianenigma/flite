@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["default_configs","flite_system","native_currency","types","weights"]};

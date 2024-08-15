@@ -1,0 +1,3 @@
+(function() {var implementors = {
+"runtime":[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.80.1/core/convert/trait.TryFrom.html\" title=\"trait core::convert::TryFrom\">TryFrom</a>&lt;<a class=\"enum\" href=\"runtime/enum.OriginCaller.html\" title=\"enum runtime::OriginCaller\">OriginCaller</a>&gt; for Origin&lt;<a class=\"struct\" href=\"runtime/struct.Runtime.html\" title=\"struct runtime::Runtime\">Runtime</a>&gt;"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

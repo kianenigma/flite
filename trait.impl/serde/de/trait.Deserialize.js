@@ -1,0 +1,3 @@
+(function() {var implementors = {
+"runtime":[["impl&lt;'de&gt; <a class=\"trait\" href=\"https://docs.rs/serde/1.0.207/serde/de/trait.Deserialize.html\" title=\"trait serde::de::Deserialize\">Deserialize</a>&lt;'de&gt; for <a class=\"struct\" href=\"runtime/struct.RuntimeGenesisConfig.html\" title=\"struct runtime::RuntimeGenesisConfig\">RuntimeGenesisConfig</a>"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
