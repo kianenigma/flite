@@ -1,0 +1,1 @@
+searchState.loadedDescShard("pallet_offences_benchmarking", 0, "Offences pallet benchmarking.")

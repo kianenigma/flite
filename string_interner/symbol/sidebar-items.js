@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["SymbolU16","SymbolU32","SymbolUsize"],"trait":["Symbol"],"type":["DefaultSymbol"]};

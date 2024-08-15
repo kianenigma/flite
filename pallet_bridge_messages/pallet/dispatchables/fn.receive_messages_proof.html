@@ -1,0 +1,35 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Receive messages proof from bridged chain."><title>receive_messages_proof in pallet_bridge_messages::pallet::dispatchables - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-b25d77b18a16a9a4.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="pallet_bridge_messages" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0-nightly (13a52890d 2024-08-14)" data-channel="nightly" data-search-js="search-ef54e092fea9c776.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../../static.files/main-cb0df477c2d67d00.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc fn"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../../pallet_bridge_messages/index.html">pallet_<wbr>bridge_<wbr>messages</a><span class="version">0.7.0</span></h2></div><div class="sidebar-elems"><h2><a href="index.html">In pallet_<wbr>bridge_<wbr>messages::<wbr>pallet::<wbr>dispatchables</a></h2></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Function <a href="../../index.html">pallet_bridge_messages</a>::<wbr><a href="../index.html">pallet</a>::<wbr><a href="index.html">dispatchables</a>::<wbr><a class="fn" href="#">receive_messages_proof</a><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><span class="out-of-band"><a class="src" href="../../../src/pallet_bridge_messages/lib.rs.html#94">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><pre class="rust item-decl"><code>pub fn receive_messages_proof&lt;T: <a class="trait" href="../trait.Config.html" title="trait pallet_bridge_messages::pallet::Config">Config</a>&lt;I&gt;, I: 'static&gt;(
+    relayer_id_at_bridged_chain: <a class="type" href="../../../bp_runtime/chain/type.AccountIdOf.html" title="type bp_runtime::chain::AccountIdOf">AccountIdOf</a>&lt;<a class="type" href="../type.BridgedChainOf.html" title="type pallet_bridge_messages::pallet::BridgedChainOf">BridgedChainOf</a>&lt;T, I&gt;&gt;,
+    proof: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;<a class="struct" href="../../../bp_messages/target_chain/struct.FromBridgedChainMessagesProof.html" title="struct bp_messages::target_chain::FromBridgedChainMessagesProof">FromBridgedChainMessagesProof</a>&lt;<a class="type" href="../../../bp_runtime/chain/type.HashOf.html" title="type bp_runtime::chain::HashOf">HashOf</a>&lt;<a class="type" href="../type.BridgedChainOf.html" title="type pallet_bridge_messages::pallet::BridgedChainOf">BridgedChainOf</a>&lt;T, I&gt;&gt;&gt;&gt;,
+    messages_count: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    dispatch_weight: <a class="struct" href="../../../sp_weights/weight_v2/struct.Weight.html" title="struct sp_weights::weight_v2::Weight">Weight</a>,
+)</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Receive messages proof from bridged chain.</p>
+<p>The weight of the call assumes that the transaction always brings outbound lane
+state update. Because of that, the submitter (relayer) has no benefit of not including
+this data in the transaction, so reward confirmations lags should be minimal.</p>
+<p>The call fails if:</p>
+<ul>
+<li>
+<p>the pallet is halted;</p>
+</li>
+<li>
+<p>the call origin is not <code>Signed(_)</code>;</p>
+</li>
+<li>
+<p>there are too many messages in the proof;</p>
+</li>
+<li>
+<p>the proof verification procedure returns an error - e.g. because header used to craft
+proof is not imported by the associated finality pallet;</p>
+</li>
+<li>
+<p>the <code>dispatch_weight</code> argument is not sufficient to dispatch all bundled messages.</p>
+</li>
+</ul>
+<p>The call may succeed, but some messages may not be delivered e.g. if they are not fit
+into the unrewarded relayers vector.</p>
+<h2 id="warning-doc-only"><a class="doc-anchor" href="#warning-doc-only">§</a>Warning: Doc-Only</h2>
+<p>This function is an automatically generated, and is doc-only, uncallable
+stub. See the real version in
+<a href="../struct.Pallet.html#method.receive_messages_proof" title="associated function pallet_bridge_messages::pallet::Pallet::receive_messages_proof"><code>Pallet::receive_messages_proof</code></a>.</p>
+</div></details></section></div></main></body></html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Non-Interactive Staking (NIS) Pallet"><title>pallet_nis - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-b25d77b18a16a9a4.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="pallet_nis" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0-nightly (13a52890d 2024-08-14)" data-channel="nightly" data-search-js="search-ef54e092fea9c776.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-cb0df477c2d67d00.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../pallet_nis/index.html">pallet_<wbr>nis</a><span class="version">28.0.0</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section><ul class="block"><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#traits">Traits</a></li></ul></section></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Crate <a class="mod" href="#">pallet_nis</a><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><span class="out-of-band"><a class="src" href="../src/pallet_nis/lib.rs.html#18-1165">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="non-interactive-staking-nis-pallet"><a class="doc-anchor" href="#non-interactive-staking-nis-pallet">§</a>Non-Interactive Staking (NIS) Pallet</h2>
+<p>A pallet allowing accounts to auction for being frozen and receive open-ended
+inflation-protection in return.</p>
+<h3 id="overview"><a class="doc-anchor" href="#overview">§</a>Overview</h3>
+<p>Lock up tokens, for at least as long as you offer, and be free from both inflation and
+intermediate reward or exchange until the tokens become unlocked.</p>
+<h3 id="design"><a class="doc-anchor" href="#design">§</a>Design</h3>
+<p>Queues for each of <code>1..QueueCount</code> periods, given in blocks (<code>Period</code>). Queues are limited in
+size to something sensible, <code>MaxQueueLen</code>. A secondary storage item with <code>QueueCount</code> x <code>u32</code>
+elements with the number of items in each queue.</p>
+<p>Queues are split into two parts. The first part is a priority queue based on bid size. The
+second part is just a FIFO (the size of the second part is set with <code>FifoQueueLen</code>). Items are
+always prepended so that removal is always O(1) since removal often happens many times under a
+single weighed function (<code>on_initialize</code>) yet placing bids only ever happens once per weighed
+function (<code>place_bid</code>). If the queue has a priority portion, then it remains sorted in order of
+bid size so that smaller bids fall off as it gets too large.</p>
+<p>Account may enqueue a balance with some number of <code>Period</code>s lock up, up to a maximum of
+<code>QueueCount</code>. The balance gets reserved. There’s a minimum of <code>MinBid</code> to avoid dust.</p>
+<p>Until your bid is consolidated and you receive a receipt, you can retract it instantly and the
+funds are unreserved.</p>
+<p>There’s a target proportion of effective total issuance (i.e. accounting for existing receipts)
+which the pallet attempts to have frozen at any one time. It will likely be gradually increased
+over time by governance.</p>
+<p>As the proportion of effective total issuance represented by outstanding receipts drops below
+<code>FrozenFraction</code>, then bids are taken from queues and consolidated into receipts, with the queue
+of the greatest period taking priority. If the item in the queue’s locked amount is greater than
+the amount remaining to achieve <code>FrozenFraction</code>, then it is split up into multiple bids and
+becomes partially consolidated.</p>
+<p>With the consolidation of a bid, the bid amount is taken from the owner and a receipt is issued.
+The receipt records the proportion of the bid compared to effective total issuance at the time
+of consolidation. The receipt has two independent elements: a “main” non-fungible receipt and
+a second set of fungible “counterpart” tokens. The accounting functionality of the latter must
+be provided through the <code>Counterpart</code> trait item. The main non-fungible receipt may have its
+owner transferred through the pallet’s implementation of <code>nonfungible::Transfer</code>.</p>
+<p>A later <code>thaw</code> function may be called in order to reduce the recorded proportion or entirely
+remove the receipt in return for the appropriate proportion of the effective total issuance.
+This may happen no earlier than queue’s period after the point at which the receipt was issued.
+The call must be made by the owner of both the “main” non-fungible receipt and the appropriate
+amount of counterpart tokens.</p>
+<p><code>NoCounterpart</code> may be provided as an implementation for the counterpart token system in which
+case they are completely disregarded from the thawing logic.</p>
+<h3 id="terms"><a class="doc-anchor" href="#terms">§</a>Terms</h3>
+<ul>
+<li><em>Effective total issuance</em>: The total issuance of balances in the system, equal to the active
+issuance plus the value of all outstanding receipts, less <code>IgnoredIssuance</code>.</li>
+</ul>
+</div></details><h2 id="reexports" class="section-header">Re-exports<a href="#reexports" class="anchor">§</a></h2><ul class="item-table"><li><div class="item-name"><code>pub use <a class="mod" href="pallet/index.html" title="mod pallet_nis::pallet">pallet</a>::*;</code></div></li></ul><h2 id="modules" class="section-header">Modules<a href="#modules" class="anchor">§</a></h2><ul class="item-table"><li><div class="item-name"><a class="mod" href="pallet/index.html" title="mod pallet_nis::pallet">pallet</a></div><div class="desc docblock-short">The <code>pallet</code> module in each FRAME pallet hosts the most important items needed
+to construct this pallet.</div></li><li><div class="item-name"><a class="mod" href="weights/index.html" title="mod pallet_nis::weights">weights</a></div><div class="desc docblock-short">Autogenerated weights for <code>pallet_nis</code></div></li></ul><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><ul class="item-table"><li><div class="item-name"><a class="struct" href="struct.NoCounterpart.html" title="struct pallet_nis::NoCounterpart">NoCounterpart</a></div></li><li><div class="item-name"><a class="struct" href="struct.WithMaximumOf.html" title="struct pallet_nis::WithMaximumOf">With<wbr>Maximum<wbr>Of</a></div></li></ul><h2 id="traits" class="section-header">Traits<a href="#traits" class="anchor">§</a></h2><ul class="item-table"><li><div class="item-name"><a class="trait" href="trait.BenchmarkSetup.html" title="trait pallet_nis::BenchmarkSetup">Benchmark<wbr>Setup</a></div><div class="desc docblock-short">Setup the empty genesis state for benchmarking.</div></li></ul></section></div></main></body></html>

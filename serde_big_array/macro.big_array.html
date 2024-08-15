@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Big array macro"><title>big_array in serde_big_array - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-b25d77b18a16a9a4.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="serde_big_array" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0-nightly (13a52890d 2024-08-14)" data-channel="nightly" data-search-js="search-ef54e092fea9c776.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../static.files/storage-118b08c4c78b968e.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-cb0df477c2d67d00.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc macro"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../serde_big_array/index.html">serde_<wbr>big_<wbr>array</a><span class="version">0.3.3</span></h2></div><div class="sidebar-elems"></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Macro <a href="index.html">serde_big_array</a>::<wbr><a class="macro" href="#">big_array</a><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><span class="out-of-band"><a class="src" href="../src/serde_big_array/lib.rs.html#146-228">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><pre class="rust item-decl"><span class="macro">macro_rules!</span> big_array {
+    (<span class="macro-nonterminal">$name</span>:ident; $(<span class="macro-nonterminal">$len</span>:expr),+ $(,)<span class="question-mark">?</span>) =&gt; { ... };
+    (<span class="macro-nonterminal">$name</span>:ident; + $(<span class="macro-nonterminal">$len</span>:expr),* $(,)<span class="question-mark">?</span>) =&gt; { ... };
+    (<span class="macro-nonterminal">$name</span>:ident;) =&gt; { ... };
+}</pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Big array macro</p>
+<p>This is the main macro of this crate.
+Invoking it creates a trait that can be used together with a <code>#[serde(with = "TraitName")]</code> like attribute
+on an array that’s a member of a struct you want to (de-) serialize.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="macro">big_array!</span> { BigArray; }
+
+<span class="attr">#[derive(Serialize, Deserialize)]
+</span><span class="kw">struct </span>S {
+    <span class="attr">#[serde(with = <span class="string">"BigArray"</span>)]
+    </span>arr: [u8; <span class="number">128</span>],
+}</code></pre></div>
+<p>The name of the added trait is your choice.</p>
+<p>The macro doesn’t automatically implement the trait for all possible array lengths.
+Instead, the trait is implemented for a pre-specified set of numbers.
+The default way to invoke the macro is by specifying the name only, like:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="macro">big_array!</span> {
+    BigArray;
+}</code></pre></div>
+<p>Then, the trait will be implemented for a pre-defined set of interesting array lengths.
+Currently, the numbers are:</p>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="number">40</span>, <span class="number">48</span>, <span class="number">50</span>, <span class="number">56</span>, <span class="number">64</span>, <span class="number">72</span>, <span class="number">96</span>, <span class="number">100</span>, <span class="number">128</span>, <span class="number">160</span>, <span class="number">192</span>, <span class="number">200</span>, <span class="number">224</span>, <span class="number">256</span>, <span class="number">384</span>, <span class="number">512</span>,
+<span class="number">768</span>, <span class="number">1024</span>, <span class="number">2048</span>, <span class="number">4096</span>, <span class="number">8192</span>, <span class="number">16384</span>, <span class="number">32768</span>, <span class="number">65536</span>,</code></pre></div>
+<p>These are the same numbers that the <code>arrayvec</code> crate uses as well,
+and should cover most places this macro is used.</p>
+<p>If this default setting is not suiting your use case, the macro has you covered as well.
+You can specify a custom set of numbers by using the second way to invoke the macro:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="macro">big_array!</span> {
+    BigArray;
+    +<span class="number">42</span>, <span class="number">300</span>, <span class="number">1234</span>, <span class="number">99999</span>,
+}
+
+<span class="attr">#[derive(Serialize, Deserialize)]
+</span><span class="kw">struct </span>S {
+    <span class="attr">#[serde(with = <span class="string">"BigArray"</span>)]
+    </span>arr_a: [u8; <span class="number">300</span>],
+    <span class="attr">#[serde(with = <span class="string">"BigArray"</span>)]
+    </span>arr_b: [u8; <span class="number">42</span>],
+}</code></pre></div>
+<p>If the <code>+</code> is specified like in the example above, the trait is also implemented for the
+pre-defined set of array lengths. If omitted, it’s implemented for the specified numbers only.</p>
+</div></details></section></div></main></body></html>

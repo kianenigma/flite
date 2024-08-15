@@ -1,0 +1,1 @@
+searchState.loadedDescShard("sp_crypto_ec_utils", 0, "This crate offers elliptic curves types which are …")

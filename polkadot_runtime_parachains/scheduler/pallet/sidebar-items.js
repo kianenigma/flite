@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Call","CoreOccupied","FreedReason"],"mod":["dispatchables","storage_types"],"struct":["Pallet","ParasEntry"],"trait":["Config"],"type":["AvailabilityCores","ClaimQueue","CoreOccupiedType","Module","ParasEntryType","SessionStartBlock","ValidatorGroups"]};

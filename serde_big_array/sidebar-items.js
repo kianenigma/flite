@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"macro":["big_array"],"trait":["BigArray"]};

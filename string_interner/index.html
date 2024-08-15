@@ -1,0 +1,78 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Caches strings efficiently, with minimal memory footprint and associates them with unique symbols. These symbols allow constant time comparisons and look-ups to the underlying interned strings."><title>string_interner - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-b25d77b18a16a9a4.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="string_interner" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0-nightly (13a52890d 2024-08-14)" data-channel="nightly" data-search-js="search-ef54e092fea9c776.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-cb0df477c2d67d00.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../string_interner/index.html">string_<wbr>interner</a><span class="version">0.17.0</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section><ul class="block"><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#traits">Traits</a></li><li><a href="#types">Type Aliases</a></li></ul></section></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Crate <a class="mod" href="#">string_interner</a><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><span class="out-of-band"><a class="src" href="../src/string_interner/lib.rs.html#1-149">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Caches strings efficiently, with minimal memory footprint and associates them with unique symbols.
+These symbols allow constant time comparisons and look-ups to the underlying interned strings.</p>
+<h4 id="example-interning--symbols"><a class="doc-anchor" href="#example-interning--symbols">§</a>Example: Interning &amp; Symbols</h4>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>string_interner::StringInterner;
+
+<span class="kw">let </span><span class="kw-2">mut </span>interner = StringInterner::default();
+<span class="kw">let </span>sym0 = interner.get_or_intern(<span class="string">"Elephant"</span>);
+<span class="kw">let </span>sym1 = interner.get_or_intern(<span class="string">"Tiger"</span>);
+<span class="kw">let </span>sym2 = interner.get_or_intern(<span class="string">"Horse"</span>);
+<span class="kw">let </span>sym3 = interner.get_or_intern(<span class="string">"Tiger"</span>);
+<span class="macro">assert_ne!</span>(sym0, sym1);
+<span class="macro">assert_ne!</span>(sym0, sym2);
+<span class="macro">assert_ne!</span>(sym1, sym2);
+<span class="macro">assert_eq!</span>(sym1, sym3); <span class="comment">// same!</span></code></pre></div>
+<h4 id="example-creation-by-fromiterator"><a class="doc-anchor" href="#example-creation-by-fromiterator">§</a>Example: Creation by <code>FromIterator</code></h4>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>interner = [<span class="string">"Elephant"</span>, <span class="string">"Tiger"</span>, <span class="string">"Horse"</span>, <span class="string">"Tiger"</span>]
+    .into_iter()
+    .collect::&lt;DefaultStringInterner&gt;();</code></pre></div>
+<h4 id="example-look-up"><a class="doc-anchor" href="#example-look-up">§</a>Example: Look-up</h4>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span><span class="kw-2">mut </span>interner = StringInterner::default();
+<span class="kw">let </span>sym = interner.get_or_intern(<span class="string">"Banana"</span>);
+<span class="macro">assert_eq!</span>(interner.resolve(sym), <span class="prelude-val">Some</span>(<span class="string">"Banana"</span>));</code></pre></div>
+<h4 id="example-iteration"><a class="doc-anchor" href="#example-iteration">§</a>Example: Iteration</h4>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>interner = &lt;DefaultStringInterner&gt;::from_iter([<span class="string">"Earth"</span>, <span class="string">"Water"</span>, <span class="string">"Fire"</span>, <span class="string">"Air"</span>]);
+<span class="kw">for </span>(sym, str) <span class="kw">in </span><span class="kw-2">&amp;</span>interner {
+    <span class="macro">println!</span>(<span class="string">"{} = {}"</span>, sym.to_usize(), str);
+}</code></pre></div>
+<h4 id="example-use-different-backend"><a class="doc-anchor" href="#example-use-different-backend">§</a>Example: Use Different Backend</h4>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>string_interner::backend::BufferBackend;
+<span class="kw">type </span>Interner = StringInterner&lt;BufferBackend&gt;;
+<span class="kw">let </span><span class="kw-2">mut </span>interner = Interner::new();
+<span class="kw">let </span>sym1 = interner.get_or_intern(<span class="string">"Tiger"</span>);
+<span class="kw">let </span>sym2 = interner.get_or_intern(<span class="string">"Horse"</span>);
+<span class="kw">let </span>sym3 = interner.get_or_intern(<span class="string">"Tiger"</span>);
+<span class="macro">assert_ne!</span>(sym1, sym2);
+<span class="macro">assert_eq!</span>(sym1, sym3); <span class="comment">// same!</span></code></pre></div>
+<h4 id="example-use-different-backend--symbol"><a class="doc-anchor" href="#example-use-different-backend--symbol">§</a>Example: Use Different Backend &amp; Symbol</h4>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>string_interner::{backend::BucketBackend, symbol::SymbolU16};
+<span class="kw">type </span>Interner = StringInterner&lt;BucketBackend&lt;SymbolU16&gt;&gt;;
+<span class="kw">let </span><span class="kw-2">mut </span>interner = Interner::new();
+<span class="kw">let </span>sym1 = interner.get_or_intern(<span class="string">"Tiger"</span>);
+<span class="kw">let </span>sym2 = interner.get_or_intern(<span class="string">"Horse"</span>);
+<span class="kw">let </span>sym3 = interner.get_or_intern(<span class="string">"Tiger"</span>);
+<span class="macro">assert_ne!</span>(sym1, sym2);
+<span class="macro">assert_eq!</span>(sym1, sym3); <span class="comment">// same!</span></code></pre></div>
+<h3 id="backends"><a class="doc-anchor" href="#backends">§</a>Backends</h3>
+<p>The <code>string_interner</code> crate provides different backends with different strengths.
+The table below compactly shows when to use which backend according to the following
+performance characteristics.</p>
+<ul>
+<li><strong>Fill:</strong> Efficiency of filling an empty string interner.</li>
+<li><strong>Resolve:</strong> Efficiency of resolving a symbol of an interned string.</li>
+<li><strong>Allocations:</strong> The number of allocations performed by the backend.</li>
+<li><strong>Footprint:</strong> The total heap memory consumed by the backend.</li>
+<li><strong>Contiguous:</strong> True if the returned symbols have contiguous values.</li>
+<li><strong>Iteration:</strong> Efficiency of iterating over the interned strings.</li>
+</ul>
+<div><table><thead><tr><th style="text-align: left"><strong>Property</strong></th><th style="text-align: center"><strong>BucketBackend</strong></th><th style="text-align: center"><strong>StringBackend</strong></th><th style="text-align: center"><strong>BufferBackend</strong></th></tr></thead><tbody>
+<tr><td style="text-align: left"><strong>Fill</strong></td><td style="text-align: center">ok</td><td style="text-align: center">good</td><td style="text-align: center">best</td></tr>
+<tr><td style="text-align: left"><strong>Resolve</strong></td><td style="text-align: center">best</td><td style="text-align: center">good</td><td style="text-align: center">bad</td></tr>
+<tr><td style="text-align: left">Allocations</td><td style="text-align: center">ok</td><td style="text-align: center">good</td><td style="text-align: center">best</td></tr>
+<tr><td style="text-align: left">Footprint</td><td style="text-align: center">ok</td><td style="text-align: center">good</td><td style="text-align: center">best</td></tr>
+<tr><td style="text-align: left">Contiguous</td><td style="text-align: center">yes</td><td style="text-align: center">yes</td><td style="text-align: center">no</td></tr>
+<tr><td style="text-align: left">Iteration</td><td style="text-align: center">best</td><td style="text-align: center">good</td><td style="text-align: center">bad</td></tr>
+</tbody></table>
+</div><h3 id="when-to-use-which-backend"><a class="doc-anchor" href="#when-to-use-which-backend">§</a>When to use which backend?</h3><h4 id="bucket-backend"><a class="doc-anchor" href="#bucket-backend">§</a>Bucket Backend</h4>
+<p>Given the table above the <code>BucketBackend</code> might seem inferior to the other backends.
+However, it allows to efficiently intern <code>&amp;'static str</code> and avoids deallocations.</p>
+<h4 id="string-backend"><a class="doc-anchor" href="#string-backend">§</a>String Backend</h4>
+<p>Overall the <code>StringBackend</code> performs really well and therefore is the backend
+that the <code>StringInterner</code> uses by default.</p>
+<h4 id="buffer-backend"><a class="doc-anchor" href="#buffer-backend">§</a>Buffer Backend</h4>
+<p>The <code>BufferBackend</code> is in some sense similar to the <code>StringBackend</code> on steroids.
+Some operations are even slightly more efficient and it consumes less memory.
+However, all this is at the costs of a less efficient resolution of symbols.
+Note that the symbols generated by the <code>BufferBackend</code> are not contiguous.</p>
+</div></details><h2 id="modules" class="section-header">Modules<a href="#modules" class="anchor">§</a></h2><ul class="item-table"><li><div class="item-name"><a class="mod" href="backend/index.html" title="mod string_interner::backend">backend</a></div><div class="desc docblock-short">Backends for the <a href="struct.StringInterner.html" title="struct string_interner::StringInterner"><code>StringInterner</code></a>.</div></li><li><div class="item-name"><a class="mod" href="symbol/index.html" title="mod string_interner::symbol">symbol</a></div><div class="desc docblock-short">Interfaces and types to be used as symbols for the
+<a href="struct.StringInterner.html" title="struct string_interner::StringInterner"><code>StringInterner</code></a>.</div></li></ul><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><ul class="item-table"><li><div class="item-name"><a class="struct" href="struct.StringInterner.html" title="struct string_interner::StringInterner">String<wbr>Interner</a></div><div class="desc docblock-short">Data structure to intern and resolve strings.</div></li></ul><h2 id="traits" class="section-header">Traits<a href="#traits" class="anchor">§</a></h2><ul class="item-table"><li><div class="item-name"><a class="trait" href="trait.Symbol.html" title="trait string_interner::Symbol">Symbol</a></div><div class="desc docblock-short">Types implementing this trait can be used as symbols for string interners.</div></li></ul><h2 id="types" class="section-header">Type Aliases<a href="#types" class="anchor">§</a></h2><ul class="item-table"><li><div class="item-name"><a class="type" href="type.DefaultBackend.html" title="type string_interner::DefaultBackend">Default<wbr>Backend</a></div><div class="desc docblock-short">The default backend recommended for general use.</div></li><li><div class="item-name"><a class="type" href="type.DefaultHashBuilder.html" title="type string_interner::DefaultHashBuilder">Default<wbr>Hash<wbr>Builder</a></div><div class="desc docblock-short">Default hasher for <code>HashMap</code>.</div></li><li><div class="item-name"><a class="type" href="type.DefaultStringInterner.html" title="type string_interner::DefaultStringInterner">Default<wbr>String<wbr>Interner</a></div><div class="desc docblock-short">A convenience <a href="struct.StringInterner.html" title="struct string_interner::StringInterner"><code>StringInterner</code></a> type based on the <a href="type.DefaultBackend.html" title="type string_interner::DefaultBackend"><code>DefaultBackend</code></a>.</div></li><li><div class="item-name"><a class="type" href="type.DefaultSymbol.html" title="type string_interner::DefaultSymbol">Default<wbr>Symbol</a></div><div class="desc docblock-short">The symbol type that is used by default.</div></li></ul></section></div></main></body></html>

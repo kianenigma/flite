@@ -1,0 +1,1 @@
+searchState.loadedDescShard("bp_xcm_bridge_hub", 0, "Primitives of the xcm-bridge-hub pallet.\nEncoded XCM blob. We expect the bridge messages pallet to …")

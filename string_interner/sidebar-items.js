@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["backend","symbol"],"struct":["StringInterner"],"trait":["Symbol"],"type":["DefaultBackend","DefaultHashBuilder","DefaultStringInterner","DefaultSymbol"]};

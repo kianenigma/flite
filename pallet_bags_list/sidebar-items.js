@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ListError"],"fn":["notional_bag_for"],"macro":["log"],"mod":["example","migrations","pallet","weights"],"struct":["Bag","List","Node"]};

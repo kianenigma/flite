@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="I’m online Pallet"><title>pallet_im_online - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-b25d77b18a16a9a4.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="pallet_im_online" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0-nightly (13a52890d 2024-08-14)" data-channel="nightly" data-search-js="search-ef54e092fea9c776.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-cb0df477c2d67d00.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../pallet_im_online/index.html">pallet_<wbr>im_<wbr>online</a><span class="version">27.0.0</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section><ul class="block"><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#types">Type Aliases</a></li></ul></section></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Crate <a class="mod" href="#">pallet_im_online</a><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><span class="out-of-band"><a class="src" href="../src/pallet_im_online/lib.rs.html#18-863">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="im-online-pallet"><a class="doc-anchor" href="#im-online-pallet">§</a>I’m online Pallet</h2>
+<p>If the local node is a validator (i.e. contains an authority key), this pallet
+gossips a heartbeat transaction with each new session. The heartbeat functions
+as a simple mechanism to signal that the node is online in the current era.</p>
+<p>Received heartbeats are tracked for one era and reset with each new era. The
+pallet exposes two public functions to query if a heartbeat has been received
+in the current era or session.</p>
+<p>The heartbeat is a signed transaction, which was signed using the session key
+and includes the recent best block number of the local validators chain.
+It is submitted as an Unsigned Transaction via off-chain workers.</p>
+<ul>
+<li><a href="pallet/trait.Config.html" title="trait pallet_im_online::pallet::Config"><code>Config</code></a></li>
+<li><a href="pallet/enum.Call.html" title="enum pallet_im_online::pallet::Call"><code>Call</code></a></li>
+<li><a href="pallet/struct.Pallet.html" title="struct pallet_im_online::pallet::Pallet"><code>Pallet</code></a></li>
+</ul>
+<h3 id="interface"><a class="doc-anchor" href="#interface">§</a>Interface</h3><h4 id="public-functions"><a class="doc-anchor" href="#public-functions">§</a>Public Functions</h4>
+<ul>
+<li><code>is_online</code> - True if the validator sent a heartbeat in the current session.</li>
+</ul>
+<h3 id="usage"><a class="doc-anchor" href="#usage">§</a>Usage</h3>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>pallet_im_online::{<span class="self">self </span><span class="kw">as </span>im_online};
+
+<span class="attr">#[frame_support::pallet]
+</span><span class="kw">pub mod </span>pallet {
+	<span class="kw">use super</span>::<span class="kw-2">*</span>;
+	<span class="kw">use </span>frame_support::pallet_prelude::<span class="kw-2">*</span>;
+	<span class="kw">use </span>frame_system::pallet_prelude::<span class="kw-2">*</span>;
+
+	<span class="attr">#[pallet::pallet]
+	</span><span class="kw">pub struct </span>Pallet&lt;T&gt;(<span class="kw">_</span>);
+
+	<span class="attr">#[pallet::config]
+	</span><span class="kw">pub trait </span>Config: frame_system::Config + im_online::Config {}
+
+	<span class="attr">#[pallet::call]
+	</span><span class="kw">impl</span>&lt;T: Config&gt; Pallet&lt;T&gt; {
+		<span class="attr">#[pallet::weight(<span class="number">0</span>)]
+		</span><span class="kw">pub fn </span>is_online(origin: OriginFor&lt;T&gt;, authority_index: u32) -&gt; DispatchResult {
+			<span class="kw">let </span>_sender = ensure_signed(origin)<span class="question-mark">?</span>;
+			<span class="kw">let </span>_is_online = &lt;im_online::Pallet&lt;T&gt;&gt;::is_online(authority_index);
+			<span class="prelude-val">Ok</span>(())
+		}
+	}
+}</code></pre></div>
+<h3 id="dependencies"><a class="doc-anchor" href="#dependencies">§</a>Dependencies</h3>
+<p>This pallet depends on the <a href="../pallet_session/index.html">Session pallet</a>.</p>
+</div></details><h2 id="reexports" class="section-header">Re-exports<a href="#reexports" class="anchor">§</a></h2><ul class="item-table"><li><div class="item-name" id="reexport.WeightInfo"><code>pub use weights::<a class="trait" href="weights/trait.WeightInfo.html" title="trait pallet_im_online::weights::WeightInfo">WeightInfo</a>;</code></div></li><li><div class="item-name"><code>pub use <a class="mod" href="pallet/index.html" title="mod pallet_im_online::pallet">pallet</a>::*;</code></div></li></ul><h2 id="modules" class="section-header">Modules<a href="#modules" class="anchor">§</a></h2><ul class="item-table"><li><div class="item-name"><a class="mod" href="ed25519/index.html" title="mod pallet_im_online::ed25519">ed25519</a></div></li><li><div class="item-name"><a class="mod" href="migration/index.html" title="mod pallet_im_online::migration">migration</a></div><div class="desc docblock-short">Storage migrations for the im-online pallet.</div></li><li><div class="item-name"><a class="mod" href="pallet/index.html" title="mod pallet_im_online::pallet">pallet</a></div><div class="desc docblock-short">The <code>pallet</code> module in each FRAME pallet hosts the most important items needed
+to construct this pallet.</div></li><li><div class="item-name"><a class="mod" href="sr25519/index.html" title="mod pallet_im_online::sr25519">sr25519</a></div></li><li><div class="item-name"><a class="mod" href="weights/index.html" title="mod pallet_im_online::weights">weights</a></div><div class="desc docblock-short">Autogenerated weights for <code>pallet_im_online</code></div></li></ul><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><ul class="item-table"><li><div class="item-name"><a class="struct" href="struct.Heartbeat.html" title="struct pallet_im_online::Heartbeat">Heartbeat</a></div><div class="desc docblock-short">Heartbeat which is sent/received.</div></li><li><div class="item-name"><a class="struct" href="struct.UnresponsivenessOffence.html" title="struct pallet_im_online::UnresponsivenessOffence">Unresponsiveness<wbr>Offence</a></div><div class="desc docblock-short">An offence that is filed if a validator didn’t send a heartbeat message.</div></li></ul><h2 id="types" class="section-header">Type Aliases<a href="#types" class="anchor">§</a></h2><ul class="item-table"><li><div class="item-name"><a class="type" href="type.AuthIndex.html" title="type pallet_im_online::AuthIndex">Auth<wbr>Index</a></div></li><li><div class="item-name"><a class="type" href="type.IdentificationTuple.html" title="type pallet_im_online::IdentificationTuple">Identification<wbr>Tuple</a></div><div class="desc docblock-short">A tuple of (ValidatorId, Identification) where <code>Identification</code> is the full identification of
+<code>ValidatorId</code>.</div></li><li><div class="item-name"><a class="type" href="type.ValidatorId.html" title="type pallet_im_online::ValidatorId">Validator<wbr>Id</a></div><div class="desc docblock-short">A type for representing the validator id in a session.</div></li></ul></section></div></main></body></html>

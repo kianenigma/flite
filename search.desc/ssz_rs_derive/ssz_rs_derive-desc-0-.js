@@ -1,0 +1,1 @@
+searchState.loadedDescShard("ssz_rs_derive", 0, "<code>SimpleSerialize</code> provides a macro to derive SSZ containers …")

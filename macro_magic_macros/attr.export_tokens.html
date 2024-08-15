@@ -1,0 +1,48 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Can be applied to any item. Doing so will make the tokens for this item available for import by the other macros in this crate."><title>export_tokens in macro_magic_macros - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-b25d77b18a16a9a4.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="macro_magic_macros" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0-nightly (13a52890d 2024-08-14)" data-channel="nightly" data-search-js="search-ef54e092fea9c776.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../static.files/storage-118b08c4c78b968e.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-cb0df477c2d67d00.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc attr"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../macro_magic_macros/index.html">macro_<wbr>magic_<wbr>macros</a><span class="version">0.5.1</span></h2></div><div class="sidebar-elems"></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Attribute Macro <a href="index.html">macro_magic_macros</a>::<wbr><a class="attr" href="#">export_tokens</a><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><span class="out-of-band"><a class="src" href="../src/macro_magic_macros/lib.rs.html#67-72">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><pre class="rust item-decl"><code>#[export_tokens]</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Can be applied to any item. Doing so will make the tokens for this item available for
+import by the other macros in this crate.</p>
+<p>An optional argument can be provided specifying an override export name to use instead of
+the regular name of the item, such as <code>#[export_tokens(MyCoolName)]</code> or
+<code>#[export_tokens(some_name)]</code>. Syntactically this name is parsed as a <code>syn::Ident</code> and is
+then normalized by converting to snake_case. Note that because of this, <code>MyCoolName</code> would
+collide with <code>my_cool_name</code>, resulting in a compiler error if these items are being
+exported from the same module.</p>
+<p>Note that some types of items, namely <code>syn::ItemForeignMod</code>, <code>syn::ItemUse</code>,
+<code>syn::ItemImpl</code>, and <code>syn::Item::Verbatim</code>, do not have an inherent concept of a naming
+ident, and so for these items specifying an override name is required or you will get a
+compiler error. This also applies to <code>macro_rules!</code> definitions that do not specify a name.</p>
+<p>Note also that while you can presently <em>attach</em> <code>#[export_tokens]</code> to anything attributes
+can be attached to, some of these items do not exist at the module path level, and
+therefore cannot be accessed. You should only attach <code>#[export_tokens]</code> to items that are
+accessible by path from the location where you wish to use their tokens.</p>
+<h3 id="examples"><a class="doc-anchor" href="#examples">§</a>Examples</h3>
+<p>Applied to a regular function definition:</p>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="attr">#[export_tokens]
+</span><span class="kw">fn </span>my_function() {
+    <span class="macro">println!</span>(<span class="string">"hey"</span>);
+}</code></pre></div>
+<p>Applied to a module:</p>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="attr">#[export_tokens]
+</span><span class="kw">mod </span>my_module() {
+    <span class="kw">fn </span>some_fn() {
+        stuff();
+    }
+}</code></pre></div>
+<p>Applied to an <code>impl</code> requiring an override name:</p>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="attr">#[export_tokens(impl_my_trait_for_my_item)]
+</span><span class="kw">impl </span>MyTrait <span class="kw">for </span>MyItem {
+    <span class="kw">fn </span>something() {
+        do_stuff();
+    }
+}</code></pre></div>
+<p>Applied to a struct, but specifying an override name:</p>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="attr">#[export_tokens(SomeOtherName)]
+</span><span class="kw">struct </span>MyStruct {
+    field: u32,
+}</code></pre></div>
+<p>Previously it was possible to access <code>#[export_tokens]</code> items defined in
+private/inaccessible contexts, however this was removed in 0.4.x.</p>
+</div></details></section></div></main></body></html>

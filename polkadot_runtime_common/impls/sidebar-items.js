@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["VersionedLocatableAsset"],"fn":["relay_era_payout"],"struct":["ContainsParts","DealWithFees","EraPayoutParams","LocatableAssetConverter","ToAuthor","VersionedLocationConverter"]};

@@ -1,0 +1,1 @@
+searchState.loadedDescShard("pallet_nomination_pools_benchmarking", 0, "Benchmarks for the nomination pools coupled with the …")

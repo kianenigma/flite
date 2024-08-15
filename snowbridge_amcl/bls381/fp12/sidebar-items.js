@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["DENSE","ONE","SPARSE","SPARSER","ZERO"],"struct":["FP12"]};

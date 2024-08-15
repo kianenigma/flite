@@ -1,0 +1,32 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Substrate genesis config builder"><title>sp_genesis_builder - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../static.files/rustdoc-b25d77b18a16a9a4.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="sp_genesis_builder" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0-nightly (13a52890d 2024-08-14)" data-channel="nightly" data-search-js="search-ef54e092fea9c776.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-cb0df477c2d67d00.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../sp_genesis_builder/index.html">sp_<wbr>genesis_<wbr>builder</a><span class="version">0.8.0</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section><ul class="block"><li><a href="#traits">Traits</a></li><li><a href="#types">Type Aliases</a></li></ul></section></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Crate <a class="mod" href="#">sp_genesis_builder</a><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><span class="out-of-band"><a class="src" href="../src/sp_genesis_builder/lib.rs.html#18-101">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Substrate genesis config builder</p>
+<p>For FRAME based runtimes, this runtime interface provides means to interact with
+<code>RuntimeGenesisConfig</code>. Runtime provides a default <code>RuntimeGenesisConfig</code> structure in a form of
+the JSON blob.</p>
+<p>For non-FRAME runtimes this interface is intended to build genesis state of the runtime basing
+on some input arbitrary bytes array. This documentation uses term <code>RuntimeGenesisConfig</code>, which
+for non-FRAME runtimes may be understood as the runtime-side entity representing initial runtime
+configuration. The representation of the preset is an arbitrary <code>Vec&lt;u8&gt;</code> and does not
+necessarily have to represent a JSON blob.</p>
+<p>The runtime may provide a number of partial predefined <code>RuntimeGenesisConfig</code> configurations in
+the form of patches which shall be applied on top of the default <code>RuntimeGenesisConfig</code>. The
+patch is a JSON blob, which essentially comprises the list of key-value pairs that are to be
+customized in the default runtime genesis config. These predefined configurations are referred
+to as presets.</p>
+<p>This allows the runtime to provide a number of predefined configs (e.g. for different
+testnets or development) without neccessity to leak the runtime types outside the itself (e.g.
+node or chain-spec related tools).</p>
+<p>This Runtime API allows to interact with <code>RuntimeGenesisConfig</code>, in particular:</p>
+<ul>
+<li>provide the list of available preset names,</li>
+<li>provide a number of named presets of <code>RuntimeGenesisConfig</code>,</li>
+<li>provide a JSON represention of the default <code>RuntimeGenesisConfig</code> (by simply serializing the
+default <code>RuntimeGenesisConfig</code> struct into JSON format),</li>
+<li>deserialize the full <code>RuntimeGenesisConfig</code> from given JSON blob and put the resulting
+<code>RuntimeGenesisConfig</code> structure into the state storage creating the initial runtime’s state.
+Allows to build customized genesis. This operation internally calls <code>GenesisBuild::build</code>
+function for all runtime pallets.</li>
+</ul>
+<p>Providing externalities with an empty storage and putting <code>RuntimeGenesisConfig</code> into storage
+(by calling <code>build_state</code>) allows to construct the raw storage of <code>RuntimeGenesisConfig</code>
+which is the foundation for genesis block.</p>
+</div></details><h2 id="traits" class="section-header">Traits<a href="#traits" class="anchor">§</a></h2><ul class="item-table"><li><div class="item-name"><a class="trait" href="trait.GenesisBuilder.html" title="trait sp_genesis_builder::GenesisBuilder">Genesis<wbr>Builder</a></div><div class="desc docblock-short">API to interact with RuntimeGenesisConfig for the runtime</div></li></ul><h2 id="types" class="section-header">Type Aliases<a href="#types" class="anchor">§</a></h2><ul class="item-table"><li><div class="item-name"><a class="type" href="type.PresetId.html" title="type sp_genesis_builder::PresetId">Preset<wbr>Id</a></div><div class="desc docblock-short">The type representing preset ID.</div></li><li><div class="item-name"><a class="type" href="type.Result.html" title="type sp_genesis_builder::Result">Result</a></div><div class="desc docblock-short">The result type alias, used in build methods. <code>Err</code> contains formatted error message.</div></li></ul></section></div></main></body></html>

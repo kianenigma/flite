@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Call","Error","Event"],"mod":["dispatchables","storage_types"],"struct":["GenesisConfig","Instance1","MaybeOutboundLanesCount","Pallet"],"trait":["Config"],"type":["BridgedChainOf","BridgedHeaderChainOf","InboundLanes","Module","OutboundLanes","OutboundLanesCongestedSignals","OutboundMessages","PalletOperatingMode","PalletOwner","ThisChainOf"]};

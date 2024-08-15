@@ -12,7 +12,7 @@ opinionated, yet simpler variants of FRAME.</p>
 macro enables a pallet to rely on a pallet other than <code>frame_system</code>. This opens the door for a
 team to write an “opinionated flavor” of <code>frame_system</code> for their own use.</p>
 <p>In this crate, we introduce <a href="flite_system/index.html" title="mod flite::flite_system"><code>flite_system</code></a>, an opinionated alternative to
-[<code>polkadot_sdk::frame_system</code>].</p>
+<a href="../frame_system/index.html" title="mod frame_system"><code>polkadot_sdk::frame_system</code></a>.</p>
 <h4 id="constrained-associated-types"><a class="doc-anchor" href="#constrained-associated-types">§</a>Constrained Associated Types</h4>
 <p>Constrained associated types are a powerful and an underrated feature of Rust, and they are
 crucially important for FRAME.</p>
@@ -160,7 +160,7 @@ separate, higher level trait that can be used to parameterize all other pallets 
 <p>In <a href="default_configs/index.html" title="mod flite::default_configs"><code>default_configs</code></a>, we provide one such example. The end-user entry-point is merely
 <a href="default_configs/trait.FliteConfigurations.html" title="trait flite::default_configs::FliteConfigurations"><code>default_configs::FliteConfigurations</code></a>. This is one trait that we expect the end user to
 parameterize for us. Instead of a lot of the technical nitty-gritty details that
-[<code>polkadot_sdk::frame_system</code>] exposes, this trait is meant to be very easy to comprehend to a
+<a href="../frame_system/index.html" title="mod frame_system"><code>polkadot_sdk::frame_system</code></a> exposes, this trait is meant to be very easy to comprehend to a
 novice developer.</p>
 <p>Then, based on <code>FliteConfigurations</code>, we provide defaults for each pallet’s <code>Config</code> traits:</p>
 <ul>
@@ -177,8 +177,8 @@ this demo and therefore the runtime file contains a lot of boilerplate.</p>
 <p>Notice how all of these types are generic over <code>F</code>, which is a <a href="default_configs/trait.FliteConfigurations.html" title="trait flite::default_configs::FliteConfigurations"><code>FliteConfigurations</code></a>.</p>
 <p>This technique allows us to retain some degree fo flexibility, and abstract over complicated
 relationships. For example, (almost) all runtimes have
-[<code>polkadot_sdk::pallet_timestamp::Config::MinimumPeriod</code>] set to half of
-[<code>polkadot_sdk::pallet_aura::Config::SlotDuration</code>]. We abstract over this needless complication
+<a href="../pallet_timestamp/pallet/trait.Config.html#associatedtype.MinimumPeriod" title="associated type pallet_timestamp::pallet::Config::MinimumPeriod"><code>polkadot_sdk::pallet_timestamp::Config::MinimumPeriod</code></a> set to half of
+<a href="../pallet_aura/pallet/trait.Config.html#associatedtype.SlotDuration" title="associated type pallet_aura::pallet::Config::SlotDuration"><code>polkadot_sdk::pallet_aura::Config::SlotDuration</code></a>. We abstract over this needless complication
 by providing one simple configuration to the user <a href="default_configs/trait.FliteConfigurations.html#associatedtype.BlockTime" title="associated type flite::default_configs::FliteConfigurations::BlockTime"><code>FliteConfigurations::BlockTime</code></a> (which is
 what we mean by <code>SlotDuration</code>). Under the hood, we take care of providing the correct defaults
 to each of the aforementioned pallets.</p>
@@ -189,8 +189,8 @@ to each of the aforementioned pallets.</p>
 </ul>
 <h3 id="further-ideas"><a class="doc-anchor" href="#further-ideas">§</a>Further Ideas</h3>
 <ul>
-<li>Create abstractions over [<code>polkadot_sdk::pallet_assets</code>], and the
-[<code>polkadot_sdk::polkadot_sdk_frame::traits::fungibles</code>] as well, for example hardcoding the
+<li>Create abstractions over <a href="../pallet_assets/index.html" title="mod pallet_assets"><code>polkadot_sdk::pallet_assets</code></a>, and the
+<a href="../frame_support/traits/tokens/fungibles/index.html" title="mod frame_support::traits::tokens::fungibles"><code>polkadot_sdk::polkadot_sdk_frame::traits::fungibles</code></a> as well, for example hardcoding the
 <code>AssetId</code> to be <code>u32</code>.</li>
 <li>More pallets that are reasonable always needed: <code>authorship</code>, <code>session</code>, etc.</li>
 <li><code>flite</code>, and <code>flite-parachain</code>. If one has to be chosen, we care more about parachain.</li>
