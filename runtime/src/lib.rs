@@ -163,7 +163,7 @@ impl_runtime_apis! {
 			RuntimeExecutive::execute_block(block)
 		}
 
-		fn initialize_block(header: &Header) -> apis::ExtrinsicInclusionMode {
+		fn initialize_block(header: &Header) -> ExtrinsicInclusionMode {
 			RuntimeExecutive::initialize_block(header)
 		}
 	}
