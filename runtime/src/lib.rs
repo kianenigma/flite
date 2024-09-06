@@ -70,57 +70,10 @@ impl flite::FliteConfigurations for Configuration {
 }
 
 use flite::default_configs::FliteFrameSystem;
+
+#[derive_impl(FliteFrameSystem<Configuration>)]
 impl frame_system::Config for Runtime {
 	type Block = Block;
-
-	// Everything after this should be elided by a macro. I am 100% sure `derive_impl` can be
-	// adapter to do this, or we use directly `macro_magic`, but for now I will just copy-paste it.
-
-	// inject types.
-	type RuntimeEvent = RuntimeEvent;
-	type RuntimeOrigin = RuntimeOrigin;
-	type RuntimeCall = RuntimeCall;
-	type RuntimeTask = RuntimeTask;
-	type PalletInfo = PalletInfo;
-
-	// coming from a macro.
-	type AccountData =
-		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::AccountData;
-	type BaseCallFilter =
-		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::BaseCallFilter;
-	type BlockWeights =
-		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::BlockWeights;
-	type BlockLength =
-		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::BlockLength;
-	type Nonce = <FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::Nonce;
-	type Hash = <FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::Hash;
-	type Hashing = <FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::Hashing;
-	type AccountId = <FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::AccountId;
-	type Lookup = <FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::Lookup;
-	type BlockHashCount =
-		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::BlockHashCount;
-	type DbWeight = <FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::DbWeight;
-	type Version = <FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::Version;
-	type OnNewAccount =
-		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::OnNewAccount;
-	type OnKilledAccount =
-		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::OnKilledAccount;
-	type SystemWeightInfo =
-		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::SystemWeightInfo;
-	type SS58Prefix = <FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::SS58Prefix;
-	type OnSetCode = <FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::OnSetCode;
-	type MaxConsumers =
-		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::MaxConsumers;
-	type SingleBlockMigrations =
-		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::SingleBlockMigrations;
-	type MultiBlockMigrator =
-		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::MultiBlockMigrator;
-	type PreInherents =
-		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::PreInherents;
-	type PostInherents =
-		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::PostInherents;
-	type PostTransactions =
-		<FliteFrameSystem<Configuration> as frame_system::DefaultConfig>::PostTransactions;
 }
 
 impl flite::flite_system::Config for Runtime {}
