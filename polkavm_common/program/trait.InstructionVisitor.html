@@ -1,0 +1,713 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `InstructionVisitor` trait in crate `polkavm_common`."><title>InstructionVisitor in polkavm_common::program - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-405f8b29f52305f8.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="polkavm_common" data-themes="" data-resource-suffix="" data-rustdoc-version="1.83.0-nightly (28e8f01c2 2024-09-17)" data-channel="nightly" data-search-js="search-0cfde64e8ad3a7fe.js" data-settings-js="settings-7e3bb6c46e92e77c.js" ><script src="../../static.files/storage-29b1d5a9048d38fe.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../static.files/main-14659ec02b58af51.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-40f72c9259523cb3.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc trait"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../polkavm_common/index.html">polkavm_<wbr>common</a><span class="version">0.10.0</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Instruction<wbr>Visitor</a></h2><h3><a href="#required-associated-types">Required Associated Types</a></h3><ul class="block"><li><a href="#associatedtype.ReturnTy" title="ReturnTy">ReturnTy</a></li></ul><h3><a href="#required-methods">Required Methods</a></h3><ul class="block"><li><a href="#tymethod.add" title="add">add</a></li><li><a href="#tymethod.add_imm" title="add_imm">add_imm</a></li><li><a href="#tymethod.and" title="and">and</a></li><li><a href="#tymethod.and_imm" title="and_imm">and_imm</a></li><li><a href="#tymethod.branch_eq" title="branch_eq">branch_eq</a></li><li><a href="#tymethod.branch_eq_imm" title="branch_eq_imm">branch_eq_imm</a></li><li><a href="#tymethod.branch_greater_or_equal_signed" title="branch_greater_or_equal_signed">branch_greater_or_equal_signed</a></li><li><a href="#tymethod.branch_greater_or_equal_signed_imm" title="branch_greater_or_equal_signed_imm">branch_greater_or_equal_signed_imm</a></li><li><a href="#tymethod.branch_greater_or_equal_unsigned" title="branch_greater_or_equal_unsigned">branch_greater_or_equal_unsigned</a></li><li><a href="#tymethod.branch_greater_or_equal_unsigned_imm" title="branch_greater_or_equal_unsigned_imm">branch_greater_or_equal_unsigned_imm</a></li><li><a href="#tymethod.branch_greater_signed_imm" title="branch_greater_signed_imm">branch_greater_signed_imm</a></li><li><a href="#tymethod.branch_greater_unsigned_imm" title="branch_greater_unsigned_imm">branch_greater_unsigned_imm</a></li><li><a href="#tymethod.branch_less_or_equal_signed_imm" title="branch_less_or_equal_signed_imm">branch_less_or_equal_signed_imm</a></li><li><a href="#tymethod.branch_less_or_equal_unsigned_imm" title="branch_less_or_equal_unsigned_imm">branch_less_or_equal_unsigned_imm</a></li><li><a href="#tymethod.branch_less_signed" title="branch_less_signed">branch_less_signed</a></li><li><a href="#tymethod.branch_less_signed_imm" title="branch_less_signed_imm">branch_less_signed_imm</a></li><li><a href="#tymethod.branch_less_unsigned" title="branch_less_unsigned">branch_less_unsigned</a></li><li><a href="#tymethod.branch_less_unsigned_imm" title="branch_less_unsigned_imm">branch_less_unsigned_imm</a></li><li><a href="#tymethod.branch_not_eq" title="branch_not_eq">branch_not_eq</a></li><li><a href="#tymethod.branch_not_eq_imm" title="branch_not_eq_imm">branch_not_eq_imm</a></li><li><a href="#tymethod.cmov_if_not_zero" title="cmov_if_not_zero">cmov_if_not_zero</a></li><li><a href="#tymethod.cmov_if_not_zero_imm" title="cmov_if_not_zero_imm">cmov_if_not_zero_imm</a></li><li><a href="#tymethod.cmov_if_zero" title="cmov_if_zero">cmov_if_zero</a></li><li><a href="#tymethod.cmov_if_zero_imm" title="cmov_if_zero_imm">cmov_if_zero_imm</a></li><li><a href="#tymethod.div_signed" title="div_signed">div_signed</a></li><li><a href="#tymethod.div_unsigned" title="div_unsigned">div_unsigned</a></li><li><a href="#tymethod.ecalli" title="ecalli">ecalli</a></li><li><a href="#tymethod.fallthrough" title="fallthrough">fallthrough</a></li><li><a href="#tymethod.jump" title="jump">jump</a></li><li><a href="#tymethod.jump_indirect" title="jump_indirect">jump_indirect</a></li><li><a href="#tymethod.load_i16" title="load_i16">load_i16</a></li><li><a href="#tymethod.load_i8" title="load_i8">load_i8</a></li><li><a href="#tymethod.load_imm" title="load_imm">load_imm</a></li><li><a href="#tymethod.load_imm_and_jump" title="load_imm_and_jump">load_imm_and_jump</a></li><li><a href="#tymethod.load_imm_and_jump_indirect" title="load_imm_and_jump_indirect">load_imm_and_jump_indirect</a></li><li><a href="#tymethod.load_indirect_i16" title="load_indirect_i16">load_indirect_i16</a></li><li><a href="#tymethod.load_indirect_i8" title="load_indirect_i8">load_indirect_i8</a></li><li><a href="#tymethod.load_indirect_u16" title="load_indirect_u16">load_indirect_u16</a></li><li><a href="#tymethod.load_indirect_u32" title="load_indirect_u32">load_indirect_u32</a></li><li><a href="#tymethod.load_indirect_u8" title="load_indirect_u8">load_indirect_u8</a></li><li><a href="#tymethod.load_u16" title="load_u16">load_u16</a></li><li><a href="#tymethod.load_u32" title="load_u32">load_u32</a></li><li><a href="#tymethod.load_u8" title="load_u8">load_u8</a></li><li><a href="#tymethod.move_reg" title="move_reg">move_reg</a></li><li><a href="#tymethod.mul" title="mul">mul</a></li><li><a href="#tymethod.mul_imm" title="mul_imm">mul_imm</a></li><li><a href="#tymethod.mul_upper_signed_signed" title="mul_upper_signed_signed">mul_upper_signed_signed</a></li><li><a href="#tymethod.mul_upper_signed_signed_imm" title="mul_upper_signed_signed_imm">mul_upper_signed_signed_imm</a></li><li><a href="#tymethod.mul_upper_signed_unsigned" title="mul_upper_signed_unsigned">mul_upper_signed_unsigned</a></li><li><a href="#tymethod.mul_upper_unsigned_unsigned" title="mul_upper_unsigned_unsigned">mul_upper_unsigned_unsigned</a></li><li><a href="#tymethod.mul_upper_unsigned_unsigned_imm" title="mul_upper_unsigned_unsigned_imm">mul_upper_unsigned_unsigned_imm</a></li><li><a href="#tymethod.negate_and_add_imm" title="negate_and_add_imm">negate_and_add_imm</a></li><li><a href="#tymethod.or" title="or">or</a></li><li><a href="#tymethod.or_imm" title="or_imm">or_imm</a></li><li><a href="#tymethod.rem_signed" title="rem_signed">rem_signed</a></li><li><a href="#tymethod.rem_unsigned" title="rem_unsigned">rem_unsigned</a></li><li><a href="#tymethod.sbrk" title="sbrk">sbrk</a></li><li><a href="#tymethod.set_greater_than_signed_imm" title="set_greater_than_signed_imm">set_greater_than_signed_imm</a></li><li><a href="#tymethod.set_greater_than_unsigned_imm" title="set_greater_than_unsigned_imm">set_greater_than_unsigned_imm</a></li><li><a href="#tymethod.set_less_than_signed" title="set_less_than_signed">set_less_than_signed</a></li><li><a href="#tymethod.set_less_than_signed_imm" title="set_less_than_signed_imm">set_less_than_signed_imm</a></li><li><a href="#tymethod.set_less_than_unsigned" title="set_less_than_unsigned">set_less_than_unsigned</a></li><li><a href="#tymethod.set_less_than_unsigned_imm" title="set_less_than_unsigned_imm">set_less_than_unsigned_imm</a></li><li><a href="#tymethod.shift_arithmetic_right" title="shift_arithmetic_right">shift_arithmetic_right</a></li><li><a href="#tymethod.shift_arithmetic_right_imm" title="shift_arithmetic_right_imm">shift_arithmetic_right_imm</a></li><li><a href="#tymethod.shift_arithmetic_right_imm_alt" title="shift_arithmetic_right_imm_alt">shift_arithmetic_right_imm_alt</a></li><li><a href="#tymethod.shift_logical_left" title="shift_logical_left">shift_logical_left</a></li><li><a href="#tymethod.shift_logical_left_imm" title="shift_logical_left_imm">shift_logical_left_imm</a></li><li><a href="#tymethod.shift_logical_left_imm_alt" title="shift_logical_left_imm_alt">shift_logical_left_imm_alt</a></li><li><a href="#tymethod.shift_logical_right" title="shift_logical_right">shift_logical_right</a></li><li><a href="#tymethod.shift_logical_right_imm" title="shift_logical_right_imm">shift_logical_right_imm</a></li><li><a href="#tymethod.shift_logical_right_imm_alt" title="shift_logical_right_imm_alt">shift_logical_right_imm_alt</a></li><li><a href="#tymethod.store_imm_indirect_u16" title="store_imm_indirect_u16">store_imm_indirect_u16</a></li><li><a href="#tymethod.store_imm_indirect_u32" title="store_imm_indirect_u32">store_imm_indirect_u32</a></li><li><a href="#tymethod.store_imm_indirect_u8" title="store_imm_indirect_u8">store_imm_indirect_u8</a></li><li><a href="#tymethod.store_imm_u16" title="store_imm_u16">store_imm_u16</a></li><li><a href="#tymethod.store_imm_u32" title="store_imm_u32">store_imm_u32</a></li><li><a href="#tymethod.store_imm_u8" title="store_imm_u8">store_imm_u8</a></li><li><a href="#tymethod.store_indirect_u16" title="store_indirect_u16">store_indirect_u16</a></li><li><a href="#tymethod.store_indirect_u32" title="store_indirect_u32">store_indirect_u32</a></li><li><a href="#tymethod.store_indirect_u8" title="store_indirect_u8">store_indirect_u8</a></li><li><a href="#tymethod.store_u16" title="store_u16">store_u16</a></li><li><a href="#tymethod.store_u32" title="store_u32">store_u32</a></li><li><a href="#tymethod.store_u8" title="store_u8">store_u8</a></li><li><a href="#tymethod.sub" title="sub">sub</a></li><li><a href="#tymethod.trap" title="trap">trap</a></li><li><a href="#tymethod.xor" title="xor">xor</a></li><li><a href="#tymethod.xor_imm" title="xor_imm">xor_imm</a></li></ul><h3><a href="#provided-methods">Provided Methods</a></h3><ul class="block"><li><a href="#method.invalid" title="invalid">invalid</a></li></ul><h3><a href="#implementors">Implementors</a></h3></section><div id="rustdoc-modnav"><h2><a href="index.html">In polkavm_<wbr>common::<wbr>program</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Trait <a href="../index.html">polkavm_common</a>::<wbr><a href="index.html">program</a>::<wbr><a class="trait" href="#">InstructionVisitor</a><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><span class="out-of-band"><a class="src" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><pre class="rust item-decl"><code>pub trait InstructionVisitor {
+    type <a href="#associatedtype.ReturnTy" class="associatedtype">ReturnTy</a>;
+
+<details class="toggle type-contents-toggle"><summary class="hideme"><span>Show 89 methods</span></summary>    // Required methods
+    fn <a href="#tymethod.trap" class="fn">trap</a>(&amp;mut self) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.fallthrough" class="fn">fallthrough</a>(&amp;mut self) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.jump_indirect" class="fn">jump_indirect</a>(&amp;mut self, reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.load_imm" class="fn">load_imm</a>(&amp;mut self, reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.load_u8" class="fn">load_u8</a>(&amp;mut self, reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.load_i8" class="fn">load_i8</a>(&amp;mut self, reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.load_u16" class="fn">load_u16</a>(&amp;mut self, reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.load_i16" class="fn">load_i16</a>(&amp;mut self, reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.load_u32" class="fn">load_u32</a>(&amp;mut self, reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.store_u8" class="fn">store_u8</a>(&amp;mut self, reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.store_u16" class="fn">store_u16</a>(&amp;mut self, reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.store_u32" class="fn">store_u32</a>(&amp;mut self, reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.load_imm_and_jump" class="fn">load_imm_and_jump</a>(
+        &amp;mut self,
+        reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+        imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.branch_eq_imm" class="fn">branch_eq_imm</a>(
+        &amp;mut self,
+        reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+        imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.branch_not_eq_imm" class="fn">branch_not_eq_imm</a>(
+        &amp;mut self,
+        reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+        imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.branch_less_unsigned_imm" class="fn">branch_less_unsigned_imm</a>(
+        &amp;mut self,
+        reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+        imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.branch_less_signed_imm" class="fn">branch_less_signed_imm</a>(
+        &amp;mut self,
+        reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+        imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.branch_greater_or_equal_unsigned_imm" class="fn">branch_greater_or_equal_unsigned_imm</a>(
+        &amp;mut self,
+        reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+        imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.branch_greater_or_equal_signed_imm" class="fn">branch_greater_or_equal_signed_imm</a>(
+        &amp;mut self,
+        reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+        imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.branch_less_or_equal_signed_imm" class="fn">branch_less_or_equal_signed_imm</a>(
+        &amp;mut self,
+        reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+        imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.branch_less_or_equal_unsigned_imm" class="fn">branch_less_or_equal_unsigned_imm</a>(
+        &amp;mut self,
+        reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+        imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.branch_greater_signed_imm" class="fn">branch_greater_signed_imm</a>(
+        &amp;mut self,
+        reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+        imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.branch_greater_unsigned_imm" class="fn">branch_greater_unsigned_imm</a>(
+        &amp;mut self,
+        reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+        imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.store_imm_indirect_u8" class="fn">store_imm_indirect_u8</a>(
+        &amp;mut self,
+        reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+        imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.store_imm_indirect_u16" class="fn">store_imm_indirect_u16</a>(
+        &amp;mut self,
+        reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+        imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.store_imm_indirect_u32" class="fn">store_imm_indirect_u32</a>(
+        &amp;mut self,
+        reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+        imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.store_indirect_u8" class="fn">store_indirect_u8</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.store_indirect_u16" class="fn">store_indirect_u16</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.store_indirect_u32" class="fn">store_indirect_u32</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.load_indirect_u8" class="fn">load_indirect_u8</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.load_indirect_i8" class="fn">load_indirect_i8</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.load_indirect_u16" class="fn">load_indirect_u16</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.load_indirect_i16" class="fn">load_indirect_i16</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.load_indirect_u32" class="fn">load_indirect_u32</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.add_imm" class="fn">add_imm</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.and_imm" class="fn">and_imm</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.xor_imm" class="fn">xor_imm</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.or_imm" class="fn">or_imm</a>(&amp;mut self, reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.mul_imm" class="fn">mul_imm</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.mul_upper_signed_signed_imm" class="fn">mul_upper_signed_signed_imm</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.mul_upper_unsigned_unsigned_imm" class="fn">mul_upper_unsigned_unsigned_imm</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.set_less_than_unsigned_imm" class="fn">set_less_than_unsigned_imm</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.set_less_than_signed_imm" class="fn">set_less_than_signed_imm</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.shift_logical_left_imm" class="fn">shift_logical_left_imm</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.shift_logical_right_imm" class="fn">shift_logical_right_imm</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.shift_arithmetic_right_imm" class="fn">shift_arithmetic_right_imm</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.negate_and_add_imm" class="fn">negate_and_add_imm</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.set_greater_than_unsigned_imm" class="fn">set_greater_than_unsigned_imm</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.set_greater_than_signed_imm" class="fn">set_greater_than_signed_imm</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.shift_logical_right_imm_alt" class="fn">shift_logical_right_imm_alt</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.shift_arithmetic_right_imm_alt" class="fn">shift_arithmetic_right_imm_alt</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.shift_logical_left_imm_alt" class="fn">shift_logical_left_imm_alt</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.cmov_if_zero_imm" class="fn">cmov_if_zero_imm</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.cmov_if_not_zero_imm" class="fn">cmov_if_not_zero_imm</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.branch_eq" class="fn">branch_eq</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.branch_not_eq" class="fn">branch_not_eq</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.branch_less_unsigned" class="fn">branch_less_unsigned</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.branch_less_signed" class="fn">branch_less_signed</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.branch_greater_or_equal_unsigned" class="fn">branch_greater_or_equal_unsigned</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.branch_greater_or_equal_signed" class="fn">branch_greater_or_equal_signed</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.add" class="fn">add</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.sub" class="fn">sub</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.and" class="fn">and</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.xor" class="fn">xor</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.or" class="fn">or</a>(&amp;mut self, reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.mul" class="fn">mul</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.mul_upper_signed_signed" class="fn">mul_upper_signed_signed</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.mul_upper_unsigned_unsigned" class="fn">mul_upper_unsigned_unsigned</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.mul_upper_signed_unsigned" class="fn">mul_upper_signed_unsigned</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.set_less_than_unsigned" class="fn">set_less_than_unsigned</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.set_less_than_signed" class="fn">set_less_than_signed</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.shift_logical_left" class="fn">shift_logical_left</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.shift_logical_right" class="fn">shift_logical_right</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.shift_arithmetic_right" class="fn">shift_arithmetic_right</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.div_unsigned" class="fn">div_unsigned</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.div_signed" class="fn">div_signed</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.rem_unsigned" class="fn">rem_unsigned</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.rem_signed" class="fn">rem_signed</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.cmov_if_zero" class="fn">cmov_if_zero</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.cmov_if_not_zero" class="fn">cmov_if_not_zero</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.jump" class="fn">jump</a>(&amp;mut self, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.ecalli" class="fn">ecalli</a>(&amp;mut self, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.store_imm_u8" class="fn">store_imm_u8</a>(&amp;mut self, imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.store_imm_u16" class="fn">store_imm_u16</a>(&amp;mut self, imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.store_imm_u32" class="fn">store_imm_u32</a>(&amp;mut self, imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.move_reg" class="fn">move_reg</a>(&amp;mut self, reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.sbrk" class="fn">sbrk</a>(&amp;mut self, reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.load_imm_and_jump_indirect" class="fn">load_imm_and_jump_indirect</a>(
+        &amp;mut self,
+        reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+        imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+        imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    ) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a>;
+
+    // Provided method
+    fn <a href="#method.invalid" class="fn">invalid</a>(&amp;mut self) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a> { ... }
+</details>}</code></pre><h2 id="required-associated-types" class="section-header">Required Associated Types<a href="#required-associated-types" class="anchor">§</a></h2><div class="methods"><section id="associatedtype.ReturnTy" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">type <a href="#associatedtype.ReturnTy" class="associatedtype">ReturnTy</a></h4></section></div><h2 id="required-methods" class="section-header">Required Methods<a href="#required-methods" class="anchor">§</a></h2><div class="methods"><section id="tymethod.trap" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.trap" class="fn">trap</a>(&amp;mut self) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.fallthrough" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.fallthrough" class="fn">fallthrough</a>(&amp;mut self) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.jump_indirect" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.jump_indirect" class="fn">jump_indirect</a>(&amp;mut self, reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.load_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.load_imm" class="fn">load_imm</a>(&amp;mut self, reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.load_u8" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.load_u8" class="fn">load_u8</a>(&amp;mut self, reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.load_i8" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.load_i8" class="fn">load_i8</a>(&amp;mut self, reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.load_u16" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.load_u16" class="fn">load_u16</a>(&amp;mut self, reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.load_i16" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.load_i16" class="fn">load_i16</a>(&amp;mut self, reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.load_u32" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.load_u32" class="fn">load_u32</a>(&amp;mut self, reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.store_u8" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.store_u8" class="fn">store_u8</a>(&amp;mut self, reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.store_u16" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.store_u16" class="fn">store_u16</a>(&amp;mut self, reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.store_u32" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.store_u32" class="fn">store_u32</a>(&amp;mut self, reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.load_imm_and_jump" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.load_imm_and_jump" class="fn">load_imm_and_jump</a>(
+    &amp;mut self,
+    reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.branch_eq_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.branch_eq_imm" class="fn">branch_eq_imm</a>(&amp;mut self, reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.branch_not_eq_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.branch_not_eq_imm" class="fn">branch_not_eq_imm</a>(
+    &amp;mut self,
+    reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.branch_less_unsigned_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.branch_less_unsigned_imm" class="fn">branch_less_unsigned_imm</a>(
+    &amp;mut self,
+    reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.branch_less_signed_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.branch_less_signed_imm" class="fn">branch_less_signed_imm</a>(
+    &amp;mut self,
+    reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.branch_greater_or_equal_unsigned_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.branch_greater_or_equal_unsigned_imm" class="fn">branch_greater_or_equal_unsigned_imm</a>(
+    &amp;mut self,
+    reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.branch_greater_or_equal_signed_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.branch_greater_or_equal_signed_imm" class="fn">branch_greater_or_equal_signed_imm</a>(
+    &amp;mut self,
+    reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.branch_less_or_equal_signed_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.branch_less_or_equal_signed_imm" class="fn">branch_less_or_equal_signed_imm</a>(
+    &amp;mut self,
+    reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.branch_less_or_equal_unsigned_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.branch_less_or_equal_unsigned_imm" class="fn">branch_less_or_equal_unsigned_imm</a>(
+    &amp;mut self,
+    reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.branch_greater_signed_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.branch_greater_signed_imm" class="fn">branch_greater_signed_imm</a>(
+    &amp;mut self,
+    reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.branch_greater_unsigned_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.branch_greater_unsigned_imm" class="fn">branch_greater_unsigned_imm</a>(
+    &amp;mut self,
+    reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.store_imm_indirect_u8" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.store_imm_indirect_u8" class="fn">store_imm_indirect_u8</a>(
+    &amp;mut self,
+    reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.store_imm_indirect_u16" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.store_imm_indirect_u16" class="fn">store_imm_indirect_u16</a>(
+    &amp;mut self,
+    reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.store_imm_indirect_u32" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.store_imm_indirect_u32" class="fn">store_imm_indirect_u32</a>(
+    &amp;mut self,
+    reg: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.store_indirect_u8" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.store_indirect_u8" class="fn">store_indirect_u8</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.store_indirect_u16" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.store_indirect_u16" class="fn">store_indirect_u16</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.store_indirect_u32" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.store_indirect_u32" class="fn">store_indirect_u32</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.load_indirect_u8" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.load_indirect_u8" class="fn">load_indirect_u8</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.load_indirect_i8" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.load_indirect_i8" class="fn">load_indirect_i8</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.load_indirect_u16" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.load_indirect_u16" class="fn">load_indirect_u16</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.load_indirect_i16" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.load_indirect_i16" class="fn">load_indirect_i16</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.load_indirect_u32" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.load_indirect_u32" class="fn">load_indirect_u32</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.add_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.add_imm" class="fn">add_imm</a>(&amp;mut self, reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.and_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.and_imm" class="fn">and_imm</a>(&amp;mut self, reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.xor_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.xor_imm" class="fn">xor_imm</a>(&amp;mut self, reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.or_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.or_imm" class="fn">or_imm</a>(&amp;mut self, reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.mul_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.mul_imm" class="fn">mul_imm</a>(&amp;mut self, reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.mul_upper_signed_signed_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.mul_upper_signed_signed_imm" class="fn">mul_upper_signed_signed_imm</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.mul_upper_unsigned_unsigned_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.mul_upper_unsigned_unsigned_imm" class="fn">mul_upper_unsigned_unsigned_imm</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.set_less_than_unsigned_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.set_less_than_unsigned_imm" class="fn">set_less_than_unsigned_imm</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.set_less_than_signed_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.set_less_than_signed_imm" class="fn">set_less_than_signed_imm</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.shift_logical_left_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.shift_logical_left_imm" class="fn">shift_logical_left_imm</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.shift_logical_right_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.shift_logical_right_imm" class="fn">shift_logical_right_imm</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.shift_arithmetic_right_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.shift_arithmetic_right_imm" class="fn">shift_arithmetic_right_imm</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.negate_and_add_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.negate_and_add_imm" class="fn">negate_and_add_imm</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.set_greater_than_unsigned_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.set_greater_than_unsigned_imm" class="fn">set_greater_than_unsigned_imm</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.set_greater_than_signed_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.set_greater_than_signed_imm" class="fn">set_greater_than_signed_imm</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.shift_logical_right_imm_alt" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.shift_logical_right_imm_alt" class="fn">shift_logical_right_imm_alt</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.shift_arithmetic_right_imm_alt" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.shift_arithmetic_right_imm_alt" class="fn">shift_arithmetic_right_imm_alt</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.shift_logical_left_imm_alt" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.shift_logical_left_imm_alt" class="fn">shift_logical_left_imm_alt</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.cmov_if_zero_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.cmov_if_zero_imm" class="fn">cmov_if_zero_imm</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.cmov_if_not_zero_imm" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.cmov_if_not_zero_imm" class="fn">cmov_if_not_zero_imm</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.branch_eq" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.branch_eq" class="fn">branch_eq</a>(&amp;mut self, reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.branch_not_eq" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.branch_not_eq" class="fn">branch_not_eq</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.branch_less_unsigned" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.branch_less_unsigned" class="fn">branch_less_unsigned</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.branch_less_signed" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.branch_less_signed" class="fn">branch_less_signed</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.branch_greater_or_equal_unsigned" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.branch_greater_or_equal_unsigned" class="fn">branch_greater_or_equal_unsigned</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.branch_greater_or_equal_signed" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.branch_greater_or_equal_signed" class="fn">branch_greater_or_equal_signed</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.add" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.add" class="fn">add</a>(&amp;mut self, reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.sub" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.sub" class="fn">sub</a>(&amp;mut self, reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.and" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.and" class="fn">and</a>(&amp;mut self, reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.xor" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.xor" class="fn">xor</a>(&amp;mut self, reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.or" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.or" class="fn">or</a>(&amp;mut self, reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.mul" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.mul" class="fn">mul</a>(&amp;mut self, reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.mul_upper_signed_signed" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.mul_upper_signed_signed" class="fn">mul_upper_signed_signed</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.mul_upper_unsigned_unsigned" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.mul_upper_unsigned_unsigned" class="fn">mul_upper_unsigned_unsigned</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.mul_upper_signed_unsigned" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.mul_upper_signed_unsigned" class="fn">mul_upper_signed_unsigned</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.set_less_than_unsigned" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.set_less_than_unsigned" class="fn">set_less_than_unsigned</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.set_less_than_signed" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.set_less_than_signed" class="fn">set_less_than_signed</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.shift_logical_left" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.shift_logical_left" class="fn">shift_logical_left</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.shift_logical_right" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.shift_logical_right" class="fn">shift_logical_right</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.shift_arithmetic_right" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.shift_arithmetic_right" class="fn">shift_arithmetic_right</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.div_unsigned" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.div_unsigned" class="fn">div_unsigned</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.div_signed" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.div_signed" class="fn">div_signed</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.rem_unsigned" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.rem_unsigned" class="fn">rem_unsigned</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.rem_signed" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.rem_signed" class="fn">rem_signed</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.cmov_if_zero" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.cmov_if_zero" class="fn">cmov_if_zero</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.cmov_if_not_zero" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.cmov_if_not_zero" class="fn">cmov_if_not_zero</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg3: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.jump" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.jump" class="fn">jump</a>(&amp;mut self, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.ecalli" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.ecalli" class="fn">ecalli</a>(&amp;mut self, imm: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.store_imm_u8" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.store_imm_u8" class="fn">store_imm_u8</a>(&amp;mut self, imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.store_imm_u16" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.store_imm_u16" class="fn">store_imm_u16</a>(&amp;mut self, imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.store_imm_u32" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.store_imm_u32" class="fn">store_imm_u32</a>(&amp;mut self, imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.move_reg" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.move_reg" class="fn">move_reg</a>(&amp;mut self, reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.sbrk" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.sbrk" class="fn">sbrk</a>(&amp;mut self, reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>, reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section><section id="tymethod.load_imm_and_jump_indirect" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#tymethod.load_imm_and_jump_indirect" class="fn">load_imm_and_jump_indirect</a>(
+    &amp;mut self,
+    reg1: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    reg2: <a class="struct" href="struct.RawReg.html" title="struct polkavm_common::program::RawReg">RawReg</a>,
+    imm1: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    imm2: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section></div><h2 id="provided-methods" class="section-header">Provided Methods<a href="#provided-methods" class="anchor">§</a></h2><div class="methods"><section id="method.invalid" class="method"><a class="src rightside" href="../../src/polkavm_common/program.rs.html#1307-1447">source</a><h4 class="code-header">fn <a href="#method.invalid" class="fn">invalid</a>(&amp;mut self) -&gt; Self::<a class="associatedtype" href="trait.InstructionVisitor.html#associatedtype.ReturnTy" title="type polkavm_common::program::InstructionVisitor::ReturnTy">ReturnTy</a></h4></section></div><h2 id="implementors" class="section-header">Implementors<a href="#implementors" class="anchor">§</a></h2><div id="implementors-list"></div><script src="../../trait.impl/polkavm_common/program/trait.InstructionVisitor.js" async></script></section></div></main></body></html>

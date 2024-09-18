@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/git/checkouts/polkadot-sdk-cff69157b985ed76/08f677e/polkadot/runtime/parachains/src/paras_inherent/mod.rs`."><title>mod.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-b25d77b18a16a9a4.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="polkadot_runtime_parachains" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0-nightly (13a52890d 2024-08-14)" data-channel="nightly" data-search-js="search-ef54e092fea9c776.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-cb0df477c2d67d00.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/git/checkouts/polkadot-sdk-cff69157b985ed76/34e0ff4/polkadot/runtime/parachains/src/paras_inherent/mod.rs`."><title>mod.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-405f8b29f52305f8.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="polkadot_runtime_parachains" data-themes="" data-resource-suffix="" data-rustdoc-version="1.83.0-nightly (28e8f01c2 2024-09-17)" data-channel="nightly" data-search-js="search-0cfde64e8ad3a7fe.js" data-settings-js="settings-7e3bb6c46e92e77c.js" ><script src="../../../static.files/storage-29b1d5a9048d38fe.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-14659ec02b58af51.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-40f72c9259523cb3.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
+<a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1499,7 +1500,58 @@
 <a href="#1499" id="1499">1499</a>
 <a href="#1500" id="1500">1500</a>
 <a href="#1501" id="1501">1501</a>
-</pre></div><pre class="rust"><code><span class="comment">// Copyright (C) Parity Technologies (UK) Ltd.
+<a href="#1502" id="1502">1502</a>
+<a href="#1503" id="1503">1503</a>
+<a href="#1504" id="1504">1504</a>
+<a href="#1505" id="1505">1505</a>
+<a href="#1506" id="1506">1506</a>
+<a href="#1507" id="1507">1507</a>
+<a href="#1508" id="1508">1508</a>
+<a href="#1509" id="1509">1509</a>
+<a href="#1510" id="1510">1510</a>
+<a href="#1511" id="1511">1511</a>
+<a href="#1512" id="1512">1512</a>
+<a href="#1513" id="1513">1513</a>
+<a href="#1514" id="1514">1514</a>
+<a href="#1515" id="1515">1515</a>
+<a href="#1516" id="1516">1516</a>
+<a href="#1517" id="1517">1517</a>
+<a href="#1518" id="1518">1518</a>
+<a href="#1519" id="1519">1519</a>
+<a href="#1520" id="1520">1520</a>
+<a href="#1521" id="1521">1521</a>
+<a href="#1522" id="1522">1522</a>
+<a href="#1523" id="1523">1523</a>
+<a href="#1524" id="1524">1524</a>
+<a href="#1525" id="1525">1525</a>
+<a href="#1526" id="1526">1526</a>
+<a href="#1527" id="1527">1527</a>
+<a href="#1528" id="1528">1528</a>
+<a href="#1529" id="1529">1529</a>
+<a href="#1530" id="1530">1530</a>
+<a href="#1531" id="1531">1531</a>
+<a href="#1532" id="1532">1532</a>
+<a href="#1533" id="1533">1533</a>
+<a href="#1534" id="1534">1534</a>
+<a href="#1535" id="1535">1535</a>
+<a href="#1536" id="1536">1536</a>
+<a href="#1537" id="1537">1537</a>
+<a href="#1538" id="1538">1538</a>
+<a href="#1539" id="1539">1539</a>
+<a href="#1540" id="1540">1540</a>
+<a href="#1541" id="1541">1541</a>
+<a href="#1542" id="1542">1542</a>
+<a href="#1543" id="1543">1543</a>
+<a href="#1544" id="1544">1544</a>
+<a href="#1545" id="1545">1545</a>
+<a href="#1546" id="1546">1546</a>
+<a href="#1547" id="1547">1547</a>
+<a href="#1548" id="1548">1548</a>
+<a href="#1549" id="1549">1549</a>
+<a href="#1550" id="1550">1550</a>
+<a href="#1551" id="1551">1551</a>
+<a href="#1552" id="1552">1552</a>
+<a href="#1553" id="1553">1553</a></pre></div><pre class="rust"><code><span class="comment">// Copyright (C) Parity Technologies (UK) Ltd.
 // This file is part of Polkadot.
 
 // Polkadot is free software: you can redistribute it and/or modify
@@ -1549,12 +1601,17 @@
 <span class="kw">use </span>frame_system::pallet_prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>pallet_babe::{<span class="self">self</span>, ParentBlockRandomness};
 <span class="kw">use </span>polkadot_primitives::{
-	effective_minimum_backing_votes, node_features::FeatureIndex, BackedCandidate, CandidateHash,
-	CandidateReceipt, CheckedDisputeStatementSet, CheckedMultiDisputeStatementSet, CoreIndex,
-	DisputeStatementSet, HeadData, InherentData <span class="kw">as </span>ParachainsInherentData,
-	MultiDisputeStatementSet, ScrapedOnChainVotes, SessionIndex, SignedAvailabilityBitfields,
-	SigningContext, UncheckedSignedAvailabilityBitfield, UncheckedSignedAvailabilityBitfields,
-	ValidatorId, ValidatorIndex, ValidityAttestation, PARACHAINS_INHERENT_IDENTIFIER,
+	effective_minimum_backing_votes,
+	node_features::FeatureIndex,
+	vstaging::{
+		BackedCandidate, CandidateDescriptorVersion, CandidateReceiptV2 <span class="kw">as </span>CandidateReceipt,
+		InherentData <span class="kw">as </span>ParachainsInherentData, ScrapedOnChainVotes,
+	},
+	CandidateHash, CheckedDisputeStatementSet, CheckedMultiDisputeStatementSet, CoreIndex,
+	DisputeStatementSet, HeadData, MultiDisputeStatementSet, SessionIndex,
+	SignedAvailabilityBitfields, SigningContext, UncheckedSignedAvailabilityBitfield,
+	UncheckedSignedAvailabilityBitfields, ValidatorId, ValidatorIndex, ValidityAttestation,
+	PARACHAINS_INHERENT_IDENTIFIER,
 };
 <span class="kw">use </span>rand::{seq::SliceRandom, SeedableRng};
 <span class="kw">use </span>scale_info::TypeInfo;
@@ -1848,12 +1905,12 @@
 		<span class="kw">let </span>bitfields_weight = signed_bitfields_weight::&lt;T&gt;(<span class="kw-2">&amp;</span>bitfields);
 		<span class="kw">let </span>disputes_weight = multi_dispute_statement_sets_weight::&lt;T&gt;(<span class="kw-2">&amp;</span>disputes);
 
-		<span class="comment">// Weight before filtering/sanitization
-		</span><span class="kw">let </span>all_weight_before = candidates_weight + bitfields_weight + disputes_weight;
+		<span class="comment">// Weight before filtering/sanitization except for enacting the candidates
+		</span><span class="kw">let </span>weight_before_filtering = candidates_weight + bitfields_weight + disputes_weight;
 
-		METRICS.on_before_filter(all_weight_before.ref_time());
-		<span class="macro">log::debug!</span>(target: LOG_TARGET, <span class="string">"Size before filter: {}, candidates + bitfields: {}, disputes: {}"</span>, all_weight_before.proof_size(), candidates_weight.proof_size() + bitfields_weight.proof_size(), disputes_weight.proof_size());
-		<span class="macro">log::debug!</span>(target: LOG_TARGET, <span class="string">"Time weight before filter: {}, candidates + bitfields: {}, disputes: {}"</span>, all_weight_before.ref_time(), candidates_weight.ref_time() + bitfields_weight.ref_time(), disputes_weight.ref_time());
+		METRICS.on_before_filter(weight_before_filtering.ref_time());
+		<span class="macro">log::debug!</span>(target: LOG_TARGET, <span class="string">"Size before filter: {}, candidates + bitfields: {}, disputes: {}"</span>, weight_before_filtering.proof_size(), candidates_weight.proof_size() + bitfields_weight.proof_size(), disputes_weight.proof_size());
+		<span class="macro">log::debug!</span>(target: LOG_TARGET, <span class="string">"Time weight before filter: {}, candidates + bitfields: {}, disputes: {}"</span>, weight_before_filtering.ref_time(), candidates_weight.ref_time() + bitfields_weight.ref_time(), disputes_weight.ref_time());
 
 		<span class="kw">let </span>current_session = shared::CurrentSessionIndex::&lt;T&gt;::get();
 		<span class="kw">let </span>expected_bits = scheduler::AvailabilityCores::&lt;T&gt;::get().len();
@@ -1910,7 +1967,7 @@
 				max_block_weight,
 			);
 
-		<span class="kw">let </span>all_weight_after = <span class="kw">if </span>context == ProcessInherentDataContext::ProvideInherent {
+		<span class="kw">let </span><span class="kw-2">mut </span>all_weight_after = <span class="kw">if </span>context == ProcessInherentDataContext::ProvideInherent {
 			<span class="comment">// Assure the maximum block weight is adhered, by limiting bitfields and backed
 			// candidates. Dispute statement sets were already limited before.
 			</span><span class="kw">let </span>non_disputes_weight = apply_weight_limit::&lt;T&gt;(
@@ -1925,11 +1982,11 @@
 
 			METRICS.on_after_filter(all_weight_after.ref_time());
 			<span class="macro">log::debug!</span>(
-			target: LOG_TARGET,
-			<span class="string">"[process_inherent_data] after filter: bitfields.len(): {}, backed_candidates.len(): {}, checked_disputes_sets.len() {}"</span>,
-			bitfields.len(),
-			backed_candidates.len(),
-			checked_disputes_sets.len()
+				target: LOG_TARGET,
+				<span class="string">"[process_inherent_data] after filter: bitfields.len(): {}, backed_candidates.len(): {}, checked_disputes_sets.len() {}"</span>,
+				bitfields.len(),
+				backed_candidates.len(),
+				checked_disputes_sets.len()
 			);
 			<span class="macro">log::debug!</span>(target: LOG_TARGET, <span class="string">"Size after filter: {}, candidates + bitfields: {}, disputes: {}"</span>, all_weight_after.proof_size(), non_disputes_weight.proof_size(), checked_disputes_sets_consumed_weight.proof_size());
 			<span class="macro">log::debug!</span>(target: LOG_TARGET, <span class="string">"Time weight after filter: {}, candidates + bitfields: {}, disputes: {}"</span>, all_weight_after.ref_time(), non_disputes_weight.ref_time(), checked_disputes_sets_consumed_weight.ref_time());
@@ -1941,17 +1998,20 @@
 		} <span class="kw">else </span>{
 			<span class="comment">// This check is performed in the context of block execution. Ensures inherent weight
 			// invariants guaranteed by `create_inherent_data` for block authorship.
-			</span><span class="kw">if </span>all_weight_before.any_gt(max_block_weight) {
+			</span><span class="kw">if </span>weight_before_filtering.any_gt(max_block_weight) {
 				<span class="macro">log::error!</span>(
 					<span class="string">"Overweight para inherent data reached the runtime {:?}: {} &gt; {}"</span>,
 					parent_hash,
-					all_weight_before,
+					weight_before_filtering,
 					max_block_weight
 				);
 			}
 
-			<span class="macro">ensure!</span>(all_weight_before.all_lte(max_block_weight), Error::&lt;T&gt;::InherentOverweight);
-			all_weight_before
+			<span class="macro">ensure!</span>(
+				weight_before_filtering.all_lte(max_block_weight),
+				Error::&lt;T&gt;::InherentOverweight
+			);
+			weight_before_filtering
 		};
 
 		<span class="comment">// Note that `process_checked_multi_dispute_data` will iterate and import each
@@ -2030,11 +2090,32 @@
 
 		<span class="comment">// Process new availability bitfields, yielding any availability cores whose
 		// work has now concluded.
-		</span><span class="kw">let </span>freed_concluded =
+		</span><span class="kw">let </span>(enact_weight, freed_concluded) =
 			inclusion::Pallet::&lt;T&gt;::update_pending_availability_and_get_freed_cores(
 				<span class="kw-2">&amp;</span>validator_public[..],
 				bitfields.clone(),
 			);
+		all_weight_after.saturating_accrue(enact_weight);
+		<span class="macro">log::debug!</span>(
+			target: LOG_TARGET,
+			<span class="string">"Enacting weight: {}, all weight: {}"</span>,
+			enact_weight.ref_time(),
+			all_weight_after.ref_time(),
+		);
+
+		<span class="comment">// It's possible that that after the enacting the candidates, the total weight
+		// goes over the limit, however, we can't do anything about it at this point.
+		// By using the `Mandatory` weight, we ensure the block is still accepted,
+		// but no other (user) transactions can be included.
+		</span><span class="kw">if </span>all_weight_after.any_gt(max_block_weight) {
+			<span class="macro">log::warn!</span>(
+				target: LOG_TARGET,
+				<span class="string">"Overweight para inherent data after enacting the candidates {:?}: {} &gt; {}"</span>,
+				parent_hash,
+				all_weight_after,
+				max_block_weight,
+			);
+		}
 
 		<span class="comment">// Inform the disputes module of all included candidates.
 		</span><span class="kw">for </span>(<span class="kw">_</span>, candidate_hash) <span class="kw">in </span><span class="kw-2">&amp;</span>freed_concluded {
@@ -2071,6 +2152,12 @@
 			.map(|b| <span class="kw-2">*</span>b)
 			.unwrap_or(<span class="bool-val">false</span>);
 
+		<span class="kw">let </span>allow_v2_receipts = configuration::ActiveConfig::&lt;T&gt;::get()
+			.node_features
+			.get(FeatureIndex::CandidateReceiptV2 <span class="kw">as </span>usize)
+			.map(|b| <span class="kw-2">*</span>b)
+			.unwrap_or(<span class="bool-val">false</span>);
+
 		<span class="kw">let </span><span class="kw-2">mut </span>eligible: BTreeMap&lt;ParaId, BTreeSet&lt;CoreIndex&gt;&gt; = BTreeMap::new();
 		<span class="kw">let </span><span class="kw-2">mut </span>total_eligible_cores = <span class="number">0</span>;
 
@@ -2087,6 +2174,7 @@
 			concluded_invalid_hashes,
 			eligible,
 			core_index_enabled,
+			allow_v2_receipts,
 		);
 		<span class="kw">let </span>count = count_backed_candidates(<span class="kw-2">&amp;</span>backed_candidates_with_core);
 
@@ -2264,7 +2352,7 @@
 	<span class="kw">let </span><span class="kw-2">mut </span>current_para_id = <span class="prelude-val">None</span>;
 
 	<span class="kw">for </span>candidate <span class="kw">in </span>core::mem::take(candidates).into_iter() {
-		<span class="kw">let </span>candidate_para_id = candidate.descriptor().para_id;
+		<span class="kw">let </span>candidate_para_id = candidate.descriptor().para_id();
 		<span class="kw">if </span><span class="prelude-val">Some</span>(candidate_para_id) == current_para_id {
 			<span class="kw">let </span>chain = chained_candidates
 				.last_mut()
@@ -2443,14 +2531,15 @@
 /// subsequent candidates after the filtered one.
 ///
 /// Filter out:
-/// 1. any candidates which don't form a chain with the other candidates of the paraid (even if they
+/// 1. Candidates that have v2 descriptors if the node `CandidateReceiptV2` feature is not enabled.
+/// 2. any candidates which don't form a chain with the other candidates of the paraid (even if they
 ///    do form a chain but are not in the right order).
-/// 2. any candidates that have a concluded invalid dispute or who are descendants of a concluded
+/// 3. any candidates that have a concluded invalid dispute or who are descendants of a concluded
 ///    invalid candidate.
-/// 3. any unscheduled candidates, as well as candidates whose paraid has multiple cores assigned
+/// 4. any unscheduled candidates, as well as candidates whose paraid has multiple cores assigned
 ///    but have no injected core index.
-/// 4. all backing votes from disabled validators
-/// 5. any candidates that end up with less than `effective_minimum_backing_votes` backing votes
+/// 5. all backing votes from disabled validators
+/// 6. any candidates that end up with less than `effective_minimum_backing_votes` backing votes
 ///
 /// Returns the scheduled
 /// backed candidates which passed filtering, mapped by para id and in the right dependency order.
@@ -2460,13 +2549,28 @@
 	concluded_invalid_with_descendants: BTreeSet&lt;CandidateHash&gt;,
 	scheduled: BTreeMap&lt;ParaId, BTreeSet&lt;CoreIndex&gt;&gt;,
 	core_index_enabled: bool,
+	allow_v2_receipts: bool,
 ) -&gt; BTreeMap&lt;ParaId, Vec&lt;(BackedCandidate&lt;T::Hash&gt;, CoreIndex)&gt;&gt; {
 	<span class="comment">// Map the candidates to the right paraids, while making sure that the order between candidates
 	// of the same para is preserved.
 	</span><span class="kw">let </span><span class="kw-2">mut </span>candidates_per_para: BTreeMap&lt;ParaId, Vec&lt;<span class="kw">_</span>&gt;&gt; = BTreeMap::new();
 	<span class="kw">for </span>candidate <span class="kw">in </span>backed_candidates {
+		<span class="comment">// Drop any v2 candidate receipts if nodes are not allowed to use them.
+		// It is mandatory to filter these before calling `filter_unchained_candidates` to ensure
+		// any v1 descendants of v2 candidates are dropped.
+		</span><span class="kw">if </span>!allow_v2_receipts &amp;&amp; candidate.descriptor().version() == CandidateDescriptorVersion::V2
+		{
+			<span class="macro">log::debug!</span>(
+				target: LOG_TARGET,
+				<span class="string">"V2 candidate descriptors not allowed. Dropping candidate {:?} for paraid {:?}."</span>,
+				candidate.candidate().hash(),
+				candidate.descriptor().para_id()
+			);
+			<span class="kw">continue
+		</span>}
+
 		candidates_per_para
-			.entry(candidate.descriptor().para_id)
+			.entry(candidate.descriptor().para_id())
 			.or_default()
 			.push(candidate);
 	}
@@ -2485,7 +2589,7 @@
 				target: LOG_TARGET,
 				<span class="string">"Found backed candidate {:?} which was concluded invalid or is a descendant of a concluded invalid candidate, for paraid {:?}."</span>,
 				candidate.candidate().hash(),
-				candidate.descriptor().para_id
+				candidate.descriptor().para_id()
 			);
 		}
 		keep
@@ -2666,13 +2770,13 @@
 		<span class="comment">// Get relay parent block number of the candidate. We need this to get the group index
 		// assigned to this core at this block number
 		</span><span class="kw">let </span>relay_parent_block_number =
-			<span class="kw">match </span>allowed_relay_parents.acquire_info(bc.descriptor().relay_parent, <span class="prelude-val">None</span>) {
+			<span class="kw">match </span>allowed_relay_parents.acquire_info(bc.descriptor().relay_parent(), <span class="prelude-val">None</span>) {
 				<span class="prelude-val">Some</span>((<span class="kw">_</span>, block_num)) =&gt; block_num,
 				<span class="prelude-val">None </span>=&gt; {
 					<span class="macro">log::debug!</span>(
 						target: LOG_TARGET,
 						<span class="string">"Relay parent {:?} for candidate is not in the allowed relay parents. Dropping the candidate."</span>,
-						bc.descriptor().relay_parent
+						bc.descriptor().relay_parent()
 					);
 					<span class="kw">return </span><span class="bool-val">false
 				</span>},
@@ -2873,7 +2977,7 @@
 						</span><span class="macro">log::debug!</span>(
 							target: LOG_TARGET,
 							<span class="string">"Found enough candidates for paraid: {:?}."</span>,
-							candidate.descriptor().para_id
+							candidate.descriptor().para_id()
 						);
 						<span class="kw">break</span>;
 					}
@@ -2892,7 +2996,7 @@
 								<span class="string">"Found a backed candidate {:?} with injected core index {}, which is not scheduled for paraid {:?}."</span>,
 								candidate.candidate().hash(),
 								core_index.<span class="number">0</span>,
-								candidate.descriptor().para_id
+								candidate.descriptor().para_id()
 							);
 
 							<span class="kw">break</span>;
@@ -2906,7 +3010,7 @@
 							target: LOG_TARGET,
 							<span class="string">"Found a backed candidate {:?} with no injected core index, for paraid {:?} which has multiple scheduled cores."</span>,
 							candidate.candidate().hash(),
-							candidate.descriptor().para_id
+							candidate.descriptor().para_id()
 						);
 
 						<span class="kw">break</span>;
@@ -2952,13 +3056,13 @@
 	<span class="kw">let </span><span class="prelude-val">Some</span>(core_idx) = maybe_core_idx <span class="kw">else </span>{ <span class="kw">return </span><span class="prelude-val">None </span>};
 
 	<span class="kw">let </span>relay_parent_block_number =
-		<span class="kw">match </span>allowed_relay_parents.acquire_info(candidate.descriptor().relay_parent, <span class="prelude-val">None</span>) {
+		<span class="kw">match </span>allowed_relay_parents.acquire_info(candidate.descriptor().relay_parent(), <span class="prelude-val">None</span>) {
 			<span class="prelude-val">Some</span>((<span class="kw">_</span>, block_num)) =&gt; block_num,
 			<span class="prelude-val">None </span>=&gt; {
 				<span class="macro">log::debug!</span>(
 					target: LOG_TARGET,
 					<span class="string">"Relay parent {:?} for candidate {:?} is not in the allowed relay parents."</span>,
-					candidate.descriptor().relay_parent,
+					candidate.descriptor().relay_parent(),
 					candidate.candidate().hash(),
 				);
 				<span class="kw">return </span><span class="prelude-val">None

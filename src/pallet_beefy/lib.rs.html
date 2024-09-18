@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/git/checkouts/polkadot-sdk-cff69157b985ed76/08f677e/substrate/frame/beefy/src/lib.rs`."><title>lib.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-b25d77b18a16a9a4.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="pallet_beefy" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0-nightly (13a52890d 2024-08-14)" data-channel="nightly" data-search-js="search-ef54e092fea9c776.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-cb0df477c2d67d00.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/git/checkouts/polkadot-sdk-cff69157b985ed76/34e0ff4/substrate/frame/beefy/src/lib.rs`."><title>lib.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-405f8b29f52305f8.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="pallet_beefy" data-themes="" data-resource-suffix="" data-rustdoc-version="1.83.0-nightly (28e8f01c2 2024-09-17)" data-channel="nightly" data-search-js="search-0cfde64e8ad3a7fe.js" data-settings-js="settings-7e3bb6c46e92e77c.js" ><script src="../../static.files/storage-29b1d5a9048d38fe.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-14659ec02b58af51.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-40f72c9259523cb3.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
+<a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -752,7 +753,44 @@
 <a href="#752" id="752">752</a>
 <a href="#753" id="753">753</a>
 <a href="#754" id="754">754</a>
-</pre></div><pre class="rust"><code><span class="comment">// This file is part of Substrate.
+<a href="#755" id="755">755</a>
+<a href="#756" id="756">756</a>
+<a href="#757" id="757">757</a>
+<a href="#758" id="758">758</a>
+<a href="#759" id="759">759</a>
+<a href="#760" id="760">760</a>
+<a href="#761" id="761">761</a>
+<a href="#762" id="762">762</a>
+<a href="#763" id="763">763</a>
+<a href="#764" id="764">764</a>
+<a href="#765" id="765">765</a>
+<a href="#766" id="766">766</a>
+<a href="#767" id="767">767</a>
+<a href="#768" id="768">768</a>
+<a href="#769" id="769">769</a>
+<a href="#770" id="770">770</a>
+<a href="#771" id="771">771</a>
+<a href="#772" id="772">772</a>
+<a href="#773" id="773">773</a>
+<a href="#774" id="774">774</a>
+<a href="#775" id="775">775</a>
+<a href="#776" id="776">776</a>
+<a href="#777" id="777">777</a>
+<a href="#778" id="778">778</a>
+<a href="#779" id="779">779</a>
+<a href="#780" id="780">780</a>
+<a href="#781" id="781">781</a>
+<a href="#782" id="782">782</a>
+<a href="#783" id="783">783</a>
+<a href="#784" id="784">784</a>
+<a href="#785" id="785">785</a>
+<a href="#786" id="786">786</a>
+<a href="#787" id="787">787</a>
+<a href="#788" id="788">788</a>
+<a href="#789" id="789">789</a>
+<a href="#790" id="790">790</a>
+<a href="#791" id="791">791</a>
+<a href="#792" id="792">792</a></pre></div><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) Parity Technologies (UK) Ltd.
 // SPDX-License-Identifier: Apache-2.0
@@ -773,21 +811,33 @@
 
 </span><span class="kw">extern crate </span>alloc;
 
+<span class="kw">mod </span>default_weights;
+<span class="kw">mod </span>equivocation;
+<span class="attr">#[cfg(test)]
+</span><span class="kw">mod </span>mock;
+<span class="attr">#[cfg(test)]
+</span><span class="kw">mod </span>tests;
+
 <span class="kw">use </span>alloc::{boxed::Box, vec::Vec};
 <span class="kw">use </span>codec::{Encode, MaxEncodedLen};
+<span class="kw">use </span>log;
 
 <span class="kw">use </span>frame_support::{
 	dispatch::{DispatchResultWithPostInfo, Pays},
 	pallet_prelude::<span class="kw-2">*</span>,
 	traits::{Get, OneSessionHandler},
-	weights::Weight,
+	weights::{constants::RocksDbWeight <span class="kw">as </span>DbWeight, Weight},
 	BoundedSlice, BoundedVec, Parameter,
 };
 <span class="kw">use </span>frame_system::{
 	ensure_none, ensure_signed,
 	pallet_prelude::{BlockNumberFor, HeaderFor, OriginFor},
 };
-<span class="kw">use </span>log;
+<span class="kw">use </span>sp_consensus_beefy::{
+	AncestryHelper, AncestryHelperWeightInfo, AuthorityIndex, BeefyAuthorityId, ConsensusLog,
+	DoubleVotingProof, ForkVotingProof, FutureBlockVotingProof, OnNewValidatorSet, ValidatorSet,
+	BEEFY_ENGINE_ID, GENESIS_AUTHORITY_SET_ID,
+};
 <span class="kw">use </span>sp_runtime::{
 	generic::DigestItem,
 	traits::{IsMember, Member, One},
@@ -796,23 +846,9 @@
 <span class="kw">use </span>sp_session::{GetSessionNumber, GetValidatorCount};
 <span class="kw">use </span>sp_staking::{offence::OffenceReportSystem, SessionIndex};
 
-<span class="kw">use </span>sp_consensus_beefy::{
-	AncestryHelper, AuthorityIndex, BeefyAuthorityId, ConsensusLog, DoubleVotingProof,
-	ForkVotingProof, FutureBlockVotingProof, OnNewValidatorSet, ValidatorSet, BEEFY_ENGINE_ID,
-	GENESIS_AUTHORITY_SET_ID,
-};
-
-<span class="kw">mod </span>default_weights;
-<span class="kw">mod </span>equivocation;
-<span class="attr">#[cfg(test)]
-</span><span class="kw">mod </span>mock;
-<span class="attr">#[cfg(test)]
-</span><span class="kw">mod </span>tests;
-
+<span class="kw">use </span><span class="kw">crate</span>::equivocation::EquivocationEvidenceFor;
 <span class="kw">pub use </span><span class="kw">crate</span>::equivocation::{EquivocationOffence, EquivocationReportSystem, TimeSlot};
 <span class="kw">pub use </span>pallet::<span class="kw-2">*</span>;
-
-<span class="kw">use </span><span class="kw">crate</span>::equivocation::EquivocationEvidenceFor;
 
 <span class="kw">const </span>LOG_TARGET: <span class="kw-2">&amp;</span>str = <span class="string">"runtime::beefy"</span>;
 
@@ -856,7 +892,8 @@
 		</span><span class="kw">type </span>OnNewValidatorSet: OnNewValidatorSet&lt;&lt;<span class="self">Self </span><span class="kw">as </span>Config&gt;::BeefyId&gt;;
 
 		<span class="doccomment">/// Hook for checking commitment canonicity.
-		</span><span class="kw">type </span>AncestryHelper: AncestryHelper&lt;HeaderFor&lt;<span class="self">Self</span>&gt;&gt;;
+		</span><span class="kw">type </span>AncestryHelper: AncestryHelper&lt;HeaderFor&lt;<span class="self">Self</span>&gt;&gt;
+			+ AncestryHelperWeightInfo&lt;HeaderFor&lt;<span class="self">Self</span>&gt;&gt;;
 
 		<span class="doccomment">/// Weights for this pallet.
 		</span><span class="kw">type </span>WeightInfo: WeightInfo;
@@ -1049,9 +1086,10 @@
 		/// and validate the given key ownership proof against the extracted offender.
 		/// If both are valid, the offence will be reported.
 		</span><span class="attr">#[pallet::call_index(<span class="number">3</span>)]
-		#[pallet::weight(T::WeightInfo::report_fork_voting(
+		#[pallet::weight(T::WeightInfo::report_fork_voting::&lt;T&gt;(
 			key_owner_proof.validator_count(),
 			T::MaxNominators::get(),
+			<span class="kw-2">&amp;</span>equivocation_proof.ancestry_proof
 		))]
 		</span><span class="kw">pub fn </span>report_fork_voting(
 			origin: OriginFor&lt;T&gt;,
@@ -1083,9 +1121,10 @@
 		/// if the block author is defined it will be defined as the equivocation
 		/// reporter.
 		</span><span class="attr">#[pallet::call_index(<span class="number">4</span>)]
-		#[pallet::weight(T::WeightInfo::report_fork_voting(
+		#[pallet::weight(T::WeightInfo::report_fork_voting::&lt;T&gt;(
 			key_owner_proof.validator_count(),
 			T::MaxNominators::get(),
+			<span class="kw-2">&amp;</span>equivocation_proof.ancestry_proof
 		))]
 		</span><span class="kw">pub fn </span>report_fork_voting_unsigned(
 			origin: OriginFor&lt;T&gt;,
@@ -1112,7 +1151,7 @@
 		/// and validate the given key ownership proof against the extracted offender.
 		/// If both are valid, the offence will be reported.
 		</span><span class="attr">#[pallet::call_index(<span class="number">5</span>)]
-		#[pallet::weight(T::WeightInfo::report_fork_voting(
+		#[pallet::weight(T::WeightInfo::report_future_block_voting(
 			key_owner_proof.validator_count(),
 			T::MaxNominators::get(),
 		))]
@@ -1143,7 +1182,7 @@
 		/// if the block author is defined it will be defined as the equivocation
 		/// reporter.
 		</span><span class="attr">#[pallet::call_index(<span class="number">6</span>)]
-		#[pallet::weight(T::WeightInfo::report_fork_voting(
+		#[pallet::weight(T::WeightInfo::report_future_block_voting(
 			key_owner_proof.validator_count(),
 			T::MaxNominators::get(),
 		))]
@@ -1494,16 +1533,53 @@
 		validator_count: u32,
 		max_nominators_per_validator: u32,
 	) -&gt; Weight;
+
+	<span class="kw">fn </span>set_new_genesis() -&gt; Weight;
+}
+
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">trait </span>WeightInfoExt: WeightInfo {
 	<span class="kw">fn </span>report_double_voting(validator_count: u32, max_nominators_per_validator: u32) -&gt; Weight {
 		<span class="self">Self</span>::report_voting_equivocation(<span class="number">2</span>, validator_count, max_nominators_per_validator)
 	}
-	<span class="kw">fn </span>report_fork_voting(validator_count: u32, max_nominators_per_validator: u32) -&gt; Weight;
+
+	<span class="kw">fn </span>report_fork_voting&lt;T: Config&gt;(
+		validator_count: u32,
+		max_nominators_per_validator: u32,
+		ancestry_proof: <span class="kw-2">&amp;</span>&lt;T::AncestryHelper <span class="kw">as </span>AncestryHelper&lt;HeaderFor&lt;T&gt;&gt;&gt;::Proof,
+	) -&gt; Weight {
+		<span class="kw">let </span>_weight = &lt;T::AncestryHelper <span class="kw">as </span>AncestryHelperWeightInfo&lt;HeaderFor&lt;T&gt;&gt;&gt;::extract_validation_context()
+			.saturating_add(
+				&lt;T::AncestryHelper <span class="kw">as </span>AncestryHelperWeightInfo&lt;HeaderFor&lt;T&gt;&gt;&gt;::is_non_canonical(
+					ancestry_proof,
+				),
+			)
+			.saturating_add(<span class="self">Self</span>::report_voting_equivocation(
+				<span class="number">1</span>,
+				validator_count,
+				max_nominators_per_validator,
+			));
+
+		<span class="comment">// TODO: https://github.com/paritytech/polkadot-sdk/issues/4523 - return `_weight` here.
+		// We return `Weight::MAX` currently in order to disallow this extrinsic for the moment.
+		// We need to check that the proof is optimal.
+		</span>Weight::MAX
+	}
+
 	<span class="kw">fn </span>report_future_block_voting(
 		validator_count: u32,
 		max_nominators_per_validator: u32,
 	) -&gt; Weight {
-		<span class="self">Self</span>::report_voting_equivocation(<span class="number">1</span>, validator_count, max_nominators_per_validator)
+		<span class="comment">// checking if the report is for a future block
+		</span>DbWeight::get()
+			.reads(<span class="number">1</span>)
+			<span class="comment">// check and report the equivocated vote
+			</span>.saturating_add(<span class="self">Self</span>::report_voting_equivocation(
+				<span class="number">1</span>,
+				validator_count,
+				max_nominators_per_validator,
+			))
 	}
-	<span class="kw">fn </span>set_new_genesis() -&gt; Weight;
 }
+
+<span class="kw">impl</span>&lt;T&gt; WeightInfoExt <span class="kw">for </span>T <span class="kw">where </span>T: WeightInfo {}
 </code></pre></div></section></main></body></html>

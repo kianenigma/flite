@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `runtime/src/lib.rs`."><title>lib.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-b25d77b18a16a9a4.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="runtime" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0-nightly (13a52890d 2024-08-14)" data-channel="nightly" data-search-js="search-ef54e092fea9c776.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-cb0df477c2d67d00.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `runtime/src/lib.rs`."><title>lib.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-405f8b29f52305f8.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="runtime" data-themes="" data-resource-suffix="" data-rustdoc-version="1.83.0-nightly (28e8f01c2 2024-09-17)" data-channel="nightly" data-search-js="search-0cfde64e8ad3a7fe.js" data-settings-js="settings-7e3bb6c46e92e77c.js" ><script src="../../static.files/storage-29b1d5a9048d38fe.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-14659ec02b58af51.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-40f72c9259523cb3.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
+<a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -249,55 +250,7 @@
 <a href="#249" id="249">249</a>
 <a href="#250" id="250">250</a>
 <a href="#251" id="251">251</a>
-<a href="#252" id="252">252</a>
-<a href="#253" id="253">253</a>
-<a href="#254" id="254">254</a>
-<a href="#255" id="255">255</a>
-<a href="#256" id="256">256</a>
-<a href="#257" id="257">257</a>
-<a href="#258" id="258">258</a>
-<a href="#259" id="259">259</a>
-<a href="#260" id="260">260</a>
-<a href="#261" id="261">261</a>
-<a href="#262" id="262">262</a>
-<a href="#263" id="263">263</a>
-<a href="#264" id="264">264</a>
-<a href="#265" id="265">265</a>
-<a href="#266" id="266">266</a>
-<a href="#267" id="267">267</a>
-<a href="#268" id="268">268</a>
-<a href="#269" id="269">269</a>
-<a href="#270" id="270">270</a>
-<a href="#271" id="271">271</a>
-<a href="#272" id="272">272</a>
-<a href="#273" id="273">273</a>
-<a href="#274" id="274">274</a>
-<a href="#275" id="275">275</a>
-<a href="#276" id="276">276</a>
-<a href="#277" id="277">277</a>
-<a href="#278" id="278">278</a>
-<a href="#279" id="279">279</a>
-<a href="#280" id="280">280</a>
-<a href="#281" id="281">281</a>
-<a href="#282" id="282">282</a>
-<a href="#283" id="283">283</a>
-<a href="#284" id="284">284</a>
-<a href="#285" id="285">285</a>
-<a href="#286" id="286">286</a>
-<a href="#287" id="287">287</a>
-<a href="#288" id="288">288</a>
-<a href="#289" id="289">289</a>
-<a href="#290" id="290">290</a>
-<a href="#291" id="291">291</a>
-<a href="#292" id="292">292</a>
-<a href="#293" id="293">293</a>
-<a href="#294" id="294">294</a>
-<a href="#295" id="295">295</a>
-<a href="#296" id="296">296</a>
-<a href="#297" id="297">297</a>
-<a href="#298" id="298">298</a>
-<a href="#299" id="299">299</a>
-</pre></div><pre class="rust"><code><span class="attr">#![cfg_attr(not(feature = <span class="string">"std"</span>), no_std)]
+<a href="#252" id="252">252</a></pre></div><pre class="rust"><code><span class="attr">#![cfg_attr(not(feature = <span class="string">"std"</span>), no_std)]
 
 </span><span class="kw">extern crate </span>alloc;
 <span class="kw">use </span>alloc::{vec, vec::Vec};
@@ -369,57 +322,10 @@
 }
 
 <span class="kw">use </span>flite::default_configs::FliteFrameSystem;
-<span class="kw">impl </span>frame_system::Config <span class="kw">for </span>Runtime {
+
+<span class="attr">#[derive_impl(FliteFrameSystem&lt;Configuration&gt;)]
+</span><span class="kw">impl </span>frame_system::Config <span class="kw">for </span>Runtime {
 	<span class="kw">type </span>Block = Block;
-
-	<span class="comment">// Everything after this should be elided by a macro. I am 100% sure `derive_impl` can be
-	// adapter to do this, or we use directly `macro_magic`, but for now I will just copy-paste it.
-
-	// inject types.
-	</span><span class="kw">type </span>RuntimeEvent = RuntimeEvent;
-	<span class="kw">type </span>RuntimeOrigin = RuntimeOrigin;
-	<span class="kw">type </span>RuntimeCall = RuntimeCall;
-	<span class="kw">type </span>RuntimeTask = RuntimeTask;
-	<span class="kw">type </span>PalletInfo = PalletInfo;
-
-	<span class="comment">// coming from a macro.
-	</span><span class="kw">type </span>AccountData =
-		&lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::AccountData;
-	<span class="kw">type </span>BaseCallFilter =
-		&lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::BaseCallFilter;
-	<span class="kw">type </span>BlockWeights =
-		&lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::BlockWeights;
-	<span class="kw">type </span>BlockLength =
-		&lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::BlockLength;
-	<span class="kw">type </span>Nonce = &lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::Nonce;
-	<span class="kw">type </span>Hash = &lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::Hash;
-	<span class="kw">type </span>Hashing = &lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::Hashing;
-	<span class="kw">type </span>AccountId = &lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::AccountId;
-	<span class="kw">type </span>Lookup = &lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::Lookup;
-	<span class="kw">type </span>BlockHashCount =
-		&lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::BlockHashCount;
-	<span class="kw">type </span>DbWeight = &lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::DbWeight;
-	<span class="kw">type </span>Version = &lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::Version;
-	<span class="kw">type </span>OnNewAccount =
-		&lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::OnNewAccount;
-	<span class="kw">type </span>OnKilledAccount =
-		&lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::OnKilledAccount;
-	<span class="kw">type </span>SystemWeightInfo =
-		&lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::SystemWeightInfo;
-	<span class="kw">type </span>SS58Prefix = &lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::SS58Prefix;
-	<span class="kw">type </span>OnSetCode = &lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::OnSetCode;
-	<span class="kw">type </span>MaxConsumers =
-		&lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::MaxConsumers;
-	<span class="kw">type </span>SingleBlockMigrations =
-		&lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::SingleBlockMigrations;
-	<span class="kw">type </span>MultiBlockMigrator =
-		&lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::MultiBlockMigrator;
-	<span class="kw">type </span>PreInherents =
-		&lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::PreInherents;
-	<span class="kw">type </span>PostInherents =
-		&lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::PostInherents;
-	<span class="kw">type </span>PostTransactions =
-		&lt;FliteFrameSystem&lt;Configuration&gt; <span class="kw">as </span>frame_system::DefaultConfig&gt;::PostTransactions;
 }
 
 <span class="kw">impl </span>flite::flite_system::Config <span class="kw">for </span>Runtime {}
@@ -509,7 +415,7 @@
 			RuntimeExecutive::execute_block(block)
 		}
 
-		<span class="kw">fn </span>initialize_block(header: <span class="kw-2">&amp;</span>Header) -&gt; apis::ExtrinsicInclusionMode {
+		<span class="kw">fn </span>initialize_block(header: <span class="kw-2">&amp;</span>Header) -&gt; ExtrinsicInclusionMode {
 			RuntimeExecutive::initialize_block(header)
 		}
 	}

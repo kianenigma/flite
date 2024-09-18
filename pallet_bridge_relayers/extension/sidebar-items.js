@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["RelayerAccountAction"],"fn":["compute_priority_boost"],"struct":["BridgeRelayersSignedExtension","PreDispatchData","WithGrandpaChainExtensionConfig","WithMessagesExtensionConfig","WithParachainExtensionConfig"],"type":["ItemCount"]};

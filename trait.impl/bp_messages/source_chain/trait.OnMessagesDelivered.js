@@ -1,4 +1,9 @@
-(function() {var implementors = {
-"bp_messages":[],
-"bridge_runtime_common":[["impl&lt;H: <a class=\"trait\" href=\"bridge_runtime_common/messages_xcm_extension/trait.XcmBlobHauler.html\" title=\"trait bridge_runtime_common::messages_xcm_extension::XcmBlobHauler\">XcmBlobHauler</a>, Lanes: <a class=\"trait\" href=\"bounded_collections/trait.Get.html\" title=\"trait bounded_collections::Get\">Get</a>&lt;<a class=\"struct\" href=\"https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html\" title=\"struct alloc::vec::Vec\">Vec</a>&lt;(<a class=\"struct\" href=\"bridge_runtime_common/messages_xcm_extension/struct.SenderAndLane.html\" title=\"struct bridge_runtime_common::messages_xcm_extension::SenderAndLane\">SenderAndLane</a>, (<a class=\"enum\" href=\"staging_xcm/v4/junction/enum.NetworkId.html\" title=\"enum staging_xcm::v4::junction::NetworkId\">NetworkId</a>, <a class=\"type\" href=\"staging_xcm/v4/location/type.InteriorLocation.html\" title=\"type staging_xcm::v4::location::InteriorLocation\">InteriorLocation</a>))&gt;&gt;&gt; <a class=\"trait\" href=\"bp_messages/source_chain/trait.OnMessagesDelivered.html\" title=\"trait bp_messages::source_chain::OnMessagesDelivered\">OnMessagesDelivered</a> for <a class=\"struct\" href=\"bridge_runtime_common/messages_xcm_extension/struct.XcmBlobHaulerAdapter.html\" title=\"struct bridge_runtime_common::messages_xcm_extension::XcmBlobHaulerAdapter\">XcmBlobHaulerAdapter</a>&lt;H, Lanes&gt;"]]
-};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
+(function() {
+    var implementors = Object.fromEntries([["bp_messages",[]],["pallet_xcm_bridge_hub",[["impl&lt;T: <a class=\"trait\" href=\"pallet_xcm_bridge_hub/pallet/trait.Config.html\" title=\"trait pallet_xcm_bridge_hub::pallet::Config\">Config</a>&lt;I&gt;, I: 'static&gt; <a class=\"trait\" href=\"bp_messages/source_chain/trait.OnMessagesDelivered.html\" title=\"trait bp_messages::source_chain::OnMessagesDelivered\">OnMessagesDelivered</a> for <a class=\"struct\" href=\"pallet_xcm_bridge_hub/pallet/struct.Pallet.html\" title=\"struct pallet_xcm_bridge_hub::pallet::Pallet\">Pallet</a>&lt;T, I&gt;"]]]]);
+    if (window.register_implementors) {
+        window.register_implementors(implementors);
+    } else {
+        window.pending_implementors = implementors;
+    }
+})()
+//{"start":57,"fragment_lengths":[18,538]}

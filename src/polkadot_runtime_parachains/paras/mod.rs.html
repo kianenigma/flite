@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/git/checkouts/polkadot-sdk-cff69157b985ed76/08f677e/polkadot/runtime/parachains/src/paras/mod.rs`."><title>mod.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-b25d77b18a16a9a4.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="polkadot_runtime_parachains" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0-nightly (13a52890d 2024-08-14)" data-channel="nightly" data-search-js="search-ef54e092fea9c776.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-cb0df477c2d67d00.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/git/checkouts/polkadot-sdk-cff69157b985ed76/34e0ff4/polkadot/runtime/parachains/src/paras/mod.rs`."><title>mod.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-405f8b29f52305f8.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="polkadot_runtime_parachains" data-themes="" data-resource-suffix="" data-rustdoc-version="1.83.0-nightly (28e8f01c2 2024-09-17)" data-channel="nightly" data-search-js="search-0cfde64e8ad3a7fe.js" data-settings-js="settings-7e3bb6c46e92e77c.js" ><script src="../../../static.files/storage-29b1d5a9048d38fe.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-14659ec02b58af51.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-40f72c9259523cb3.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
+<a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -2367,20 +2368,7 @@
 <a href="#2367" id="2367">2367</a>
 <a href="#2368" id="2368">2368</a>
 <a href="#2369" id="2369">2369</a>
-<a href="#2370" id="2370">2370</a>
-<a href="#2371" id="2371">2371</a>
-<a href="#2372" id="2372">2372</a>
-<a href="#2373" id="2373">2373</a>
-<a href="#2374" id="2374">2374</a>
-<a href="#2375" id="2375">2375</a>
-<a href="#2376" id="2376">2376</a>
-<a href="#2377" id="2377">2377</a>
-<a href="#2378" id="2378">2378</a>
-<a href="#2379" id="2379">2379</a>
-<a href="#2380" id="2380">2380</a>
-<a href="#2381" id="2381">2381</a>
-<a href="#2382" id="2382">2382</a>
-</pre></div><pre class="rust"><code><span class="comment">// Copyright (C) Parity Technologies (UK) Ltd.
+<a href="#2370" id="2370">2370</a></pre></div><pre class="rust"><code><span class="comment">// Copyright (C) Parity Technologies (UK) Ltd.
 // This file is part of Polkadot.
 
 // Polkadot is free software: you can redistribute it and/or modify
@@ -4338,15 +4326,13 @@
 		inclusion_block_number: BlockNumberFor&lt;T&gt;,
 		cfg: <span class="kw-2">&amp;</span>configuration::HostConfiguration&lt;BlockNumberFor&lt;T&gt;&gt;,
 		upgrade_strategy: UpgradeStrategy,
-	) -&gt; Weight {
-		<span class="kw">let </span><span class="kw-2">mut </span>weight = T::DbWeight::get().reads(<span class="number">1</span>);
-
+	) {
 		<span class="comment">// Should be prevented by checks in `schedule_code_upgrade_external`
 		</span><span class="kw">let </span>new_code_len = new_code.<span class="number">0</span>.len();
 		<span class="kw">if </span>new_code_len &lt; MIN_CODE_SIZE <span class="kw">as </span>usize || new_code_len &gt; cfg.max_code_size <span class="kw">as </span>usize {
 			<span class="macro">log::warn!</span>(target: LOG_TARGET, <span class="string">"attempted to schedule an upgrade with invalid new validation code"</span>,);
-			<span class="kw">return </span>weight
-		}
+			<span class="kw">return
+		</span>}
 
 		<span class="comment">// Enacting this should be prevented by the `can_upgrade_validation_code`
 		</span><span class="kw">if </span>FutureCodeHash::&lt;T&gt;::contains_key(<span class="kw-2">&amp;</span>id) {
@@ -4359,8 +4345,8 @@
 			// NOTE: we cannot set `UpgradeGoAheadSignal` signal here since this will be reset by
 			//       the following call `note_new_head`
 			</span><span class="macro">log::warn!</span>(target: LOG_TARGET, <span class="string">"ended up scheduling an upgrade while one is pending"</span>,);
-			<span class="kw">return </span>weight
-		}
+			<span class="kw">return
+		</span>}
 
 		<span class="kw">let </span>code_hash = new_code.hash();
 
@@ -4368,23 +4354,20 @@
 		// process right away.
 		//
 		// We do not want to allow this since it will mess with the code reference counting.
-		</span>weight += T::DbWeight::get().reads(<span class="number">1</span>);
-		<span class="kw">if </span>CurrentCodeHash::&lt;T&gt;::get(<span class="kw-2">&amp;</span>id) == <span class="prelude-val">Some</span>(code_hash) {
+		</span><span class="kw">if </span>CurrentCodeHash::&lt;T&gt;::get(<span class="kw-2">&amp;</span>id) == <span class="prelude-val">Some</span>(code_hash) {
 			<span class="comment">// NOTE: we cannot set `UpgradeGoAheadSignal` signal here since this will be reset by
 			//       the following call `note_new_head`
 			</span><span class="macro">log::warn!</span>(
 				target: LOG_TARGET,
 				<span class="string">"para tried to upgrade to the same code. Abort the upgrade"</span>,
 			);
-			<span class="kw">return </span>weight
-		}
+			<span class="kw">return
+		</span>}
 
 		<span class="comment">// This is the start of the upgrade process. Prevent any further attempts at upgrading.
-		</span>weight += T::DbWeight::get().writes(<span class="number">2</span>);
-		FutureCodeHash::&lt;T&gt;::insert(<span class="kw-2">&amp;</span>id, <span class="kw-2">&amp;</span>code_hash);
+		</span>FutureCodeHash::&lt;T&gt;::insert(<span class="kw-2">&amp;</span>id, <span class="kw-2">&amp;</span>code_hash);
 		UpgradeRestrictionSignal::&lt;T&gt;::insert(<span class="kw-2">&amp;</span>id, UpgradeRestriction::Present);
 
-		weight += T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">1</span>);
 		<span class="kw">let </span>next_possible_upgrade_at = inclusion_block_number + cfg.validation_upgrade_cooldown;
 		UpgradeCooldowns::&lt;T&gt;::mutate(|upgrade_cooldowns| {
 			<span class="kw">let </span>insert_idx = upgrade_cooldowns
@@ -4393,14 +4376,12 @@
 			upgrade_cooldowns.insert(insert_idx, (id, next_possible_upgrade_at));
 		});
 
-		weight += <span class="self">Self</span>::kick_off_pvf_check(
+		<span class="self">Self</span>::kick_off_pvf_check(
 			PvfCheckCause::Upgrade { id, included_at: inclusion_block_number, upgrade_strategy },
 			code_hash,
 			new_code,
 			cfg,
 		);
-
-		weight
 	}
 
 	<span class="doccomment">/// Makes sure that the given code hash has passed pre-checking.
@@ -4490,11 +4471,11 @@
 		id: ParaId,
 		new_head: HeadData,
 		execution_context: BlockNumberFor&lt;T&gt;,
-	) -&gt; Weight {
+	) {
 		Heads::&lt;T&gt;::insert(<span class="kw-2">&amp;</span>id, <span class="kw-2">&amp;</span>new_head);
 		MostRecentContext::&lt;T&gt;::insert(<span class="kw-2">&amp;</span>id, execution_context);
 
-		<span class="kw">let </span>weight = <span class="kw">if let </span><span class="prelude-val">Some</span>(expected_at) = FutureCodeUpgrades::&lt;T&gt;::get(<span class="kw-2">&amp;</span>id) {
+		<span class="kw">if let </span><span class="prelude-val">Some</span>(expected_at) = FutureCodeUpgrades::&lt;T&gt;::get(<span class="kw-2">&amp;</span>id) {
 			<span class="kw">if </span>expected_at &lt;= execution_context {
 				FutureCodeUpgrades::&lt;T&gt;::remove(<span class="kw-2">&amp;</span>id);
 				UpgradeGoAheadSignal::&lt;T&gt;::remove(<span class="kw-2">&amp;</span>id);
@@ -4504,14 +4485,10 @@
 					new_code_hash
 				} <span class="kw">else </span>{
 					<span class="macro">log::error!</span>(target: LOG_TARGET, <span class="string">"Missing future code hash for {:?}"</span>, <span class="kw-2">&amp;</span>id);
-					<span class="kw">return </span>T::DbWeight::get().reads_writes(<span class="number">3</span>, <span class="number">1 </span>+ <span class="number">3</span>)
-				};
+					<span class="kw">return
+				</span>};
 
-				<span class="kw">let </span>weight = <span class="self">Self</span>::set_current_code(id, new_code_hash, expected_at);
-
-				weight + T::DbWeight::get().reads_writes(<span class="number">3</span>, <span class="number">3</span>)
-			} <span class="kw">else </span>{
-				T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">1 </span>+ <span class="number">0</span>)
+				<span class="self">Self</span>::set_current_code(id, new_code_hash, expected_at);
 			}
 		} <span class="kw">else </span>{
 			<span class="comment">// This means there is no upgrade scheduled.
@@ -4519,10 +4496,9 @@
 			// In case the upgrade was aborted by the relay-chain we should reset
 			// the `Abort` signal.
 			</span>UpgradeGoAheadSignal::&lt;T&gt;::remove(<span class="kw-2">&amp;</span>id);
-			T::DbWeight::get().reads_writes(<span class="number">1</span>, <span class="number">2</span>)
 		};
 
-		weight.saturating_add(T::OnNewHead::on_new_head(id, <span class="kw-2">&amp;</span>new_head))
+		T::OnNewHead::on_new_head(id, <span class="kw-2">&amp;</span>new_head);
 	}
 
 	<span class="doccomment">/// Set the current code for the given parachain.

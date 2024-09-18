@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/git/checkouts/polkadot-sdk-cff69157b985ed76/08f677e/substrate/primitives/staking/src/lib.rs`."><title>lib.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-b25d77b18a16a9a4.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sp_staking" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0-nightly (13a52890d 2024-08-14)" data-channel="nightly" data-search-js="search-ef54e092fea9c776.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-cb0df477c2d67d00.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/git/checkouts/polkadot-sdk-cff69157b985ed76/34e0ff4/substrate/primitives/staking/src/lib.rs`."><title>lib.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-405f8b29f52305f8.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sp_staking" data-themes="" data-resource-suffix="" data-rustdoc-version="1.83.0-nightly (28e8f01c2 2024-09-17)" data-channel="nightly" data-search-js="search-0cfde64e8ad3a7fe.js" data-settings-js="settings-7e3bb6c46e92e77c.js" ><script src="../../static.files/storage-29b1d5a9048d38fe.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-14659ec02b58af51.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-40f72c9259523cb3.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
+<a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -620,7 +621,9 @@
 <a href="#620" id="620">620</a>
 <a href="#621" id="621">621</a>
 <a href="#622" id="622">622</a>
-</pre></div><pre class="rust"><code><span class="comment">// This file is part of Substrate.
+<a href="#623" id="623">623</a>
+<a href="#624" id="624">624</a>
+<a href="#625" id="625">625</a></pre></div><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) Parity Technologies (UK) Ltd.
 // SPDX-License-Identifier: Apache-2.0
@@ -1147,23 +1150,26 @@
 	/// This takes into account any pending slashes to `Agent` against the delegated balance.
 	</span><span class="kw">fn </span>agent_balance(agent: Agent&lt;<span class="self">Self</span>::AccountId&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Balance&gt;;
 
+	<span class="doccomment">/// Returns the total amount of funds that is unbonded and can be withdrawn from the `Agent`
+	/// account. `None` if not an `Agent`.
+	</span><span class="kw">fn </span>agent_transferable_balance(agent: Agent&lt;<span class="self">Self</span>::AccountId&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Balance&gt;;
+
 	<span class="doccomment">/// Returns the total amount of funds delegated. `None` if not a `Delegator`.
 	</span><span class="kw">fn </span>delegator_balance(delegator: Delegator&lt;<span class="self">Self</span>::AccountId&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Balance&gt;;
 
-	<span class="doccomment">/// Delegate funds to `Agent`.
-	///
-	/// Only used for the initial delegation. Use [`Self::delegate_extra`] to add more delegation.
-	</span><span class="kw">fn </span>delegate(
-		delegator: Delegator&lt;<span class="self">Self</span>::AccountId&gt;,
+	<span class="doccomment">/// Register `Agent` such that it can accept delegation.
+	</span><span class="kw">fn </span>register_agent(
 		agent: Agent&lt;<span class="self">Self</span>::AccountId&gt;,
 		reward_account: <span class="kw-2">&amp;</span><span class="self">Self</span>::AccountId,
-		amount: <span class="self">Self</span>::Balance,
 	) -&gt; DispatchResult;
 
-	<span class="doccomment">/// Add more delegation to the `Agent`.
+	<span class="doccomment">/// Removes `Agent` registration.
 	///
-	/// If this is the first delegation, use [`Self::delegate`] instead.
-	</span><span class="kw">fn </span>delegate_extra(
+	/// This should only be allowed if the agent has no staked funds.
+	</span><span class="kw">fn </span>remove_agent(agent: Agent&lt;<span class="self">Self</span>::AccountId&gt;) -&gt; DispatchResult;
+
+	<span class="doccomment">/// Add delegation to the `Agent`.
+	</span><span class="kw">fn </span>delegate(
 		delegator: Delegator&lt;<span class="self">Self</span>::AccountId&gt;,
 		agent: Agent&lt;<span class="self">Self</span>::AccountId&gt;,
 		amount: <span class="self">Self</span>::Balance,
@@ -1238,7 +1244,7 @@
 	///
 	/// Also removed from [`StakingUnchecked`] as a Virtual Staker. Useful for testing.
 	</span><span class="attr">#[cfg(feature = <span class="string">"runtime-benchmarks"</span>)]
-	</span><span class="kw">fn </span>drop_agent(agent: Agent&lt;<span class="self">Self</span>::AccountId&gt;);
+	</span><span class="kw">fn </span>migrate_to_direct_staker(agent: Agent&lt;<span class="self">Self</span>::AccountId&gt;);
 }
 
 <span class="macro">sp_core::generate_feature_enabled_macro!</span>(runtime_benchmarks_enabled, feature = <span class="string">"runtime-benchmarks"</span>, $);

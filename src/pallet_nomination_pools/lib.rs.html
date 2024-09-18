@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/git/checkouts/polkadot-sdk-cff69157b985ed76/08f677e/substrate/frame/nomination-pools/src/lib.rs`."><title>lib.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-b25d77b18a16a9a4.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="pallet_nomination_pools" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0-nightly (13a52890d 2024-08-14)" data-channel="nightly" data-search-js="search-ef54e092fea9c776.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-cb0df477c2d67d00.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/git/checkouts/polkadot-sdk-cff69157b985ed76/34e0ff4/substrate/frame/nomination-pools/src/lib.rs`."><title>lib.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-405f8b29f52305f8.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="pallet_nomination_pools" data-themes="" data-resource-suffix="" data-rustdoc-version="1.83.0-nightly (28e8f01c2 2024-09-17)" data-channel="nightly" data-search-js="search-0cfde64e8ad3a7fe.js" data-settings-js="settings-7e3bb6c46e92e77c.js" ><script src="../../static.files/storage-29b1d5a9048d38fe.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-14659ec02b58af51.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-40f72c9259523cb3.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
+<a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -3955,7 +3956,123 @@
 <a href="#3955" id="3955">3955</a>
 <a href="#3956" id="3956">3956</a>
 <a href="#3957" id="3957">3957</a>
-</pre></div><pre class="rust"><code><span class="comment">// This file is part of Substrate.
+<a href="#3958" id="3958">3958</a>
+<a href="#3959" id="3959">3959</a>
+<a href="#3960" id="3960">3960</a>
+<a href="#3961" id="3961">3961</a>
+<a href="#3962" id="3962">3962</a>
+<a href="#3963" id="3963">3963</a>
+<a href="#3964" id="3964">3964</a>
+<a href="#3965" id="3965">3965</a>
+<a href="#3966" id="3966">3966</a>
+<a href="#3967" id="3967">3967</a>
+<a href="#3968" id="3968">3968</a>
+<a href="#3969" id="3969">3969</a>
+<a href="#3970" id="3970">3970</a>
+<a href="#3971" id="3971">3971</a>
+<a href="#3972" id="3972">3972</a>
+<a href="#3973" id="3973">3973</a>
+<a href="#3974" id="3974">3974</a>
+<a href="#3975" id="3975">3975</a>
+<a href="#3976" id="3976">3976</a>
+<a href="#3977" id="3977">3977</a>
+<a href="#3978" id="3978">3978</a>
+<a href="#3979" id="3979">3979</a>
+<a href="#3980" id="3980">3980</a>
+<a href="#3981" id="3981">3981</a>
+<a href="#3982" id="3982">3982</a>
+<a href="#3983" id="3983">3983</a>
+<a href="#3984" id="3984">3984</a>
+<a href="#3985" id="3985">3985</a>
+<a href="#3986" id="3986">3986</a>
+<a href="#3987" id="3987">3987</a>
+<a href="#3988" id="3988">3988</a>
+<a href="#3989" id="3989">3989</a>
+<a href="#3990" id="3990">3990</a>
+<a href="#3991" id="3991">3991</a>
+<a href="#3992" id="3992">3992</a>
+<a href="#3993" id="3993">3993</a>
+<a href="#3994" id="3994">3994</a>
+<a href="#3995" id="3995">3995</a>
+<a href="#3996" id="3996">3996</a>
+<a href="#3997" id="3997">3997</a>
+<a href="#3998" id="3998">3998</a>
+<a href="#3999" id="3999">3999</a>
+<a href="#4000" id="4000">4000</a>
+<a href="#4001" id="4001">4001</a>
+<a href="#4002" id="4002">4002</a>
+<a href="#4003" id="4003">4003</a>
+<a href="#4004" id="4004">4004</a>
+<a href="#4005" id="4005">4005</a>
+<a href="#4006" id="4006">4006</a>
+<a href="#4007" id="4007">4007</a>
+<a href="#4008" id="4008">4008</a>
+<a href="#4009" id="4009">4009</a>
+<a href="#4010" id="4010">4010</a>
+<a href="#4011" id="4011">4011</a>
+<a href="#4012" id="4012">4012</a>
+<a href="#4013" id="4013">4013</a>
+<a href="#4014" id="4014">4014</a>
+<a href="#4015" id="4015">4015</a>
+<a href="#4016" id="4016">4016</a>
+<a href="#4017" id="4017">4017</a>
+<a href="#4018" id="4018">4018</a>
+<a href="#4019" id="4019">4019</a>
+<a href="#4020" id="4020">4020</a>
+<a href="#4021" id="4021">4021</a>
+<a href="#4022" id="4022">4022</a>
+<a href="#4023" id="4023">4023</a>
+<a href="#4024" id="4024">4024</a>
+<a href="#4025" id="4025">4025</a>
+<a href="#4026" id="4026">4026</a>
+<a href="#4027" id="4027">4027</a>
+<a href="#4028" id="4028">4028</a>
+<a href="#4029" id="4029">4029</a>
+<a href="#4030" id="4030">4030</a>
+<a href="#4031" id="4031">4031</a>
+<a href="#4032" id="4032">4032</a>
+<a href="#4033" id="4033">4033</a>
+<a href="#4034" id="4034">4034</a>
+<a href="#4035" id="4035">4035</a>
+<a href="#4036" id="4036">4036</a>
+<a href="#4037" id="4037">4037</a>
+<a href="#4038" id="4038">4038</a>
+<a href="#4039" id="4039">4039</a>
+<a href="#4040" id="4040">4040</a>
+<a href="#4041" id="4041">4041</a>
+<a href="#4042" id="4042">4042</a>
+<a href="#4043" id="4043">4043</a>
+<a href="#4044" id="4044">4044</a>
+<a href="#4045" id="4045">4045</a>
+<a href="#4046" id="4046">4046</a>
+<a href="#4047" id="4047">4047</a>
+<a href="#4048" id="4048">4048</a>
+<a href="#4049" id="4049">4049</a>
+<a href="#4050" id="4050">4050</a>
+<a href="#4051" id="4051">4051</a>
+<a href="#4052" id="4052">4052</a>
+<a href="#4053" id="4053">4053</a>
+<a href="#4054" id="4054">4054</a>
+<a href="#4055" id="4055">4055</a>
+<a href="#4056" id="4056">4056</a>
+<a href="#4057" id="4057">4057</a>
+<a href="#4058" id="4058">4058</a>
+<a href="#4059" id="4059">4059</a>
+<a href="#4060" id="4060">4060</a>
+<a href="#4061" id="4061">4061</a>
+<a href="#4062" id="4062">4062</a>
+<a href="#4063" id="4063">4063</a>
+<a href="#4064" id="4064">4064</a>
+<a href="#4065" id="4065">4065</a>
+<a href="#4066" id="4066">4066</a>
+<a href="#4067" id="4067">4067</a>
+<a href="#4068" id="4068">4068</a>
+<a href="#4069" id="4069">4069</a>
+<a href="#4070" id="4070">4070</a>
+<a href="#4071" id="4071">4071</a>
+<a href="#4072" id="4072">4072</a>
+<a href="#4073" id="4073">4073</a>
+<a href="#4074" id="4074">4074</a></pre></div><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) Parity Technologies (UK) Ltd.
 // SPDX-License-Identifier: Apache-2.0
@@ -5788,7 +5905,9 @@
 		<span class="doccomment">/// A member has been removed from a pool.
 		///
 		/// The removal can be voluntary (withdrawn all unbonded funds) or involuntary (kicked).
-		</span>MemberRemoved { pool_id: PoolId, member: T::AccountId },
+		/// Any funds that are still delegated (i.e. dangling delegation) are released and are
+		/// represented by `released_balance`.
+		</span>MemberRemoved { pool_id: PoolId, member: T::AccountId, released_balance: BalanceOf&lt;T&gt; },
 		<span class="doccomment">/// The roles of a pool have been updated to the given new roles. Note that the depositor
 		/// can never change.
 		</span>RolesUpdated {
@@ -5965,6 +6084,8 @@
 			pool_id: PoolId,
 		) -&gt; DispatchResult {
 			<span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
+			<span class="comment">// ensure pool is not in an un-migrated state.
+			</span><span class="macro">ensure!</span>(!<span class="self">Self</span>::api_pool_needs_delegate_migration(pool_id), Error::&lt;T&gt;::NotMigrated);
 
 			<span class="macro">ensure!</span>(amount &gt;= MinJoinBond::&lt;T&gt;::get(), Error::&lt;T&gt;::MinimumBondNotMet);
 			<span class="comment">// If a member already exists that means they already belong to a pool
@@ -6027,6 +6148,13 @@
 		)]
 		</span><span class="kw">pub fn </span>bond_extra(origin: OriginFor&lt;T&gt;, extra: BondExtra&lt;BalanceOf&lt;T&gt;&gt;) -&gt; DispatchResult {
 			<span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
+
+			<span class="comment">// ensure who is not in an un-migrated state.
+			</span><span class="macro">ensure!</span>(
+				!<span class="self">Self</span>::api_member_needs_delegate_migration(who.clone()),
+				Error::&lt;T&gt;::NotMigrated
+			);
+
 			<span class="self">Self</span>::do_bond_extra(who.clone(), who, extra)
 		}
 
@@ -6042,6 +6170,12 @@
 		#[pallet::weight(T::WeightInfo::claim_payout())]
 		</span><span class="kw">pub fn </span>claim_payout(origin: OriginFor&lt;T&gt;) -&gt; DispatchResult {
 			<span class="kw">let </span>signer = ensure_signed(origin)<span class="question-mark">?</span>;
+			<span class="comment">// ensure signer is not in an un-migrated state.
+			</span><span class="macro">ensure!</span>(
+				!<span class="self">Self</span>::api_member_needs_delegate_migration(signer.clone()),
+				Error::&lt;T&gt;::NotMigrated
+			);
+
 			<span class="self">Self</span>::do_claim_payout(signer.clone(), signer)
 		}
 
@@ -6085,6 +6219,12 @@
 		) -&gt; DispatchResult {
 			<span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
 			<span class="kw">let </span>member_account = T::Lookup::lookup(member_account)<span class="question-mark">?</span>;
+			<span class="comment">// ensure member is not in an un-migrated state.
+			</span><span class="macro">ensure!</span>(
+				!<span class="self">Self</span>::api_member_needs_delegate_migration(member_account.clone()),
+				Error::&lt;T&gt;::NotMigrated
+			);
+
 			<span class="kw">let </span>(<span class="kw-2">mut </span>member, <span class="kw-2">mut </span>bonded_pool, <span class="kw-2">mut </span>reward_pool) =
 				<span class="self">Self</span>::get_member_with_pools(<span class="kw-2">&amp;</span>member_account)<span class="question-mark">?</span>;
 
@@ -6168,6 +6308,9 @@
 			num_slashing_spans: u32,
 		) -&gt; DispatchResult {
 			<span class="kw">let _ </span>= ensure_signed(origin)<span class="question-mark">?</span>;
+			<span class="comment">// ensure pool is not in an un-migrated state.
+			</span><span class="macro">ensure!</span>(!<span class="self">Self</span>::api_pool_needs_delegate_migration(pool_id), Error::&lt;T&gt;::NotMigrated);
+
 			<span class="kw">let </span>pool = BondedPool::&lt;T&gt;::get(pool_id).ok_or(Error::&lt;T&gt;::PoolNotFound)<span class="question-mark">?</span>;
 
 			<span class="comment">// For now we only allow a pool to withdraw unbonded if its not destroying. If the pool
@@ -6214,6 +6357,12 @@
 		) -&gt; DispatchResultWithPostInfo {
 			<span class="kw">let </span>caller = ensure_signed(origin)<span class="question-mark">?</span>;
 			<span class="kw">let </span>member_account = T::Lookup::lookup(member_account)<span class="question-mark">?</span>;
+			<span class="comment">// ensure member is not in an un-migrated state.
+			</span><span class="macro">ensure!</span>(
+				!<span class="self">Self</span>::api_member_needs_delegate_migration(member_account.clone()),
+				Error::&lt;T&gt;::NotMigrated
+			);
+
 			<span class="kw">let </span><span class="kw-2">mut </span>member =
 				PoolMembers::&lt;T&gt;::get(<span class="kw-2">&amp;</span>member_account).ok_or(Error::&lt;T&gt;::PoolMemberNotFound)<span class="question-mark">?</span>;
 			<span class="kw">let </span>current_era = T::StakeAdapter::current_era();
@@ -6299,9 +6448,10 @@
 				// don't exist. This check is also defensive in cases where the unbond pool does not
 				// update its balance (e.g. a bug in the slashing hook.) We gracefully proceed in
 				// order to ensure members can leave the pool and it can be destroyed.
-				</span>.min(T::StakeAdapter::transferable_balance(Pool::from(
-					bonded_pool.bonded_account(),
-				)));
+				</span>.min(T::StakeAdapter::transferable_balance(
+					Pool::from(bonded_pool.bonded_account()),
+					Member::from(member_account.clone()),
+				));
 
 			<span class="comment">// this can fail if the pool uses `DelegateStake` strategy and the member delegation
 			// is not claimed yet. See `Call::migrate_delegation()`.
@@ -6325,9 +6475,27 @@
 
 				<span class="comment">// member being reaped.
 				</span>PoolMembers::&lt;T&gt;::remove(<span class="kw-2">&amp;</span>member_account);
+
+				<span class="comment">// Ensure any dangling delegation is withdrawn.
+				</span><span class="kw">let </span>dangling_withdrawal = <span class="kw">match </span>T::StakeAdapter::member_delegation_balance(
+					Member::from(member_account.clone()),
+				) {
+					<span class="prelude-val">Some</span>(dangling_delegation) =&gt; {
+						T::StakeAdapter::member_withdraw(
+							Member::from(member_account.clone()),
+							Pool::from(bonded_pool.bonded_account()),
+							dangling_delegation,
+							num_slashing_spans,
+						)<span class="question-mark">?</span>;
+						dangling_delegation
+					},
+					<span class="prelude-val">None </span>=&gt; Zero::zero(),
+				};
+
 				<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::MemberRemoved {
 					pool_id: member.pool_id,
 					member: member_account.clone(),
+					released_balance: dangling_withdrawal,
 				});
 
 				<span class="kw">if </span>member_account == bonded_pool.roles.depositor {
@@ -6429,6 +6597,8 @@
 		) -&gt; DispatchResult {
 			<span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
 			<span class="kw">let </span>bonded_pool = BondedPool::&lt;T&gt;::get(pool_id).ok_or(Error::&lt;T&gt;::PoolNotFound)<span class="question-mark">?</span>;
+			<span class="comment">// ensure pool is not in an un-migrated state.
+			</span><span class="macro">ensure!</span>(!<span class="self">Self</span>::api_pool_needs_delegate_migration(pool_id), Error::&lt;T&gt;::NotMigrated);
 			<span class="macro">ensure!</span>(bonded_pool.can_nominate(<span class="kw-2">&amp;</span>who), Error::&lt;T&gt;::NotNominator);
 
 			<span class="kw">let </span>depositor_points = PoolMembers::&lt;T&gt;::get(<span class="kw-2">&amp;</span>bonded_pool.roles.depositor)
@@ -6463,6 +6633,8 @@
 			<span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
 			<span class="kw">let </span><span class="kw-2">mut </span>bonded_pool = BondedPool::&lt;T&gt;::get(pool_id).ok_or(Error::&lt;T&gt;::PoolNotFound)<span class="question-mark">?</span>;
 			<span class="macro">ensure!</span>(bonded_pool.state != PoolState::Destroying, Error::&lt;T&gt;::CanNotChangeState);
+			<span class="comment">// ensure pool is not in an un-migrated state.
+			</span><span class="macro">ensure!</span>(!<span class="self">Self</span>::api_pool_needs_delegate_migration(pool_id), Error::&lt;T&gt;::NotMigrated);
 
 			<span class="kw">if </span>bonded_pool.can_toggle_state(<span class="kw-2">&amp;</span>who) {
 				bonded_pool.set_state(state);
@@ -6498,6 +6670,8 @@
 					</span>.can_set_metadata(<span class="kw-2">&amp;</span>who),
 				Error::&lt;T&gt;::DoesNotHavePermission
 			);
+			<span class="comment">// ensure pool is not in an un-migrated state.
+			</span><span class="macro">ensure!</span>(!<span class="self">Self</span>::api_pool_needs_delegate_migration(pool_id), Error::&lt;T&gt;::NotMigrated);
 
 			Metadata::&lt;T&gt;::mutate(pool_id, |pool_meta| <span class="kw-2">*</span>pool_meta = metadata);
 
@@ -6574,6 +6748,9 @@
 				},
 			};
 
+			<span class="comment">// ensure pool is not in an un-migrated state.
+			</span><span class="macro">ensure!</span>(!<span class="self">Self</span>::api_pool_needs_delegate_migration(pool_id), Error::&lt;T&gt;::NotMigrated);
+
 			<span class="kw">match </span>new_root {
 				ConfigOp::Noop =&gt; (),
 				ConfigOp::Remove =&gt; bonded_pool.roles.root = <span class="prelude-val">None</span>,
@@ -6620,8 +6797,9 @@
 		#[pallet::weight(T::WeightInfo::chill())]
 		</span><span class="kw">pub fn </span>chill(origin: OriginFor&lt;T&gt;, pool_id: PoolId) -&gt; DispatchResult {
 			<span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
-
 			<span class="kw">let </span>bonded_pool = BondedPool::&lt;T&gt;::get(pool_id).ok_or(Error::&lt;T&gt;::PoolNotFound)<span class="question-mark">?</span>;
+			<span class="comment">// ensure pool is not in an un-migrated state.
+			</span><span class="macro">ensure!</span>(!<span class="self">Self</span>::api_pool_needs_delegate_migration(pool_id), Error::&lt;T&gt;::NotMigrated);
 
 			<span class="kw">let </span>depositor_points = PoolMembers::&lt;T&gt;::get(<span class="kw-2">&amp;</span>bonded_pool.roles.depositor)
 				.ok_or(Error::&lt;T&gt;::PoolMemberNotFound)<span class="question-mark">?
@@ -6656,7 +6834,14 @@
 			extra: BondExtra&lt;BalanceOf&lt;T&gt;&gt;,
 		) -&gt; DispatchResult {
 			<span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
-			<span class="self">Self</span>::do_bond_extra(who, T::Lookup::lookup(member)<span class="question-mark">?</span>, extra)
+			<span class="kw">let </span>member_account = T::Lookup::lookup(member)<span class="question-mark">?</span>;
+			<span class="comment">// ensure member is not in an un-migrated state.
+			</span><span class="macro">ensure!</span>(
+				!<span class="self">Self</span>::api_member_needs_delegate_migration(member_account.clone()),
+				Error::&lt;T&gt;::NotMigrated
+			);
+
+			<span class="self">Self</span>::do_bond_extra(who, member_account, extra)
 		}
 
 		<span class="doccomment">/// Allows a pool member to set a claim permission to allow or disallow permissionless
@@ -6673,8 +6858,13 @@
 			permission: ClaimPermission,
 		) -&gt; DispatchResult {
 			<span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
-
 			<span class="macro">ensure!</span>(PoolMembers::&lt;T&gt;::contains_key(<span class="kw-2">&amp;</span>who), Error::&lt;T&gt;::PoolMemberNotFound);
+
+			<span class="comment">// ensure member is not in an un-migrated state.
+			</span><span class="macro">ensure!</span>(
+				!<span class="self">Self</span>::api_member_needs_delegate_migration(who.clone()),
+				Error::&lt;T&gt;::NotMigrated
+			);
 
 			ClaimPermissions::&lt;T&gt;::mutate(who, |source| {
 				<span class="kw-2">*</span>source = permission;
@@ -6691,6 +6881,12 @@
 		#[pallet::weight(T::WeightInfo::claim_payout())]
 		</span><span class="kw">pub fn </span>claim_payout_other(origin: OriginFor&lt;T&gt;, other: T::AccountId) -&gt; DispatchResult {
 			<span class="kw">let </span>signer = ensure_signed(origin)<span class="question-mark">?</span>;
+			<span class="comment">// ensure member is not in an un-migrated state.
+			</span><span class="macro">ensure!</span>(
+				!<span class="self">Self</span>::api_member_needs_delegate_migration(other.clone()),
+				Error::&lt;T&gt;::NotMigrated
+			);
+
 			<span class="self">Self</span>::do_claim_payout(signer, other)
 		}
 
@@ -6709,6 +6905,9 @@
 		) -&gt; DispatchResult {
 			<span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
 			<span class="kw">let </span><span class="kw-2">mut </span>bonded_pool = BondedPool::&lt;T&gt;::get(pool_id).ok_or(Error::&lt;T&gt;::PoolNotFound)<span class="question-mark">?</span>;
+			<span class="comment">// ensure pool is not in an un-migrated state.
+			</span><span class="macro">ensure!</span>(!<span class="self">Self</span>::api_pool_needs_delegate_migration(pool_id), Error::&lt;T&gt;::NotMigrated);
+
 			<span class="macro">ensure!</span>(bonded_pool.can_manage_commission(<span class="kw-2">&amp;</span>who), Error::&lt;T&gt;::DoesNotHavePermission);
 
 			<span class="kw">let </span><span class="kw-2">mut </span>reward_pool = RewardPools::&lt;T&gt;::get(pool_id)
@@ -6745,6 +6944,9 @@
 		) -&gt; DispatchResult {
 			<span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
 			<span class="kw">let </span><span class="kw-2">mut </span>bonded_pool = BondedPool::&lt;T&gt;::get(pool_id).ok_or(Error::&lt;T&gt;::PoolNotFound)<span class="question-mark">?</span>;
+			<span class="comment">// ensure pool is not in an un-migrated state.
+			</span><span class="macro">ensure!</span>(!<span class="self">Self</span>::api_pool_needs_delegate_migration(pool_id), Error::&lt;T&gt;::NotMigrated);
+
 			<span class="macro">ensure!</span>(bonded_pool.can_manage_commission(<span class="kw-2">&amp;</span>who), Error::&lt;T&gt;::DoesNotHavePermission);
 
 			bonded_pool.commission.try_update_max(pool_id, max_commission)<span class="question-mark">?</span>;
@@ -6767,6 +6969,8 @@
 		) -&gt; DispatchResult {
 			<span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
 			<span class="kw">let </span><span class="kw-2">mut </span>bonded_pool = BondedPool::&lt;T&gt;::get(pool_id).ok_or(Error::&lt;T&gt;::PoolNotFound)<span class="question-mark">?</span>;
+			<span class="comment">// ensure pool is not in an un-migrated state.
+			</span><span class="macro">ensure!</span>(!<span class="self">Self</span>::api_pool_needs_delegate_migration(pool_id), Error::&lt;T&gt;::NotMigrated);
 			<span class="macro">ensure!</span>(bonded_pool.can_manage_commission(<span class="kw-2">&amp;</span>who), Error::&lt;T&gt;::DoesNotHavePermission);
 
 			bonded_pool.commission.try_update_change_rate(change_rate)<span class="question-mark">?</span>;
@@ -6788,6 +6992,9 @@
 		#[pallet::weight(T::WeightInfo::claim_commission())]
 		</span><span class="kw">pub fn </span>claim_commission(origin: OriginFor&lt;T&gt;, pool_id: PoolId) -&gt; DispatchResult {
 			<span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
+			<span class="comment">// ensure pool is not in an un-migrated state.
+			</span><span class="macro">ensure!</span>(!<span class="self">Self</span>::api_pool_needs_delegate_migration(pool_id), Error::&lt;T&gt;::NotMigrated);
+
 			<span class="self">Self</span>::do_claim_commission(who, pool_id)
 		}
 
@@ -6802,6 +7009,9 @@
 		#[pallet::weight(T::WeightInfo::adjust_pool_deposit())]
 		</span><span class="kw">pub fn </span>adjust_pool_deposit(origin: OriginFor&lt;T&gt;, pool_id: PoolId) -&gt; DispatchResult {
 			<span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
+			<span class="comment">// ensure pool is not in an un-migrated state.
+			</span><span class="macro">ensure!</span>(!<span class="self">Self</span>::api_pool_needs_delegate_migration(pool_id), Error::&lt;T&gt;::NotMigrated);
+
 			<span class="self">Self</span>::do_adjust_pool_deposit(who, pool_id)
 		}
 
@@ -6818,6 +7028,8 @@
 		) -&gt; DispatchResult {
 			<span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
 			<span class="kw">let </span><span class="kw-2">mut </span>bonded_pool = BondedPool::&lt;T&gt;::get(pool_id).ok_or(Error::&lt;T&gt;::PoolNotFound)<span class="question-mark">?</span>;
+			<span class="comment">// ensure pool is not in an un-migrated state.
+			</span><span class="macro">ensure!</span>(!<span class="self">Self</span>::api_pool_needs_delegate_migration(pool_id), Error::&lt;T&gt;::NotMigrated);
 			<span class="macro">ensure!</span>(bonded_pool.can_manage_commission(<span class="kw-2">&amp;</span>who), Error::&lt;T&gt;::DoesNotHavePermission);
 
 			bonded_pool.commission.claim_permission = permission.clone();
@@ -6892,9 +7104,12 @@
 			);
 
 			<span class="kw">let </span>pool_contribution = member.total_balance();
-			<span class="macro">ensure!</span>(pool_contribution &gt;= MinJoinBond::&lt;T&gt;::get(), Error::&lt;T&gt;::MinimumBondNotMet);
-			<span class="comment">// the member must have some contribution to be migrated.
-			</span><span class="macro">ensure!</span>(pool_contribution &gt; Zero::zero(), Error::&lt;T&gt;::AlreadyMigrated);
+			<span class="comment">// ensure the pool contribution is greater than the existential deposit otherwise we
+			// cannot transfer funds to member account.
+			</span><span class="macro">ensure!</span>(
+				pool_contribution &gt;= T::Currency::minimum_balance(),
+				Error::&lt;T&gt;::MinimumBondNotMet
+			);
 
 			<span class="kw">let </span>delegation =
 				T::StakeAdapter::member_delegation_balance(Member::from(member_account.clone()));
@@ -7035,16 +7250,11 @@
 			T::Currency::total_balance(<span class="kw-2">&amp;</span>reward_account) == Zero::zero(),
 			<span class="string">"could not transfer all amount to depositor while dissolving pool"
 		</span>);
-		<span class="macro">defensive_assert!</span>(
-			T::StakeAdapter::total_balance(Pool::from(bonded_pool.bonded_account()))
-				.unwrap_or_default() ==
-				Zero::zero(),
-			<span class="string">"dissolving pool should not have any balance"
-		</span>);
 		<span class="comment">// NOTE: Defensively force set balance to zero.
 		</span>T::Currency::set_balance(<span class="kw-2">&amp;</span>reward_account, Zero::zero());
-		<span class="comment">// NOTE: With `DelegateStake` strategy, this won't do anything.
-		</span>T::Currency::set_balance(<span class="kw-2">&amp;</span>bonded_pool.bonded_account(), Zero::zero());
+
+		<span class="comment">// dissolve pool account.
+		</span><span class="kw">let _ </span>= T::StakeAdapter::dissolve(Pool::from(bonded_account)).defensive();
 
 		<span class="self">Self</span>::deposit_event(Event::&lt;T&gt;::Destroyed { pool_id: bonded_pool.id });
 		<span class="comment">// Remove bonded pool metadata.
@@ -7400,6 +7610,7 @@
 
 	<span class="kw">fn </span>do_adjust_pool_deposit(who: T::AccountId, pool: PoolId) -&gt; DispatchResult {
 		<span class="kw">let </span>bonded_pool = BondedPool::&lt;T&gt;::get(pool).ok_or(Error::&lt;T&gt;::PoolNotFound)<span class="question-mark">?</span>;
+
 		<span class="kw">let </span>reward_acc = <span class="kw-2">&amp;</span>bonded_pool.reward_account();
 		<span class="kw">let </span>pre_frozen_balance =
 			T::Currency::balance_frozen(<span class="kw-2">&amp;</span>FreezeReason::PoolMinBalance.into(), reward_acc);
@@ -7482,13 +7693,8 @@
 		<span class="comment">// this is their balance in the pool
 		</span><span class="kw">let </span>expected_balance = pool_member.total_balance();
 
-		<span class="macro">defensive_assert!</span>(
-			actual_balance &gt;= expected_balance,
-			<span class="string">"actual balance should always be greater or equal to the expected"
-		</span>);
-
 		<span class="comment">// return the amount to be slashed.
-		</span><span class="prelude-val">Ok</span>(actual_balance.defensive_saturating_sub(expected_balance))
+		</span><span class="prelude-val">Ok</span>(actual_balance.saturating_sub(expected_balance))
 	}
 
 	<span class="doccomment">/// Apply freeze on reward account to restrict it from going below ED.
@@ -7526,6 +7732,7 @@
 	/// * each `member.pool_id` must correspond to an existing `BondedPool.id` (which implies the
 	///   existence of the reward pool as well).
 	/// * count of all members must be less than `MaxPoolMembers`.
+	/// * each `BondedPool.points` must never be lower than the pool's balance.
 	///
 	/// Then, considering unbonding members:
 	///
@@ -7653,6 +7860,11 @@
 				<span class="string">"depositor must always have MinCreateBond stake in the pool, except for when the \
 				pool is being destroyed and the depositor is the last member"</span>,
 			);
+
+			<span class="macro">ensure!</span>(
+				bonded_pool.points &gt;= bonded_pool.points_to_balance(bonded_pool.points),
+				<span class="string">"Each `BondedPool.points` must never be lower than the pool's balance"
+			</span>);
 
 			expected_tvl += T::StakeAdapter::total_stake(Pool::from(bonded_pool.bonded_account()));
 
@@ -7826,7 +8038,13 @@
 			<span class="kw">return </span><span class="bool-val">false
 		</span>}
 
+		<span class="comment">// if pool does not exist, return false.
+		</span><span class="kw">if </span>!BondedPools::&lt;T&gt;::contains_key(pool_id) {
+			<span class="kw">return </span><span class="bool-val">false
+		</span>}
+
 		<span class="kw">let </span>pool_account = <span class="self">Self</span>::generate_bonded_account(pool_id);
+
 		<span class="comment">// true if pool is still not migrated to `DelegateStake`.
 		</span>T::StakeAdapter::pool_strategy(Pool::from(pool_account)) !=
 			adapter::StakeStrategyType::Delegate
@@ -7858,6 +8076,22 @@
 				// to be migrated.
 				</span>delegated_balance.is_none() &amp;&amp; !member_balance.is_zero()
 			})
+			.unwrap_or_default()
+	}
+
+	<span class="doccomment">/// Contribution of the member in the pool.
+	///
+	/// Includes balance that is unbonded from staking but not claimed yet from the pool, therefore
+	/// this balance can be higher than the staked funds.
+	</span><span class="kw">pub fn </span>api_member_total_balance(who: T::AccountId) -&gt; BalanceOf&lt;T&gt; {
+		PoolMembers::&lt;T&gt;::get(who.clone())
+			.map(|m| m.total_balance())
+			.unwrap_or_default()
+	}
+
+	<span class="doccomment">/// Total balance contributed to the pool.
+	</span><span class="kw">pub fn </span>api_pool_balance(pool_id: PoolId) -&gt; BalanceOf&lt;T&gt; {
+		T::StakeAdapter::total_balance(Pool::from(<span class="self">Self</span>::generate_bonded_account(pool_id)))
 			.unwrap_or_default()
 	}
 }

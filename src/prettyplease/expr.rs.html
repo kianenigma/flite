@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/prettyplease-0.2.20/src/expr.rs`."><title>expr.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-b25d77b18a16a9a4.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="prettyplease" data-themes="" data-resource-suffix="" data-rustdoc-version="1.82.0-nightly (13a52890d 2024-08-14)" data-channel="nightly" data-search-js="search-ef54e092fea9c776.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-cb0df477c2d67d00.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-3b12f09e550e0385.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/prettyplease-0.2.22/src/expr.rs`."><title>expr.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-405f8b29f52305f8.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="prettyplease" data-themes="" data-resource-suffix="" data-rustdoc-version="1.83.0-nightly (28e8f01c2 2024-09-17)" data-channel="nightly" data-search-js="search-0cfde64e8ad3a7fe.js" data-settings-js="settings-7e3bb6c46e92e77c.js" ><script src="../../static.files/storage-29b1d5a9048d38fe.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-14659ec02b58af51.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-40f72c9259523cb3.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
+<a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1279,7 +1280,23 @@
 <a href="#1279" id="1279">1279</a>
 <a href="#1280" id="1280">1280</a>
 <a href="#1281" id="1281">1281</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::algorithm::{BreakToken, Printer};
+<a href="#1282" id="1282">1282</a>
+<a href="#1283" id="1283">1283</a>
+<a href="#1284" id="1284">1284</a>
+<a href="#1285" id="1285">1285</a>
+<a href="#1286" id="1286">1286</a>
+<a href="#1287" id="1287">1287</a>
+<a href="#1288" id="1288">1288</a>
+<a href="#1289" id="1289">1289</a>
+<a href="#1290" id="1290">1290</a>
+<a href="#1291" id="1291">1291</a>
+<a href="#1292" id="1292">1292</a>
+<a href="#1293" id="1293">1293</a>
+<a href="#1294" id="1294">1294</a>
+<a href="#1295" id="1295">1295</a>
+<a href="#1296" id="1296">1296</a>
+<a href="#1297" id="1297">1297</a>
+<a href="#1298" id="1298">1298</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::algorithm::{BreakToken, Printer};
 <span class="kw">use </span><span class="kw">crate</span>::attr;
 <span class="kw">use </span><span class="kw">crate</span>::iter::IterDelimited;
 <span class="kw">use </span><span class="kw">crate</span>::path::PathKind;
@@ -1962,8 +1979,14 @@
         <span class="kw">enum </span>ExprVerbatim {
             Empty,
             Ellipsis,
+            Become(Become),
             Builtin(Builtin),
             RawReference(RawReference),
+        }
+
+        <span class="kw">struct </span>Become {
+            attrs: Vec&lt;Attribute&gt;,
+            tail_call: Expr,
         }
 
         <span class="kw">struct </span>Builtin {
@@ -1990,6 +2013,11 @@
                 <span class="kw">let </span>lookahead = ahead.lookahead1();
                 <span class="kw">if </span>input.is_empty() {
                     <span class="prelude-val">Ok</span>(ExprVerbatim::Empty)
+                } <span class="kw">else if </span>lookahead.peek(<span class="macro">Token!</span>[<span class="kw">become</span>]) {
+                    input.advance_to(<span class="kw-2">&amp;</span>ahead);
+                    input.parse::&lt;<span class="macro">Token!</span>[<span class="kw">become</span>]&gt;()<span class="question-mark">?</span>;
+                    <span class="kw">let </span>tail_call: Expr = input.parse()<span class="question-mark">?</span>;
+                    <span class="prelude-val">Ok</span>(ExprVerbatim::Become(Become { attrs, tail_call }))
                 } <span class="kw">else if </span>lookahead.peek(kw::builtin) {
                     input.advance_to(<span class="kw-2">&amp;</span>ahead);
                     input.parse::&lt;kw::builtin&gt;()<span class="question-mark">?</span>;
@@ -2031,6 +2059,12 @@
             ExprVerbatim::Empty =&gt; {}
             ExprVerbatim::Ellipsis =&gt; {
                 <span class="self">self</span>.word(<span class="string">"..."</span>);
+            }
+            ExprVerbatim::Become(expr) =&gt; {
+                <span class="self">self</span>.outer_attrs(<span class="kw-2">&amp;</span>expr.attrs);
+                <span class="self">self</span>.word(<span class="string">"become"</span>);
+                <span class="self">self</span>.nbsp();
+                <span class="self">self</span>.expr(<span class="kw-2">&amp;</span>expr.tail_call);
             }
             ExprVerbatim::Builtin(expr) =&gt; {
                 <span class="self">self</span>.outer_attrs(<span class="kw-2">&amp;</span>expr.attrs);

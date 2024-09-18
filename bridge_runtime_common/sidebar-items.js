@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"macro":["generate_bridge_reject_obsolete_headers_and_messages"],"mod":["extensions","messages_api","messages_call_ext","messages_xcm_extension"]};
+window.SIDEBAR_ITEMS = {"macro":["generate_bridge_reject_obsolete_headers_and_messages"],"mod":["extensions","messages_api"]};
