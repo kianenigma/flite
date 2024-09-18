@@ -6,7 +6,7 @@ edition.workspace = true
 [dependencies]
 parity-scale-codec = { version = "3.6.12", features = ["derive"], default-features = false}
 scale-info = { version = "2.11.3", default-features = false}
-polkadot-sdk = { git = "https://github.com/paritytech/polkadot-sdk.git", rev = "08f677e401883160b185084ba23d5ccaf670eaeb", features = ["runtime", "experimental"], default-features = false }
+polkadot-sdk = { git = "https://github.com/paritytech/polkadot-sdk.git", rev = "34e0ff435efad562ca2edc8779f144d9c12f4046", features = ["runtime", "experimental"], default-features = false }
 docify = "0.2.8"
 
 [features]
