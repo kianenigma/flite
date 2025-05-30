@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["arithmetic","deps","derive","pallet_macros","prelude","primitives","runtime","testing_prelude","traits"]};
+window.SIDEBAR_ITEMS = {"attr":["storage_alias"],"mod":["account","arithmetic","deps","derive","hashing","pallet_macros","prelude","runtime","testing_prelude","token","traits","transaction","weights_prelude"]};

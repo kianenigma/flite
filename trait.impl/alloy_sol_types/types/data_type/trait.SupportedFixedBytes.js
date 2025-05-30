@@ -1,9 +1,9 @@
 (function() {
-    var implementors = Object.fromEntries([["alloy_sol_types",[]]]);
+    var implementors = Object.fromEntries([["alloy_core",[]],["alloy_sol_types",[]]]);
     if (window.register_implementors) {
         window.register_implementors(implementors);
     } else {
         window.pending_implementors = implementors;
     }
 })()
-//{"start":57,"fragment_lengths":[22]}
+//{"start":57,"fragment_lengths":[17,23]}

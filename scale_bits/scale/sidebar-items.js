@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["decode_using_format_from","encode_using_format","encode_using_format_to"],"mod":["format"],"struct":["Decoder"]};

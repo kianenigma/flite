@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["BASEBITS","BIGBITS","BMASK","DNLEN","HBITS","HMASK","MODBYTES","NEXCESS","NLEN"],"struct":["Big"]};

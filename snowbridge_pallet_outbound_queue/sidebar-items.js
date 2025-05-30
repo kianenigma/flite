@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["api","pallet","process_message_impl","send_message_impl","types","weights"],"struct":["MerkleProof"]};

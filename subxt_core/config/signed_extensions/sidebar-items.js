@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["CheckMetadataHashMode"],"struct":["AnyOf","ChargeAssetTxPayment","ChargeAssetTxPaymentParams","ChargeTransactionPayment","ChargeTransactionPaymentParams","CheckGenesis","CheckMetadataHash","CheckMortality","CheckMortalityParams","CheckNonce","CheckNonceParams","CheckSpecVersion","CheckTxVersion"],"trait":["SignedExtension"]};

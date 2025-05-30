@@ -1,0 +1,59 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Construct and sign transactions."><title>subxt_core::tx - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-84e720fa.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subxt_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.89.0-nightly (1bbd62e54 2025-05-29)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-5514c975.js" ><script src="../../static.files/storage-4e99c027.js"></script><script defer src="../sidebar-items.js"></script><script defer src="../../static.files/main-fd3af306.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../subxt_core/index.html">subxt_<wbr>core</a><span class="version">0.38.1</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Module tx</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#example" title="Example">Example</a></li></ul><h3><a href="#reexports">Module Items</a></h3><ul class="block"><li><a href="#reexports" title="Re-exports">Re-exports</a></li><li><a href="#modules" title="Modules">Modules</a></li><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#functions" title="Functions">Functions</a></li></ul></section><div id="rustdoc-modnav"><h2 class="in-crate"><a href="../index.html">In crate subxt_<wbr>core</a></h2></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="../index.html">subxt_core</a></div><h1>Module <span>tx</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../src/subxt_core/tx/mod.rs.html#5-308">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Construct and sign transactions.</p>
+<h2 id="example"><a class="doc-anchor" href="#example">§</a>Example</h2>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>subxt_signer::sr25519::dev;
+<span class="kw">use </span>subxt_macro::subxt;
+<span class="kw">use </span>subxt_core::config::PolkadotConfig;
+<span class="kw">use </span>subxt_core::config::DefaultExtrinsicParamsBuilder <span class="kw">as </span>Params;
+<span class="kw">use </span>subxt_core::tx;
+<span class="kw">use </span>subxt_core::utils::H256;
+<span class="kw">use </span>subxt_core::metadata;
+
+<span class="comment">// If we generate types without `subxt`, we need to point to `::subxt_core`:
+</span><span class="attr">#[subxt(
+    <span class="kw">crate </span>= <span class="string">"::subxt_core"</span>,
+    runtime_metadata_path = <span class="string">"../artifacts/polkadot_metadata_small.scale"</span>,
+)]
+</span><span class="kw">pub mod </span>polkadot {}
+
+<span class="comment">// Gather some other information about the chain that we'll need to construct valid extrinsics:
+</span><span class="kw">let </span>state = tx::ClientState::&lt;PolkadotConfig&gt; {
+    metadata: {
+        <span class="kw">let </span>metadata_bytes = <span class="macro">include_bytes!</span>(<span class="string">"../../../artifacts/polkadot_metadata_small.scale"</span>);
+        metadata::decode_from(<span class="kw-2">&amp;</span>metadata_bytes[..]).unwrap()
+    },
+    genesis_hash: {
+        <span class="kw">let </span>h = <span class="string">"91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3"</span>;
+        <span class="kw">let </span>bytes = hex::decode(h).unwrap();
+        H256::from_slice(<span class="kw-2">&amp;</span>bytes)
+    },
+    runtime_version: tx::RuntimeVersion {
+        spec_version: <span class="number">9370</span>,
+        transaction_version: <span class="number">20</span>,
+    }
+};
+
+<span class="comment">// Now we can build a balance transfer extrinsic.
+</span><span class="kw">let </span>dest = dev::bob().public_key().into();
+<span class="kw">let </span>call = polkadot::tx().balances().transfer_allow_death(dest, <span class="number">10_000</span>);
+<span class="kw">let </span>params = Params::new().tip(<span class="number">1_000</span>).nonce(<span class="number">0</span>).build();
+
+<span class="comment">// We can validate that this lines up with the given metadata:
+</span>tx::validate(<span class="kw-2">&amp;</span>call, <span class="kw-2">&amp;</span>state.metadata).unwrap();
+
+<span class="comment">// We can build a signed transaction:
+</span><span class="kw">let </span>signed_call = tx::create_signed(<span class="kw-2">&amp;</span>call, <span class="kw-2">&amp;</span>state, <span class="kw-2">&amp;</span>dev::alice(), params).unwrap();
+
+<span class="comment">// And log it:
+</span><span class="macro">println!</span>(<span class="string">"Tx: 0x{}"</span>, hex::encode(signed_call.encoded()));</code></pre></div>
+</div></details><h2 id="reexports" class="section-header">Re-exports<a href="#reexports" class="anchor">§</a></h2><dl class="item-table reexports"><dt id="reexport.ClientState"><code>pub use crate::client::<a class="struct" href="../client/struct.ClientState.html" title="struct subxt_core::client::ClientState">ClientState</a>;</code></dt><dt id="reexport.RuntimeVersion"><code>pub use crate::client::<a class="struct" href="../client/struct.RuntimeVersion.html" title="struct subxt_core::client::RuntimeVersion">RuntimeVersion</a>;</code></dt></dl><h2 id="modules" class="section-header">Modules<a href="#modules" class="anchor">§</a></h2><dl class="item-table"><dt><a class="mod" href="payload/index.html" title="mod subxt_core::tx::payload">payload</a></dt><dd>This module contains the trait and types used to represent
+transactions that can be submitted.</dd><dt><a class="mod" href="signer/index.html" title="mod subxt_core::tx::signer">signer</a></dt><dd>A library to <strong>sub</strong>mit e<strong>xt</strong>rinsics to a
+<a href="https://github.com/paritytech/substrate">substrate</a> node via RPC.</dd></dl><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.PartialTransaction.html" title="struct subxt_core::tx::PartialTransaction">Partial<wbr>Transaction</a></dt><dd>This represents a partially constructed transaction that needs signing before it is ready
+to submit. Use <a href="struct.PartialTransaction.html#method.signer_payload" title="method subxt_core::tx::PartialTransaction::signer_payload"><code>PartialTransaction::signer_payload()</code></a> to return the payload that needs signing,
+<a href="struct.PartialTransaction.html#method.sign" title="method subxt_core::tx::PartialTransaction::sign"><code>PartialTransaction::sign()</code></a> to sign the transaction using a <a href="signer/trait.Signer.html" title="trait subxt_core::tx::signer::Signer"><code>SignerT</code></a> impl, or
+<a href="struct.PartialTransaction.html#method.sign_with_address_and_signature" title="method subxt_core::tx::PartialTransaction::sign_with_address_and_signature"><code>PartialTransaction::sign_with_address_and_signature()</code></a> to apply an existing signature and address
+to the transaction.</dd><dt><a class="struct" href="struct.Transaction.html" title="struct subxt_core::tx::Transaction">Transaction</a></dt><dd>This represents a signed transaction that’s ready to be submitted.
+Use <a href="struct.Transaction.html#method.encoded" title="method subxt_core::tx::Transaction::encoded"><code>Transaction::encoded()</code></a> or <a href="struct.Transaction.html#method.into_encoded" title="method subxt_core::tx::Transaction::into_encoded"><code>Transaction::into_encoded()</code></a> to
+get the bytes for it, or <a href="struct.Transaction.html#method.hash" title="method subxt_core::tx::Transaction::hash"><code>Transaction::hash()</code></a> to get the hash.</dd></dl><h2 id="functions" class="section-header">Functions<a href="#functions" class="anchor">§</a></h2><dl class="item-table"><dt><a class="fn" href="fn.call_data.html" title="fn subxt_core::tx::call_data">call_<wbr>data</a></dt><dd>Return the SCALE encoded bytes representing the call data of the transaction.</dd><dt><a class="fn" href="fn.create_partial_signed.html" title="fn subxt_core::tx::create_partial_signed">create_<wbr>partial_<wbr>signed</a></dt><dd>Create a partial extrinsic.</dd><dt><a class="fn" href="fn.create_signed.html" title="fn subxt_core::tx::create_signed">create_<wbr>signed</a></dt><dd>Creates a signed extrinsic without submitting it.</dd><dt><a class="fn" href="fn.create_unsigned.html" title="fn subxt_core::tx::create_unsigned">create_<wbr>unsigned</a></dt><dd>Creates an unsigned extrinsic without submitting it.</dd><dt><a class="fn" href="fn.validate.html" title="fn subxt_core::tx::validate">validate</a></dt><dd>Run the validation logic against some extrinsic you’d like to submit. Returns <code>Ok(())</code>
+if the call is valid (or if it’s not possible to check since the call has no validation hash).
+Return an error if the call was not valid or something went wrong trying to validate it (ie
+the pallet or call in question do not exist at all).</dd></dl></section></div></main></body></html>

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["Instruction","Opcode"],"struct":["Imports","ImportsIter","Instructions","JumpTable","JumpTableIter","ProgramExport","ProgramParseError","ProgramSymbol","RawReg"]};
+window.SIDEBAR_ITEMS = {"enum":["Instruction","Opcode"],"struct":["ISA32_V1","ISA32_V1_NoSbrk","ISA64_V1","Imports","ImportsIter","Instructions","JumpTable","JumpTableIter","ParsedInstruction","ProgramExport","ProgramParseError","ProgramSymbol","RawReg"],"trait":["InstructionSet"]};

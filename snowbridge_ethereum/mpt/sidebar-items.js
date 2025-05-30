@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["FullNode","ShortNode"],"trait":["Node"]};

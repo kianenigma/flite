@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["MemStore"],"type":["MemMMR"]};
+window.SIDEBAR_ITEMS = {"struct":["MemStore"],"trait":["VeqDequeExt"],"type":["MemMMR"]};

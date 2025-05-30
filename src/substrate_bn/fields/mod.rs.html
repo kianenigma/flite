@@ -1,0 +1,344 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `/home/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/substrate-bn-0.6.0/src/fields/mod.rs`."><title>mod.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-84e720fa.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="substrate_bn" data-themes="" data-resource-suffix="" data-rustdoc-version="1.89.0-nightly (1bbd62e54 2025-05-29)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-5514c975.js" ><script src="../../../static.files/storage-4e99c027.js"></script><script defer src="../../../static.files/src-script-63605ae7.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-fd3af306.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">substrate_bn/fields/</div>mod.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">mod </span>fp;
+<a href=#2 id=2 data-nosnippet>2</a><span class="kw">mod </span>fq2;
+<a href=#3 id=3 data-nosnippet>3</a><span class="kw">mod </span>fq6;
+<a href=#4 id=4 data-nosnippet>4</a><span class="kw">mod </span>fq12;
+<a href=#5 id=5 data-nosnippet>5</a>
+<a href=#6 id=6 data-nosnippet>6</a><span class="kw">use </span><span class="kw">crate</span>::arith::U256;
+<a href=#7 id=7 data-nosnippet>7</a><span class="kw">use </span>rand::Rng;
+<a href=#8 id=8 data-nosnippet>8</a><span class="kw">use </span>core::ops::{Add, Mul, Neg, Sub};
+<a href=#9 id=9 data-nosnippet>9</a><span class="kw">use </span>alloc::fmt::Debug;
+<a href=#10 id=10 data-nosnippet>10</a>
+<a href=#11 id=11 data-nosnippet>11</a><span class="kw">pub use </span><span class="self">self</span>::fp::{const_fq, Fq, Fr};
+<a href=#12 id=12 data-nosnippet>12</a><span class="kw">pub use </span><span class="self">self</span>::fq2::{Fq2, fq2_nonresidue};
+<a href=#13 id=13 data-nosnippet>13</a><span class="kw">pub use </span><span class="self">self</span>::fq6::Fq6;
+<a href=#14 id=14 data-nosnippet>14</a><span class="kw">pub use </span><span class="self">self</span>::fq12::Fq12;
+<a href=#15 id=15 data-nosnippet>15</a>
+<a href=#16 id=16 data-nosnippet>16</a><span class="kw">pub trait </span>FieldElement
+<a href=#17 id=17 data-nosnippet>17</a>    : Sized
+<a href=#18 id=18 data-nosnippet>18</a>    + Copy
+<a href=#19 id=19 data-nosnippet>19</a>    + Clone
+<a href=#20 id=20 data-nosnippet>20</a>    + Add&lt;Output = <span class="self">Self</span>&gt;
+<a href=#21 id=21 data-nosnippet>21</a>    + Sub&lt;Output = <span class="self">Self</span>&gt;
+<a href=#22 id=22 data-nosnippet>22</a>    + Mul&lt;Output = <span class="self">Self</span>&gt;
+<a href=#23 id=23 data-nosnippet>23</a>    + Neg&lt;Output = <span class="self">Self</span>&gt;
+<a href=#24 id=24 data-nosnippet>24</a>    + PartialEq
+<a href=#25 id=25 data-nosnippet>25</a>    + Eq
+<a href=#26 id=26 data-nosnippet>26</a>    + Debug {
+<a href=#27 id=27 data-nosnippet>27</a>    <span class="kw">fn </span>zero() -&gt; <span class="self">Self</span>;
+<a href=#28 id=28 data-nosnippet>28</a>    <span class="kw">fn </span>one() -&gt; <span class="self">Self</span>;
+<a href=#29 id=29 data-nosnippet>29</a>    <span class="kw">fn </span>random&lt;R: Rng&gt;(<span class="kw">_</span>: <span class="kw-2">&amp;mut </span>R) -&gt; <span class="self">Self</span>;
+<a href=#30 id=30 data-nosnippet>30</a>    <span class="kw">fn </span>is_zero(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool;
+<a href=#31 id=31 data-nosnippet>31</a>    <span class="kw">fn </span>squared(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+<a href=#32 id=32 data-nosnippet>32</a>        (<span class="kw-2">*</span><span class="self">self</span>) * (<span class="kw-2">*</span><span class="self">self</span>)
+<a href=#33 id=33 data-nosnippet>33</a>    }
+<a href=#34 id=34 data-nosnippet>34</a>    <span class="kw">fn </span>inverse(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt;;
+<a href=#35 id=35 data-nosnippet>35</a>    <span class="kw">fn </span>pow&lt;I: Into&lt;U256&gt;&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, by: I) -&gt; <span class="self">Self </span>{
+<a href=#36 id=36 data-nosnippet>36</a>        <span class="kw">let </span><span class="kw-2">mut </span>res = <span class="self">Self</span>::one();
+<a href=#37 id=37 data-nosnippet>37</a>
+<a href=#38 id=38 data-nosnippet>38</a>        <span class="kw">for </span>i <span class="kw">in </span>by.into().bits() {
+<a href=#39 id=39 data-nosnippet>39</a>            res = res.squared();
+<a href=#40 id=40 data-nosnippet>40</a>            <span class="kw">if </span>i {
+<a href=#41 id=41 data-nosnippet>41</a>                res = <span class="kw-2">*</span><span class="self">self </span>* res;
+<a href=#42 id=42 data-nosnippet>42</a>            }
+<a href=#43 id=43 data-nosnippet>43</a>        }
+<a href=#44 id=44 data-nosnippet>44</a>
+<a href=#45 id=45 data-nosnippet>45</a>        res
+<a href=#46 id=46 data-nosnippet>46</a>    }
+<a href=#47 id=47 data-nosnippet>47</a>}
+<a href=#48 id=48 data-nosnippet>48</a>
+<a href=#49 id=49 data-nosnippet>49</a><span class="attr">#[cfg(test)]
+<a href=#50 id=50 data-nosnippet>50</a></span><span class="kw">mod </span>tests;
+<a href=#51 id=51 data-nosnippet>51</a>
+<a href=#52 id=52 data-nosnippet>52</a><span class="attr">#[test]
+<a href=#53 id=53 data-nosnippet>53</a></span><span class="kw">fn </span>test_fr() {
+<a href=#54 id=54 data-nosnippet>54</a>    tests::field_trials::&lt;Fr&gt;();
+<a href=#55 id=55 data-nosnippet>55</a>}
+<a href=#56 id=56 data-nosnippet>56</a>
+<a href=#57 id=57 data-nosnippet>57</a><span class="attr">#[test]
+<a href=#58 id=58 data-nosnippet>58</a></span><span class="kw">fn </span>test_fq() {
+<a href=#59 id=59 data-nosnippet>59</a>    tests::field_trials::&lt;Fq&gt;();
+<a href=#60 id=60 data-nosnippet>60</a>}
+<a href=#61 id=61 data-nosnippet>61</a>
+<a href=#62 id=62 data-nosnippet>62</a><span class="attr">#[test]
+<a href=#63 id=63 data-nosnippet>63</a></span><span class="kw">fn </span>test_fq2() {
+<a href=#64 id=64 data-nosnippet>64</a>    tests::field_trials::&lt;Fq2&gt;();
+<a href=#65 id=65 data-nosnippet>65</a>}
+<a href=#66 id=66 data-nosnippet>66</a>
+<a href=#67 id=67 data-nosnippet>67</a><span class="attr">#[test]
+<a href=#68 id=68 data-nosnippet>68</a></span><span class="kw">fn </span>test_str() {
+<a href=#69 id=69 data-nosnippet>69</a>    <span class="macro">assert_eq!</span>(
+<a href=#70 id=70 data-nosnippet>70</a>        -Fr::one(),
+<a href=#71 id=71 data-nosnippet>71</a>        Fr::from_str(
+<a href=#72 id=72 data-nosnippet>72</a>            <span class="string">"21888242871839275222246405745257275088548364400416034343698204186575808495616"
+<a href=#73 id=73 data-nosnippet>73</a>        </span>).unwrap()
+<a href=#74 id=74 data-nosnippet>74</a>    );
+<a href=#75 id=75 data-nosnippet>75</a>    <span class="macro">assert_eq!</span>(
+<a href=#76 id=76 data-nosnippet>76</a>        -Fq::one(),
+<a href=#77 id=77 data-nosnippet>77</a>        Fq::from_str(
+<a href=#78 id=78 data-nosnippet>78</a>            <span class="string">"21888242871839275222246405745257275088696311157297823662689037894645226208582"
+<a href=#79 id=79 data-nosnippet>79</a>        </span>).unwrap()
+<a href=#80 id=80 data-nosnippet>80</a>    );
+<a href=#81 id=81 data-nosnippet>81</a>}
+<a href=#82 id=82 data-nosnippet>82</a>
+<a href=#83 id=83 data-nosnippet>83</a><span class="attr">#[test]
+<a href=#84 id=84 data-nosnippet>84</a></span><span class="kw">fn </span>test_fq6() {
+<a href=#85 id=85 data-nosnippet>85</a>    tests::field_trials::&lt;Fq6&gt;();
+<a href=#86 id=86 data-nosnippet>86</a>}
+<a href=#87 id=87 data-nosnippet>87</a>
+<a href=#88 id=88 data-nosnippet>88</a><span class="attr">#[test]
+<a href=#89 id=89 data-nosnippet>89</a></span><span class="kw">fn </span>test_fq12() {
+<a href=#90 id=90 data-nosnippet>90</a>    tests::field_trials::&lt;Fq12&gt;();
+<a href=#91 id=91 data-nosnippet>91</a>}
+<a href=#92 id=92 data-nosnippet>92</a>
+<a href=#93 id=93 data-nosnippet>93</a><span class="attr">#[test]
+<a href=#94 id=94 data-nosnippet>94</a></span><span class="kw">fn </span>fq12_test_vector() {
+<a href=#95 id=95 data-nosnippet>95</a>    <span class="kw">let </span>start = Fq12::new(
+<a href=#96 id=96 data-nosnippet>96</a>        Fq6::new(
+<a href=#97 id=97 data-nosnippet>97</a>            Fq2::new(
+<a href=#98 id=98 data-nosnippet>98</a>                Fq::from_str(
+<a href=#99 id=99 data-nosnippet>99</a>                    <span class="string">"19797905000333868150253315089095386158892526856493194078073564469188852136946"</span>,
+<a href=#100 id=100 data-nosnippet>100</a>                ).unwrap(),
+<a href=#101 id=101 data-nosnippet>101</a>                Fq::from_str(
+<a href=#102 id=102 data-nosnippet>102</a>                    <span class="string">"10509658143212501778222314067134547632307419253211327938344904628569123178733"</span>,
+<a href=#103 id=103 data-nosnippet>103</a>                ).unwrap(),
+<a href=#104 id=104 data-nosnippet>104</a>            ),
+<a href=#105 id=105 data-nosnippet>105</a>            Fq2::new(
+<a href=#106 id=106 data-nosnippet>106</a>                Fq::from_str(
+<a href=#107 id=107 data-nosnippet>107</a>                    <span class="string">"208316612133170645758860571704540129781090973693601051684061348604461399206"</span>,
+<a href=#108 id=108 data-nosnippet>108</a>                ).unwrap(),
+<a href=#109 id=109 data-nosnippet>109</a>                Fq::from_str(
+<a href=#110 id=110 data-nosnippet>110</a>                    <span class="string">"12617661120538088237397060591907161689901553895660355849494983891299803248390"</span>,
+<a href=#111 id=111 data-nosnippet>111</a>                ).unwrap(),
+<a href=#112 id=112 data-nosnippet>112</a>            ),
+<a href=#113 id=113 data-nosnippet>113</a>            Fq2::new(
+<a href=#114 id=114 data-nosnippet>114</a>                Fq::from_str(
+<a href=#115 id=115 data-nosnippet>115</a>                    <span class="string">"2897490589776053688661991433341220818937967872052418196321943489809183508515"</span>,
+<a href=#116 id=116 data-nosnippet>116</a>                ).unwrap(),
+<a href=#117 id=117 data-nosnippet>117</a>                Fq::from_str(
+<a href=#118 id=118 data-nosnippet>118</a>                    <span class="string">"2730506433347642574983433139433778984782882168213690554721050571242082865799"</span>,
+<a href=#119 id=119 data-nosnippet>119</a>                ).unwrap(),
+<a href=#120 id=120 data-nosnippet>120</a>            ),
+<a href=#121 id=121 data-nosnippet>121</a>        ),
+<a href=#122 id=122 data-nosnippet>122</a>        Fq6::new(
+<a href=#123 id=123 data-nosnippet>123</a>            Fq2::new(
+<a href=#124 id=124 data-nosnippet>124</a>                Fq::from_str(
+<a href=#125 id=125 data-nosnippet>125</a>                    <span class="string">"17870056122431653936196746815433147921488990391314067765563891966783088591110"</span>,
+<a href=#126 id=126 data-nosnippet>126</a>                ).unwrap(),
+<a href=#127 id=127 data-nosnippet>127</a>                Fq::from_str(
+<a href=#128 id=128 data-nosnippet>128</a>                    <span class="string">"14314041658607615069703576372547568077123863812415914883625850585470406221594"</span>,
+<a href=#129 id=129 data-nosnippet>129</a>                ).unwrap(),
+<a href=#130 id=130 data-nosnippet>130</a>            ),
+<a href=#131 id=131 data-nosnippet>131</a>            Fq2::new(
+<a href=#132 id=132 data-nosnippet>132</a>                Fq::from_str(
+<a href=#133 id=133 data-nosnippet>133</a>                    <span class="string">"10123533891707846623287020000407963680629966110211808794181173248765209982878"</span>,
+<a href=#134 id=134 data-nosnippet>134</a>                ).unwrap(),
+<a href=#135 id=135 data-nosnippet>135</a>                Fq::from_str(
+<a href=#136 id=136 data-nosnippet>136</a>                    <span class="string">"5062091880848845693514855272640141851746424235009114332841857306926659567101"</span>,
+<a href=#137 id=137 data-nosnippet>137</a>                ).unwrap(),
+<a href=#138 id=138 data-nosnippet>138</a>            ),
+<a href=#139 id=139 data-nosnippet>139</a>            Fq2::new(
+<a href=#140 id=140 data-nosnippet>140</a>                Fq::from_str(
+<a href=#141 id=141 data-nosnippet>141</a>                    <span class="string">"9839781502639936537333620974973645053542086898304697594692219798017709586567"</span>,
+<a href=#142 id=142 data-nosnippet>142</a>                ).unwrap(),
+<a href=#143 id=143 data-nosnippet>143</a>                Fq::from_str(
+<a href=#144 id=144 data-nosnippet>144</a>                    <span class="string">"1583892292110602864638265389721494775152090720173641072176370350017825640703"</span>,
+<a href=#145 id=145 data-nosnippet>145</a>                ).unwrap(),
+<a href=#146 id=146 data-nosnippet>146</a>            ),
+<a href=#147 id=147 data-nosnippet>147</a>        ),
+<a href=#148 id=148 data-nosnippet>148</a>    );
+<a href=#149 id=149 data-nosnippet>149</a>
+<a href=#150 id=150 data-nosnippet>150</a>    <span class="comment">// Do a bunch of arbitrary stuff to the element
+<a href=#151 id=151 data-nosnippet>151</a>
+<a href=#152 id=152 data-nosnippet>152</a>    </span><span class="kw">let </span><span class="kw-2">mut </span>next = start.clone();
+<a href=#153 id=153 data-nosnippet>153</a>    <span class="kw">for _ in </span><span class="number">0</span>..<span class="number">100 </span>{
+<a href=#154 id=154 data-nosnippet>154</a>        next = next * start;
+<a href=#155 id=155 data-nosnippet>155</a>    }
+<a href=#156 id=156 data-nosnippet>156</a>
+<a href=#157 id=157 data-nosnippet>157</a>    <span class="kw">let </span>cpy = next.clone();
+<a href=#158 id=158 data-nosnippet>158</a>
+<a href=#159 id=159 data-nosnippet>159</a>    <span class="kw">for _ in </span><span class="number">0</span>..<span class="number">10 </span>{
+<a href=#160 id=160 data-nosnippet>160</a>        next = next.squared();
+<a href=#161 id=161 data-nosnippet>161</a>    }
+<a href=#162 id=162 data-nosnippet>162</a>
+<a href=#163 id=163 data-nosnippet>163</a>    <span class="kw">for _ in </span><span class="number">0</span>..<span class="number">10 </span>{
+<a href=#164 id=164 data-nosnippet>164</a>        next = next + start;
+<a href=#165 id=165 data-nosnippet>165</a>        next = next - cpy;
+<a href=#166 id=166 data-nosnippet>166</a>        next = -next;
+<a href=#167 id=167 data-nosnippet>167</a>    }
+<a href=#168 id=168 data-nosnippet>168</a>
+<a href=#169 id=169 data-nosnippet>169</a>    next = next.squared();
+<a href=#170 id=170 data-nosnippet>170</a>
+<a href=#171 id=171 data-nosnippet>171</a>    <span class="kw">let </span>finally = Fq12::new(
+<a href=#172 id=172 data-nosnippet>172</a>        Fq6::new(
+<a href=#173 id=173 data-nosnippet>173</a>            Fq2::new(
+<a href=#174 id=174 data-nosnippet>174</a>                Fq::from_str(
+<a href=#175 id=175 data-nosnippet>175</a>                    <span class="string">"18388750939593263065521177085001223024106699964957029146547831509155008229833"</span>,
+<a href=#176 id=176 data-nosnippet>176</a>                ).unwrap(),
+<a href=#177 id=177 data-nosnippet>177</a>                Fq::from_str(
+<a href=#178 id=178 data-nosnippet>178</a>                    <span class="string">"18370529854582635460997127698388761779167953912610241447912705473964014492243"</span>,
+<a href=#179 id=179 data-nosnippet>179</a>                ).unwrap(),
+<a href=#180 id=180 data-nosnippet>180</a>            ),
+<a href=#181 id=181 data-nosnippet>181</a>            Fq2::new(
+<a href=#182 id=182 data-nosnippet>182</a>                Fq::from_str(
+<a href=#183 id=183 data-nosnippet>183</a>                    <span class="string">"3691824277096717481466579496401243638295254271265821828017111951446539785268"</span>,
+<a href=#184 id=184 data-nosnippet>184</a>                ).unwrap(),
+<a href=#185 id=185 data-nosnippet>185</a>                Fq::from_str(
+<a href=#186 id=186 data-nosnippet>186</a>                    <span class="string">"20513494218085713799072115076991457239411567892860153903443302793553884247235"</span>,
+<a href=#187 id=187 data-nosnippet>187</a>                ).unwrap(),
+<a href=#188 id=188 data-nosnippet>188</a>            ),
+<a href=#189 id=189 data-nosnippet>189</a>            Fq2::new(
+<a href=#190 id=190 data-nosnippet>190</a>                Fq::from_str(
+<a href=#191 id=191 data-nosnippet>191</a>                    <span class="string">"12214155472433286415803224222551966441740960297013786627326456052558698216399"</span>,
+<a href=#192 id=192 data-nosnippet>192</a>                ).unwrap(),
+<a href=#193 id=193 data-nosnippet>193</a>                Fq::from_str(
+<a href=#194 id=194 data-nosnippet>194</a>                    <span class="string">"10987494248070743195602580056085773610850106455323751205990078881956262496575"</span>,
+<a href=#195 id=195 data-nosnippet>195</a>                ).unwrap(),
+<a href=#196 id=196 data-nosnippet>196</a>            ),
+<a href=#197 id=197 data-nosnippet>197</a>        ),
+<a href=#198 id=198 data-nosnippet>198</a>        Fq6::new(
+<a href=#199 id=199 data-nosnippet>199</a>            Fq2::new(
+<a href=#200 id=200 data-nosnippet>200</a>                Fq::from_str(
+<a href=#201 id=201 data-nosnippet>201</a>                    <span class="string">"5134522153456102954632718911439874984161223687865160221119284322136466794876"</span>,
+<a href=#202 id=202 data-nosnippet>202</a>                ).unwrap(),
+<a href=#203 id=203 data-nosnippet>203</a>                Fq::from_str(
+<a href=#204 id=204 data-nosnippet>204</a>                    <span class="string">"20119236909927036376726859192821071338930785378711977469360149362002019539920"</span>,
+<a href=#205 id=205 data-nosnippet>205</a>                ).unwrap(),
+<a href=#206 id=206 data-nosnippet>206</a>            ),
+<a href=#207 id=207 data-nosnippet>207</a>            Fq2::new(
+<a href=#208 id=208 data-nosnippet>208</a>                Fq::from_str(
+<a href=#209 id=209 data-nosnippet>209</a>                    <span class="string">"8839766648621210419302228913265679710586991805716981851373026244791934012854"</span>,
+<a href=#210 id=210 data-nosnippet>210</a>                ).unwrap(),
+<a href=#211 id=211 data-nosnippet>211</a>                Fq::from_str(
+<a href=#212 id=212 data-nosnippet>212</a>                    <span class="string">"9103032146464138788288547957401673544458789595252696070370942789051858719203"</span>,
+<a href=#213 id=213 data-nosnippet>213</a>                ).unwrap(),
+<a href=#214 id=214 data-nosnippet>214</a>            ),
+<a href=#215 id=215 data-nosnippet>215</a>            Fq2::new(
+<a href=#216 id=216 data-nosnippet>216</a>                Fq::from_str(
+<a href=#217 id=217 data-nosnippet>217</a>                    <span class="string">"10378379548636866240502412547812481928323945124508039853766409196375806029865"</span>,
+<a href=#218 id=218 data-nosnippet>218</a>                ).unwrap(),
+<a href=#219 id=219 data-nosnippet>219</a>                Fq::from_str(
+<a href=#220 id=220 data-nosnippet>220</a>                    <span class="string">"9021627154807648093720460686924074684389554332435186899318369174351765754041"</span>,
+<a href=#221 id=221 data-nosnippet>221</a>                ).unwrap(),
+<a href=#222 id=222 data-nosnippet>222</a>            ),
+<a href=#223 id=223 data-nosnippet>223</a>        ),
+<a href=#224 id=224 data-nosnippet>224</a>    );
+<a href=#225 id=225 data-nosnippet>225</a>
+<a href=#226 id=226 data-nosnippet>226</a>    <span class="macro">assert_eq!</span>(finally, next);
+<a href=#227 id=227 data-nosnippet>227</a>}
+<a href=#228 id=228 data-nosnippet>228</a>
+<a href=#229 id=229 data-nosnippet>229</a><span class="attr">#[test]
+<a href=#230 id=230 data-nosnippet>230</a></span><span class="kw">fn </span>test_cyclotomic_exp() {
+<a href=#231 id=231 data-nosnippet>231</a>    <span class="kw">let </span>orig = Fq12::new(
+<a href=#232 id=232 data-nosnippet>232</a>        Fq6::new(
+<a href=#233 id=233 data-nosnippet>233</a>            Fq2::new(
+<a href=#234 id=234 data-nosnippet>234</a>                Fq::from_str(
+<a href=#235 id=235 data-nosnippet>235</a>                    <span class="string">"2259924035228092997691937637688451143058635253053054071159756458902878894295"</span>,
+<a href=#236 id=236 data-nosnippet>236</a>                ).unwrap(),
+<a href=#237 id=237 data-nosnippet>237</a>                Fq::from_str(
+<a href=#238 id=238 data-nosnippet>238</a>                    <span class="string">"13145690032701362144460254305183927872683620413225364127064863863535255135244"</span>,
+<a href=#239 id=239 data-nosnippet>239</a>                ).unwrap(),
+<a href=#240 id=240 data-nosnippet>240</a>            ),
+<a href=#241 id=241 data-nosnippet>241</a>            Fq2::new(
+<a href=#242 id=242 data-nosnippet>242</a>                Fq::from_str(
+<a href=#243 id=243 data-nosnippet>243</a>                    <span class="string">"9910063591662383599552477067956819406417086889312288278252482503717089428441"</span>,
+<a href=#244 id=244 data-nosnippet>244</a>                ).unwrap(),
+<a href=#245 id=245 data-nosnippet>245</a>                Fq::from_str(
+<a href=#246 id=246 data-nosnippet>246</a>                    <span class="string">"537414042055419261990282459138081732565514913399498746664966841152381183961"</span>,
+<a href=#247 id=247 data-nosnippet>247</a>                ).unwrap(),
+<a href=#248 id=248 data-nosnippet>248</a>            ),
+<a href=#249 id=249 data-nosnippet>249</a>            Fq2::new(
+<a href=#250 id=250 data-nosnippet>250</a>                Fq::from_str(
+<a href=#251 id=251 data-nosnippet>251</a>                    <span class="string">"15311812409497308894370893420777496684951030254049554818293571309705780605004"</span>,
+<a href=#252 id=252 data-nosnippet>252</a>                ).unwrap(),
+<a href=#253 id=253 data-nosnippet>253</a>                Fq::from_str(
+<a href=#254 id=254 data-nosnippet>254</a>                    <span class="string">"13657107176064455789881282546557276003626320193974643644160350907227082365810"</span>,
+<a href=#255 id=255 data-nosnippet>255</a>                ).unwrap(),
+<a href=#256 id=256 data-nosnippet>256</a>            ),
+<a href=#257 id=257 data-nosnippet>257</a>        ),
+<a href=#258 id=258 data-nosnippet>258</a>        Fq6::new(
+<a href=#259 id=259 data-nosnippet>259</a>            Fq2::new(
+<a href=#260 id=260 data-nosnippet>260</a>                Fq::from_str(
+<a href=#261 id=261 data-nosnippet>261</a>                    <span class="string">"4913017949003742946864670837361832856526234260447029873580022776602534856819"</span>,
+<a href=#262 id=262 data-nosnippet>262</a>                ).unwrap(),
+<a href=#263 id=263 data-nosnippet>263</a>                Fq::from_str(
+<a href=#264 id=264 data-nosnippet>264</a>                    <span class="string">"7834351480852267338070670220119081676575418514182895774094743209915633114041"</span>,
+<a href=#265 id=265 data-nosnippet>265</a>                ).unwrap(),
+<a href=#266 id=266 data-nosnippet>266</a>            ),
+<a href=#267 id=267 data-nosnippet>267</a>            Fq2::new(
+<a href=#268 id=268 data-nosnippet>268</a>                Fq::from_str(
+<a href=#269 id=269 data-nosnippet>269</a>                    <span class="string">"12837298223308203788092748646758194441270207338661891973231184407371206766993"</span>,
+<a href=#270 id=270 data-nosnippet>270</a>                ).unwrap(),
+<a href=#271 id=271 data-nosnippet>271</a>                Fq::from_str(
+<a href=#272 id=272 data-nosnippet>272</a>                    <span class="string">"12756474445699147370503225379431475413909971718057034061593007812727141391799"</span>,
+<a href=#273 id=273 data-nosnippet>273</a>                ).unwrap(),
+<a href=#274 id=274 data-nosnippet>274</a>            ),
+<a href=#275 id=275 data-nosnippet>275</a>            Fq2::new(
+<a href=#276 id=276 data-nosnippet>276</a>                Fq::from_str(
+<a href=#277 id=277 data-nosnippet>277</a>                    <span class="string">"9473802207170192255373153510655867502408045964296373712891954747252332944018"</span>,
+<a href=#278 id=278 data-nosnippet>278</a>                ).unwrap(),
+<a href=#279 id=279 data-nosnippet>279</a>                Fq::from_str(
+<a href=#280 id=280 data-nosnippet>280</a>                    <span class="string">"4583089109360519374075173304035813179013579459429335467869926761027310749713"</span>,
+<a href=#281 id=281 data-nosnippet>281</a>                ).unwrap(),
+<a href=#282 id=282 data-nosnippet>282</a>            ),
+<a href=#283 id=283 data-nosnippet>283</a>        ),
+<a href=#284 id=284 data-nosnippet>284</a>    );
+<a href=#285 id=285 data-nosnippet>285</a>
+<a href=#286 id=286 data-nosnippet>286</a>    <span class="kw">let </span>expected = Fq12::new(
+<a href=#287 id=287 data-nosnippet>287</a>        Fq6::new(
+<a href=#288 id=288 data-nosnippet>288</a>            Fq2::new(
+<a href=#289 id=289 data-nosnippet>289</a>                Fq::from_str(
+<a href=#290 id=290 data-nosnippet>290</a>                    <span class="string">"14722956046055152398903846391223329501345567382234608299399030576415080188350"</span>,
+<a href=#291 id=291 data-nosnippet>291</a>                ).unwrap(),
+<a href=#292 id=292 data-nosnippet>292</a>                Fq::from_str(
+<a href=#293 id=293 data-nosnippet>293</a>                    <span class="string">"14280703280777926697010730619606819467080027543707671882210769811674790473417"</span>,
+<a href=#294 id=294 data-nosnippet>294</a>                ).unwrap(),
+<a href=#295 id=295 data-nosnippet>295</a>            ),
+<a href=#296 id=296 data-nosnippet>296</a>            Fq2::new(
+<a href=#297 id=297 data-nosnippet>297</a>                Fq::from_str(
+<a href=#298 id=298 data-nosnippet>298</a>                    <span class="string">"19969875076083990244184003223190771301761436396530543002586073549972410735411"</span>,
+<a href=#299 id=299 data-nosnippet>299</a>                ).unwrap(),
+<a href=#300 id=300 data-nosnippet>300</a>                Fq::from_str(
+<a href=#301 id=301 data-nosnippet>301</a>                    <span class="string">"10717335566913889643303549252432531178405520196706173198634734518494041323243"</span>,
+<a href=#302 id=302 data-nosnippet>302</a>                ).unwrap(),
+<a href=#303 id=303 data-nosnippet>303</a>            ),
+<a href=#304 id=304 data-nosnippet>304</a>            Fq2::new(
+<a href=#305 id=305 data-nosnippet>305</a>                Fq::from_str(
+<a href=#306 id=306 data-nosnippet>306</a>                    <span class="string">"6063612626166484870786832843320782567259894784043383626084549455432890717937"</span>,
+<a href=#307 id=307 data-nosnippet>307</a>                ).unwrap(),
+<a href=#308 id=308 data-nosnippet>308</a>                Fq::from_str(
+<a href=#309 id=309 data-nosnippet>309</a>                    <span class="string">"17089783040131779205038789608891431427943860868115199598200376195935079808729"</span>,
+<a href=#310 id=310 data-nosnippet>310</a>                ).unwrap(),
+<a href=#311 id=311 data-nosnippet>311</a>            ),
+<a href=#312 id=312 data-nosnippet>312</a>        ),
+<a href=#313 id=313 data-nosnippet>313</a>        Fq6::new(
+<a href=#314 id=314 data-nosnippet>314</a>            Fq2::new(
+<a href=#315 id=315 data-nosnippet>315</a>                Fq::from_str(
+<a href=#316 id=316 data-nosnippet>316</a>                    <span class="string">"10029863438921507421569931792104023129735006154272482043027653425575205672906"</span>,
+<a href=#317 id=317 data-nosnippet>317</a>                ).unwrap(),
+<a href=#318 id=318 data-nosnippet>318</a>                Fq::from_str(
+<a href=#319 id=319 data-nosnippet>319</a>                    <span class="string">"6406252222753462799887280578845937185621081001436094637606245493619821542775"</span>,
+<a href=#320 id=320 data-nosnippet>320</a>                ).unwrap(),
+<a href=#321 id=321 data-nosnippet>321</a>            ),
+<a href=#322 id=322 data-nosnippet>322</a>            Fq2::new(
+<a href=#323 id=323 data-nosnippet>323</a>                Fq::from_str(
+<a href=#324 id=324 data-nosnippet>324</a>                    <span class="string">"1048245462913506652602966692378792381004227332967846949234978073448561848050"</span>,
+<a href=#325 id=325 data-nosnippet>325</a>                ).unwrap(),
+<a href=#326 id=326 data-nosnippet>326</a>                Fq::from_str(
+<a href=#327 id=327 data-nosnippet>327</a>                    <span class="string">"1444281375189053827455518242624554285012408033699861764136810522738182087554"</span>,
+<a href=#328 id=328 data-nosnippet>328</a>                ).unwrap(),
+<a href=#329 id=329 data-nosnippet>329</a>            ),
+<a href=#330 id=330 data-nosnippet>330</a>            Fq2::new(
+<a href=#331 id=331 data-nosnippet>331</a>                Fq::from_str(
+<a href=#332 id=332 data-nosnippet>332</a>                    <span class="string">"8839610992666735109106629514135300820412539620261852250193684883379364789120"</span>,
+<a href=#333 id=333 data-nosnippet>333</a>                ).unwrap(),
+<a href=#334 id=334 data-nosnippet>334</a>                Fq::from_str(
+<a href=#335 id=335 data-nosnippet>335</a>                    <span class="string">"11347360242067273846784836674906058940820632082713814508736182487171407730718"</span>,
+<a href=#336 id=336 data-nosnippet>336</a>                ).unwrap(),
+<a href=#337 id=337 data-nosnippet>337</a>            ),
+<a href=#338 id=338 data-nosnippet>338</a>        ),
+<a href=#339 id=339 data-nosnippet>339</a>    );
+<a href=#340 id=340 data-nosnippet>340</a>
+<a href=#341 id=341 data-nosnippet>341</a>    <span class="kw">let </span>e = orig.exp_by_neg_z();
+<a href=#342 id=342 data-nosnippet>342</a>
+<a href=#343 id=343 data-nosnippet>343</a>    <span class="macro">assert_eq!</span>(e, expected);
+<a href=#344 id=344 data-nosnippet>344</a>}</code></pre></div></section></main></body></html>

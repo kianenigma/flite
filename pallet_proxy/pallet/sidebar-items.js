@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["Call","Error","Event"],"mod":["dispatchables","storage_types"],"struct":["Pallet"],"trait":["Config"],"type":["Announcements","Module","Proxies"]};
+window.SIDEBAR_ITEMS = {"enum":["Call","Error","Event"],"mod":["dispatchables","storage_types"],"struct":["CheckPermissionsViewFunction","IsSupersetViewFunction","Pallet"],"trait":["Config"],"type":["Announcements","Module","Proxies"]};

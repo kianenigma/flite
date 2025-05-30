@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["BitsOrderFormat","BitsStoreFormat","Primitive","UnhandledKind"],"mod":["portable_registry","visitor"],"struct":["Field","Variant"],"trait":["FieldIter","PathIter","ResolvedTypeVisitor","TypeId","TypeResolver","VariantIter"]};

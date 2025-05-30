@@ -1,0 +1,47 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Decode an extrinsic in a historic runtime (ie one prior to V14 metadata). This is basically just an alias for `decode_extrinsic`."><title>decode_extrinsic_legacy in frame_decode::extrinsics - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-84e720fa.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="frame_decode" data-themes="" data-resource-suffix="" data-rustdoc-version="1.89.0-nightly (1bbd62e54 2025-05-29)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-5514c975.js" ><script src="../../static.files/storage-4e99c027.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../static.files/main-fd3af306.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc fn"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../frame_decode/index.html">frame_<wbr>decode</a><span class="version">0.5.1</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">decode_<wbr>extrinsic_<wbr>legacy</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#example" title="Example">Example</a></li></ul></section><div id="rustdoc-modnav"><h2><a href="index.html">In frame_<wbr>decode::<wbr>extrinsics</a></h2></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="../index.html">frame_decode</a>::<wbr><a href="index.html">extrinsics</a></div><h1>Function <span class="fn">decode_extrinsic_legacy</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../src/frame_decode/lib.rs.html#138-149">Source</a> </span></div><pre class="rust item-decl"><code>pub fn decode_extrinsic_legacy&lt;'info, Info, Resolver&gt;(
+    cursor: &amp;mut &amp;[<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>],
+    info: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;'info Info</a>,
+    type_resolver: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;Resolver</a>,
+) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="struct.Extrinsic.html" title="struct frame_decode::extrinsics::Extrinsic">Extrinsic</a>&lt;'info, Info::<a class="associatedtype" href="trait.ExtrinsicTypeInfo.html#associatedtype.TypeId" title="type frame_decode::extrinsics::ExtrinsicTypeInfo::TypeId">TypeId</a>&gt;, <a class="enum" href="enum.ExtrinsicDecodeError.html" title="enum frame_decode::extrinsics::ExtrinsicDecodeError">ExtrinsicDecodeError</a>&gt;<div class="where">where
+    Info: <a class="trait" href="trait.ExtrinsicTypeInfo.html" title="trait frame_decode::extrinsics::ExtrinsicTypeInfo">ExtrinsicTypeInfo</a>,
+    Info::<a class="associatedtype" href="trait.ExtrinsicTypeInfo.html#associatedtype.TypeId" title="type frame_decode::extrinsics::ExtrinsicTypeInfo::TypeId">TypeId</a>: <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a>,
+    Resolver: <a class="trait" href="../../scale_type_resolver/trait.TypeResolver.html" title="trait scale_type_resolver::TypeResolver">TypeResolver</a>&lt;TypeId = Info::<a class="associatedtype" href="trait.ExtrinsicTypeInfo.html#associatedtype.TypeId" title="type frame_decode::extrinsics::ExtrinsicTypeInfo::TypeId">TypeId</a>&gt;,</div></code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Decode an extrinsic in a historic runtime (ie one prior to V14 metadata). This is basically
+just an alias for <a href="fn.decode_extrinsic.html" title="fn frame_decode::extrinsics::decode_extrinsic"><code>decode_extrinsic</code></a>.</p>
+<p>To understand more about the historic types required to decode old blocks, see [<code>scale_info_legacy</code>].</p>
+<h2 id="example"><a class="doc-anchor" href="#example">§</a>Example</h2>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>frame_decode::extrinsics::decode_extrinsic_legacy;
+<span class="kw">use </span>frame_metadata::RuntimeMetadata;
+<span class="kw">use </span>parity_scale_codec::Decode;
+<span class="kw">use </span>scale_info_legacy::ChainTypeRegistry;
+
+<span class="kw">let </span>metadata_bytes = std::fs::read(<span class="string">"artifacts/metadata_5000000_30.scale"</span>).unwrap();
+<span class="kw">let </span>RuntimeMetadata::V12(metadata) = RuntimeMetadata::decode(<span class="kw-2">&amp;mut &amp;*</span>metadata_bytes).unwrap() <span class="kw">else </span>{ <span class="macro">panic!</span>() };
+
+<span class="kw">let </span>extrinsics_bytes = std::fs::read(<span class="string">"artifacts/exts_5000000_30.json"</span>).unwrap();
+<span class="kw">let </span>extrinsics_hex: Vec&lt;String&gt; = serde_json::from_slice(<span class="kw-2">&amp;</span>extrinsics_bytes).unwrap();
+
+<span class="comment">// For historic types, we also need to provide type definitions, since they aren't in the
+// metadata. We use scale-info-legacy to do this, and have already defined types for the
+// Polkadot relay chain, so let's load those in:
+</span><span class="kw">let </span>historic_type_bytes = std::fs::read(<span class="string">"types/polkadot_types.yaml"</span>).unwrap();
+<span class="kw">let </span>historic_types: ChainTypeRegistry = serde_yaml::from_slice(<span class="kw-2">&amp;</span>historic_type_bytes).unwrap();
+
+<span class="comment">// We configure the loaded types for the spec version of the extrinsics we want to decode,
+// because types can vary between different spec versions.
+</span><span class="kw">let </span><span class="kw-2">mut </span>historic_types_for_spec = historic_types.for_spec_version(<span class="number">30</span>);
+
+<span class="comment">// We also want to embelish these types with information from the metadata itself. This avoids
+// needing to hardcode a load of type definitions that we can already construct from the metadata.
+</span><span class="kw">let </span>types_from_metadata = frame_decode::helpers::type_registry_from_metadata(<span class="kw-2">&amp;</span>metadata).unwrap();
+historic_types_for_spec.prepend(types_from_metadata);
+
+<span class="kw">for </span>ext_hex <span class="kw">in </span>extrinsics_hex {
+    <span class="kw">let </span>ext_bytes = hex::decode(ext_hex.trim_start_matches(<span class="string">"0x"</span>)).unwrap();
+
+    <span class="comment">// Decode the extrinsic, returning information about it:
+    </span><span class="kw">let </span>ext_info = decode_extrinsic_legacy(<span class="kw-2">&amp;mut &amp;*</span>ext_bytes, <span class="kw-2">&amp;</span>metadata, <span class="kw-2">&amp;</span>historic_types_for_spec).unwrap();
+
+    <span class="comment">// Now we can use this information to inspect the extrinsic and decode the
+    // different values inside it (see the `decode_extrinsic` docs).
+</span>}</code></pre></div>
+</div></details></section></div></main></body></html>

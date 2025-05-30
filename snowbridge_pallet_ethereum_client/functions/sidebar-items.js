@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["compute_epoch","compute_period","decompress_sync_committee_bits","sync_committee_sum"]};

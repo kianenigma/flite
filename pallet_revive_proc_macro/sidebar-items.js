@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"attr":["define_env"]};
+window.SIDEBAR_ITEMS = {"attr":["define_env","unstable_hostfn"]};

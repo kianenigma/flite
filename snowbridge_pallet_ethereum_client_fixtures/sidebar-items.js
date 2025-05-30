@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["make_checkpoint","make_execution_proof","make_finalized_header_update","make_inbound_fixture","make_sync_committee_update"]};

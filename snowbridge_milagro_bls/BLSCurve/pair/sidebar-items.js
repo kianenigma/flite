@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["another","ate","ate2","fexp","g1mul","g2mul","gs","gtpow","initmp","miller"]};

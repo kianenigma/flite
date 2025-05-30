@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["make_send_token_message"]};

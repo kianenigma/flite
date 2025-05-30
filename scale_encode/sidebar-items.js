@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"derive":["EncodeAsType"],"mod":["error","ext"],"struct":["Composite","CompositeField","Field","Variant"],"trait":["EncodeAsFields","EncodeAsType","FieldIter","TypeResolver"]};

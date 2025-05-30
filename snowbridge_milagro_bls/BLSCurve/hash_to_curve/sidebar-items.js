@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["OVERSIZED_DST"],"enum":["HashAlgorithm"],"fn":["hash","hash_to_field_fp","hash_to_field_fp2","simplified_swu_fp","simplified_swu_fp2"]};

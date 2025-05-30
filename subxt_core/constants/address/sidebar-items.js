@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["dynamic"],"struct":["DefaultAddress"],"trait":["Address"],"type":["DynamicAddress","StaticAddress"]};

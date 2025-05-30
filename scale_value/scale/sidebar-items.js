@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["DecodeError"],"fn":["decode_as_fields","decode_as_type","encode_as_type"],"mod":["tracing"],"struct":["EncodeError","PortableRegistry"],"trait":["TypeResolver"],"type":["ValueVisitor"]};

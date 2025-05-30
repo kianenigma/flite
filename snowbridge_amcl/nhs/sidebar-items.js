@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["client","server_1","server_2"]};

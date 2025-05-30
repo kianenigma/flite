@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["decode_from"],"struct":["Metadata"],"trait":["DecodeWithMetadata","EncodeWithMetadata"]};

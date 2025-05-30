@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Phase"],"fn":["decode_from"],"struct":["EventDetails","EventMetadataDetails","Events"],"trait":["StaticEvent"]};

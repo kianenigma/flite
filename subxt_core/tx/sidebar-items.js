@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["call_data","create_partial_signed","create_signed","create_unsigned","validate"],"mod":["payload","signer"],"struct":["PartialTransaction","Transaction"]};

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["BackingState","CandidatePendingAvailability"]};
+window.SIDEBAR_ITEMS = {"struct":["BackingState","CandidatePendingAvailability","Constraints"]};

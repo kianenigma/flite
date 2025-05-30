@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["pallet"],"struct":["PoolInfo","PoolStakerInfo"],"trait":["AssetRewards","WeightInfo"],"type":["PoolId","PoolInfoFor"]};

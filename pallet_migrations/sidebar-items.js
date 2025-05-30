@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["HistoricCleanupSelector","MigrationCursor"],"mod":["mock_helpers","pallet","weights"],"struct":["ActiveCursor"],"trait":["MockedMigrations"],"type":["ActiveCursorOf","CursorOf","IdentifierOf","RawCursorOf"]};
+window.SIDEBAR_ITEMS = {"enum":["HistoricCleanupSelector","MigrationCursor"],"mod":["migrations","mock_helpers","pallet","weights"],"struct":["ActiveCursor"],"trait":["MockedMigrations"],"type":["ActiveCursorOf","CursorOf","IdentifierOf","RawCursorOf"]};

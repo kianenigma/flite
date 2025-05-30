@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["get_account_id_from_seed","get_collator_keys_from_seed","get_from_seed"]};

@@ -1,0 +1,34 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Utility macro to read input passed to a contract."><title>input in pallet_revive_uapi - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-84e720fa.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="pallet_revive_uapi" data-themes="" data-resource-suffix="" data-rustdoc-version="1.89.0-nightly (1bbd62e54 2025-05-29)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-5514c975.js" ><script src="../static.files/storage-4e99c027.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-fd3af306.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc macro"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../pallet_revive_uapi/index.html">pallet_<wbr>revive_<wbr>uapi</a><span class="version">0.4.0</span></h2></div><div class="sidebar-elems"><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="index.html">pallet_revive_uapi</a></div><h1>Macro <span class="macro">input</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/pallet_revive_uapi/macros.rs.html#37-128">Source</a> </span></div><pre class="rust item-decl"><code>macro_rules! input {
+    (@inner $input:expr, $cursor:expr,) =&gt; { ... };
+    (@size $size:expr, ) =&gt; { ... };
+    (@inner $input:expr, $cursor:expr, $var:ident: u8, $($rest:tt)*) =&gt; { ... };
+    (@size $size:expr, $var:ident: u8, $($rest:tt)*) =&gt; { ... };
+    (@inner $input:expr, $cursor:expr, $var:ident: u64, $($rest:tt)*) =&gt; { ... };
+    (@size $size:expr, $var:ident: u64, $($rest:tt)*) =&gt; { ... };
+    (@inner $input:expr, $cursor:expr, $var:ident: u32, $($rest:tt)*) =&gt; { ... };
+    (@size $size:expr, $var:ident: u32, $($rest:tt)*) =&gt; { ... };
+    (@inner $input:expr, $cursor:expr, $var:ident: [u8],) =&gt; { ... };
+    (@inner $input:expr, $cursor:expr, $var:ident: [u8; $n:expr], $($rest:tt)*) =&gt; { ... };
+    (@inner $input:expr, $cursor:expr, $var:ident: &amp;[u8; $n:expr], $($rest:tt)*) =&gt; { ... };
+    (@size $size:expr, $var:ident: [u8; $n:expr], $($rest:tt)*) =&gt; { ... };
+    (@size $size:expr, $var:ident: &amp;[u8; $n:expr], $($rest:tt)*) =&gt; { ... };
+    ($buffer:ident, $size:expr, $($rest:tt)*) =&gt; { ... };
+    ($buffer: ident, $($rest:tt)*) =&gt; { ... };
+    ($($rest:tt)*) =&gt; { ... };
+}</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Utility macro to read input passed to a contract.</p>
+<p>Example:</p>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="macro">input!</span>(
+		var1: u32,      <span class="comment">// [0, 4)   var1 decoded as u32
+		</span>var2: [u8; <span class="number">32</span>], <span class="comment">// [4, 36)  var2 decoded as a [u8] slice
+		</span>var3: u8,       <span class="comment">// [36, 37) var3 decoded as a u8
+</span>);
+
+<span class="comment">// Input and size can be specified as well:
+</span><span class="macro">input!</span>(
+		input,      <span class="comment">// input buffer (optional)
+		</span><span class="number">512</span>,        <span class="comment">// input size (optional)
+		</span>var4: u32,  <span class="comment">// [0, 4)  var4 decoded as u32
+		</span>var5: [u8], <span class="comment">// [4, ..) var5 decoded as a [u8] slice
+</span>);</code></pre></div>
+</div></details></section></div></main></body></html>

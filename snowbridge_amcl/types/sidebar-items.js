@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["CurvePairingType","CurveType","ModType","SexticTwist","SignOfX"]};

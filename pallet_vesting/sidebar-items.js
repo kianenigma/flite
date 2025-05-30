@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["migrations","pallet","weights"],"struct":["MaxVestingSchedulesGet","VestingInfo"]};
+window.SIDEBAR_ITEMS = {"enum":["Releases"],"mod":["migrations","pallet","weights"],"struct":["MaxVestingSchedulesGet","VestingInfo"]};

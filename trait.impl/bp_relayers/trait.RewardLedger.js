@@ -1,0 +1,9 @@
+(function() {
+    var implementors = Object.fromEntries([["pallet_bridge_relayers",[["impl&lt;T: <a class=\"trait\" href=\"pallet_bridge_relayers/pallet/trait.Config.html\" title=\"trait pallet_bridge_relayers::pallet::Config\">Config</a>&lt;I&gt;, I: 'static, Reward, RewardBalance&gt; <a class=\"trait\" href=\"pallet_bridge_relayers/trait.RewardLedger.html\" title=\"trait pallet_bridge_relayers::RewardLedger\">RewardLedger</a>&lt;&lt;T as <a class=\"trait\" href=\"frame_system/pallet/trait.Config.html\" title=\"trait frame_system::pallet::Config\">Config</a>&gt;::<a class=\"associatedtype\" href=\"frame_system/pallet/trait.Config.html#associatedtype.AccountId\" title=\"type frame_system::pallet::Config::AccountId\">AccountId</a>, Reward, RewardBalance&gt; for <a class=\"struct\" href=\"pallet_bridge_relayers/pallet/struct.Pallet.html\" title=\"struct pallet_bridge_relayers::pallet::Pallet\">Pallet</a>&lt;T, I&gt;<div class=\"where\">where\n    Reward: <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/convert/trait.Into.html\" title=\"trait core::convert::Into\">Into</a>&lt;T::<a class=\"associatedtype\" href=\"pallet_bridge_relayers/pallet/trait.Config.html#associatedtype.Reward\" title=\"type pallet_bridge_relayers::pallet::Config::Reward\">Reward</a>&gt;,\n    RewardBalance: <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/convert/trait.Into.html\" title=\"trait core::convert::Into\">Into</a>&lt;T::<a class=\"associatedtype\" href=\"pallet_bridge_relayers/pallet/trait.Config.html#associatedtype.RewardBalance\" title=\"type pallet_bridge_relayers::pallet::Config::RewardBalance\">RewardBalance</a>&gt;,</div>"]]]]);
+    if (window.register_implementors) {
+        window.register_implementors(implementors);
+    } else {
+        window.pending_implementors = implementors;
+    }
+})()
+//{"start":57,"fragment_lengths":[1614]}

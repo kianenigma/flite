@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["Call","Error","Event"],"mod":["config_preludes","dispatchables","storage_types"],"struct":["GenesisConfig","Instance1","Pallet"],"trait":["Config","DefaultConfig"],"type":["Module","NextAssetId"]};
+window.SIDEBAR_ITEMS = {"enum":["Call","Error","Event"],"mod":["config_preludes","dispatchables","storage_types"],"struct":["GenesisConfig","Instance1","Pallet"],"trait":["Config","DefaultConfig"],"type":["Account","Approvals","Asset","Metadata","Module","NextAssetId"]};

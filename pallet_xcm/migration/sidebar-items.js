@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["v1"],"struct":["MigrateToLatestXcmVersion"]};
+window.SIDEBAR_ITEMS = {"mod":["data","v1"],"struct":["MigrateToLatestXcmVersion"]};

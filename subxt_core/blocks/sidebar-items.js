@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["decode_from"],"struct":["ExtrinsicDetails","ExtrinsicMetadataDetails","ExtrinsicSignedExtension","ExtrinsicSignedExtensions","Extrinsics","FoundExtrinsic"],"trait":["StaticExtrinsic"]};

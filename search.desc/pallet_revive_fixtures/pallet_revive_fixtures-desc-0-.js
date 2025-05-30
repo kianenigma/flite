@@ -1,1 +1,0 @@
-searchState.loadedDescShard("pallet_revive_fixtures", 0, "Fixtures used in runtime benchmarks.\nLoad a given wasm module and returns a wasm binary …")

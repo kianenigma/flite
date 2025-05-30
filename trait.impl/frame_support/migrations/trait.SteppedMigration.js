@@ -1,0 +1,9 @@
+(function() {
+    var implementors = Object.fromEntries([["pallet_identity",[["impl&lt;T: <a class=\"trait\" href=\"pallet_identity/pallet/trait.Config.html\" title=\"trait pallet_identity::pallet::Config\">Config</a>&gt; <a class=\"trait\" href=\"frame_support/migrations/trait.SteppedMigration.html\" title=\"trait frame_support::migrations::SteppedMigration\">SteppedMigration</a> for <a class=\"struct\" href=\"pallet_identity/migration/v2/struct.LazyMigrationV1ToV2.html\" title=\"struct pallet_identity::migration::v2::LazyMigrationV1ToV2\">LazyMigrationV1ToV2</a>&lt;T&gt;"]]],["pallet_migrations",[["impl&lt;T, P, V&gt; <a class=\"trait\" href=\"frame_support/migrations/trait.SteppedMigration.html\" title=\"trait frame_support::migrations::SteppedMigration\">SteppedMigration</a> for <a class=\"struct\" href=\"pallet_migrations/migrations/struct.ResetPallet.html\" title=\"struct pallet_migrations::migrations::ResetPallet\">ResetPallet</a>&lt;T, P&gt;<div class=\"where\">where\n    T: <a class=\"trait\" href=\"pallet_migrations/pallet/trait.Config.html\" title=\"trait pallet_migrations::pallet::Config\">Config</a>,\n    P: <a class=\"trait\" href=\"frame_support/traits/metadata/trait.PalletInfoAccess.html\" title=\"trait frame_support::traits::metadata::PalletInfoAccess\">PalletInfoAccess</a> + <a class=\"trait\" href=\"frame_support/traits/metadata/trait.GetStorageVersion.html\" title=\"trait frame_support::traits::metadata::GetStorageVersion\">GetStorageVersion</a>&lt;InCodeStorageVersion = V&gt;,\n    V: <a class=\"trait\" href=\"frame_support/migrations/trait.StoreInCodeStorageVersion.html\" title=\"trait frame_support::migrations::StoreInCodeStorageVersion\">StoreInCodeStorageVersion</a>&lt;P&gt;,</div>"]]]]);
+    if (window.register_implementors) {
+        window.register_implementors(implementors);
+    } else {
+        window.pending_implementors = implementors;
+    }
+})()
+//{"start":57,"fragment_lengths":[526,1156]}

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["dynamic"],"struct":["DefaultAddress","StaticStorageKey","StorageHashers","StorageHashersIter"],"trait":["Address","StorageKey"],"type":["DynamicAddress","StaticAddress"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["polkadot","signed_extensions","substrate"],"struct":["DefaultExtrinsicParamsBuilder","RefineParamsData"],"trait":["BlockHash","Config","ExtrinsicParams","ExtrinsicParamsEncoder","Hasher","Header","RefineParams"],"type":["DefaultExtrinsicParams","ParamsFor"]};

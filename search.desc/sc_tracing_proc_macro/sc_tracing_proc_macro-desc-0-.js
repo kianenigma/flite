@@ -1,1 +1,1 @@
-searchState.loadedDescShard("sc_tracing_proc_macro", 0, "Add a log prefix to the function.")
+searchState.loadedDescShard("sc_tracing_proc_macro", 0, "This prefixes all the log lines with <code>[&lt;name&gt;]</code> (after the …")

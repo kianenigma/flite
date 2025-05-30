@@ -1,1 +1,0 @@
-searchState.loadedDescShard("snowbridge_pallet_ethereum_client_fixtures", 0, "")

@@ -1,0 +1,103 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="BIP32: HD Wallets"><title>bip32 - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-84e720fa.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="bip32" data-themes="" data-resource-suffix="" data-rustdoc-version="1.89.0-nightly (1bbd62e54 2025-05-29)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-5514c975.js" ><script src="../static.files/storage-4e99c027.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-fd3af306.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../bip32/index.html">bip32</a><span class="version">0.5.3</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#bip32-hd-wallets" title="BIP32: HD Wallets">BIP32: HD Wallets</a><ul><li><a href="#about" title="About">About</a></li><li><a href="#minimum-supported-rust-version" title="Minimum Supported Rust Version">Minimum Supported Rust Version</a></li><li><a href="#license" title="License">License</a></li><li><a href="#contribution" title="Contribution">Contribution</a></li><li><a href="#backends" title="Backends">Backends</a></li><li><a href="#limitations-and-further-work" title="Limitations and further work">Limitations and further work</a></li></ul></li><li><a href="#usage" title="Usage">Usage</a><ul><li><a href="#accessing-osrng" title="Accessing `OsRng`">Accessing <code>OsRng</code></a></li><li><a href="#rust-code-example" title="Rust code example">Rust code example</a></li></ul></li></ul><h3><a href="#reexports">Crate Items</a></h3><ul class="block"><li><a href="#reexports" title="Re-exports">Re-exports</a></li><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#enums" title="Enums">Enums</a></li><li><a href="#constants" title="Constants">Constants</a></li><li><a href="#traits" title="Traits">Traits</a></li><li><a href="#types" title="Type Aliases">Type Aliases</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Crate <span>bip32</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/bip32/lib.rs.html#1-158">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="bip32-hd-wallets"><a class="doc-anchor" href="#bip32-hd-wallets">§</a>BIP32: HD Wallets</h2>
+<p><a href="https://crates.io/crates/bip32"><img src="https://img.shields.io/crates/v/bip32.svg" alt="Crate" /></a>
+<a href="https://docs.rs/bip32/"><img src="https://docs.rs/bip32/badge.svg" alt="Docs" /></a>
+<a href="https://github.com/iqlusioninc/crates/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-Apache2.0-blue.svg" alt="Apache 2.0 Licensed" /></a>
+<img src="https://img.shields.io/badge/rustc-1.65+-blue.svg" alt="MSRV" />
+<a href="https://github.com/rust-secure-code/safety-dance/"><img src="https://img.shields.io/badge/unsafe-forbidden-success.svg" alt="Safety Dance" /></a>
+<a href="https://github.com/iqlusioninc/crates/actions/workflows/bip32.yml"><img src="https://github.com/iqlusioninc/crates/actions/workflows/bip32.yml/badge.svg" alt="Build Status" /></a></p>
+<p>BIP32 hierarchical key derivation implemented in a generic, <code>no_std</code>-friendly
+manner. Supports deriving keys using the pure Rust <code>k256</code> crate or the
+C library-backed <code>secp256k1</code> crate.</p>
+<p><img src="https://raw.githubusercontent.com/bitcoin/bips/4bc05ff903cb47eb18ce58a9836de1ac13ecf1b7/bip-0032/derivation.png" alt="Diagram" /></p>
+<p><a href="https://docs.rs/bip32/">Documentation</a></p>
+<h3 id="about"><a class="doc-anchor" href="#about">§</a>About</h3>
+<p>BIP32 is an algorithm for generating a hierarchy of elliptic curve keys,
+a.k.a. “wallets”, from a single seed value. A related algorithm also
+implemented by this crate, BIP39, provides a way to derive the seed value
+from a set of 24-words from a preset list, a.k.a. a “mnemonic”.</p>
+<h3 id="minimum-supported-rust-version"><a class="doc-anchor" href="#minimum-supported-rust-version">§</a>Minimum Supported Rust Version</h3>
+<p>Rust <strong>1.65</strong> or newer.</p>
+<p>In the future, we reserve the right to change MSRV (i.e. MSRV is out-of-scope
+for this crate’s SemVer guarantees), however when we do it will be accompanied by
+a minor version bump.</p>
+<h3 id="license"><a class="doc-anchor" href="#license">§</a>License</h3>
+<p>Copyright © 2020-2023 iqlusion</p>
+<p><strong>bip32.rs</strong> is distributed under the terms of either the MIT license
+or the Apache License (Version 2.0), at your option.</p>
+<p>See <a href="https://github.com/iqlusioninc/crates/blob/main/bip32/LICENSE-APACHE">LICENSE-APACHE</a> (Apache License, Version 2.0) and <a href="https://github.com/iqlusioninc/crates/blob/main/bip32/LICENSE-MIT">LICENSE-MIT</a> for
+further details.</p>
+<h3 id="contribution"><a class="doc-anchor" href="#contribution">§</a>Contribution</h3>
+<p>Unless you explicitly state otherwise, any contribution intentionally
+submitted for inclusion in the work by you shall be dual licensed as above,
+without any additional terms or conditions.</p>
+<h3 id="backends"><a class="doc-anchor" href="#backends">§</a>Backends</h3>
+<p>This crate provides a generic implementation of BIP32 which can be used
+with any backing provider which implements the <a href="trait.PrivateKey.html" title="trait bip32::PrivateKey"><code>PrivateKey</code></a> and
+<a href="trait.PublicKey.html" title="trait bip32::PublicKey"><code>PublicKey</code></a> traits. The following providers are built into this crate,
+under the following crate features:</p>
+<ul>
+<li><code>secp256k1</code> (enabled by default): support for the pure Rust <a href="../k256/index.html" title="mod k256"><code>k256</code></a>
+crate, with <a href="type.XPrv.html" title="type bip32::XPrv"><code>XPrv</code></a> and <a href="type.XPub.html" title="type bip32::XPub"><code>XPub</code></a> type aliases.</li>
+<li><code>secp256k1-ffi</code>: support for Bitcoin Core’s <a href="https://github.com/bitcoin-core/secp256k1">libsecp256k1 C library</a>,
+as wrapped by the <a href="https://github.com/rust-bitcoin/rust-secp256k1/"><code>secp256k1</code> Rust crate</a>.</li>
+</ul>
+<h3 id="limitations-and-further-work"><a class="doc-anchor" href="#limitations-and-further-work">§</a>Limitations and further work</h3>
+<ul>
+<li>Only 24-word BIP39 mnemonics are supported</li>
+<li>BIP43, BIP44, BIP49, BIP84 not yet properly supported</li>
+</ul>
+<h2 id="usage"><a class="doc-anchor" href="#usage">§</a>Usage</h2>
+<p>The following is an end-to-end example of how to generate a random BIP39
+mnemonic and use it to derive child keys according to a provided BIP32
+derivation path.</p>
+<h3 id="accessing-osrng"><a class="doc-anchor" href="#accessing-osrng">§</a>Accessing <code>OsRng</code></h3>
+<p>The following example uses <code>OsRng</code> for cryptographically secure random
+number generation. To use it, you need to include <code>rand_core</code> with the
+<code>std</code> feature by adding the following to <code>Cargo.toml</code>:</p>
+<div class="example-wrap"><pre class="language-toml"><code>rand_core = { version = &quot;0.6&quot;, features = [&quot;std&quot;] }</code></pre></div>
+<p>(on embedded platforms, you will need to supply our own RNG)</p>
+<h3 id="rust-code-example"><a class="doc-anchor" href="#rust-code-example">§</a>Rust code example</h3>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>bip32::{Mnemonic, Prefix, XPrv};
+<span class="kw">use </span>rand_core::OsRng;
+
+<span class="comment">// Generate random Mnemonic using the default language (English)
+</span><span class="kw">let </span>mnemonic = Mnemonic::random(<span class="kw-2">&amp;mut </span>OsRng, Default::default());
+
+<span class="comment">// Derive a BIP39 seed value using the given password
+</span><span class="kw">let </span>seed = mnemonic.to_seed(<span class="string">"password"</span>);
+
+<span class="comment">// Derive the root `XPrv` from the `seed` value
+</span><span class="kw">let </span>root_xprv = XPrv::new(<span class="kw-2">&amp;</span>seed)<span class="question-mark">?</span>;
+<span class="macro">assert_eq!</span>(root_xprv, XPrv::derive_from_path(<span class="kw-2">&amp;</span>seed, <span class="kw-2">&amp;</span><span class="string">"m"</span>.parse()<span class="question-mark">?</span>)<span class="question-mark">?</span>);
+
+<span class="comment">// Derive a child `XPrv` using the provided BIP32 derivation path
+</span><span class="kw">let </span>child_path = <span class="string">"m/0/2147483647'/1/2147483646'"</span>;
+<span class="kw">let </span>child_xprv = XPrv::derive_from_path(<span class="kw-2">&amp;</span>seed, <span class="kw-2">&amp;</span>child_path.parse()<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+
+<span class="comment">// Get the `XPub` associated with `child_xprv`.
+</span><span class="kw">let </span>child_xpub = child_xprv.public_key();
+
+<span class="comment">// Serialize `child_xprv` as a string with the `xprv` prefix.
+</span><span class="kw">let </span>child_xprv_str = child_xprv.to_string(Prefix::XPRV);
+<span class="macro">assert!</span>(child_xprv_str.starts_with(<span class="string">"xprv"</span>));
+
+<span class="comment">// Serialize `child_xpub` as a string with the `xpub` prefix.
+</span><span class="kw">let </span>child_xpub_str = child_xpub.to_string(Prefix::XPUB);
+<span class="macro">assert!</span>(child_xpub_str.starts_with(<span class="string">"xpub"</span>));
+
+<span class="comment">// Get the ECDSA/secp256k1 signing and verification keys for the xprv and xpub
+</span><span class="kw">let </span>signing_key = child_xprv.private_key();
+<span class="kw">let </span>verification_key = child_xpub.public_key();
+
+<span class="comment">// Sign and verify an example message using the derived keys.
+</span><span class="kw">use </span>bip32::secp256k1::ecdsa::{
+    signature::{Signer, Verifier},
+    Signature
+};
+
+<span class="kw">let </span>example_msg = <span class="string">b"Hello, world!"</span>;
+<span class="kw">let </span>signature: Signature = signing_key.sign(example_msg);
+<span class="macro">assert!</span>(verification_key.verify(example_msg, <span class="kw-2">&amp;</span>signature).is_ok());</code></pre></div>
+</div></details><h2 id="reexports" class="section-header">Re-exports<a href="#reexports" class="anchor">§</a></h2><dl class="item-table reexports"><dt id="reexport.secp256k1"><code>pub use <a class="mod" href="../k256/index.html" title="mod k256">k256</a> as secp256k1;</code></dt></dl><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.ChildNumber.html" title="struct bip32::ChildNumber">Child<wbr>Number</a></dt><dd>Index of a particular child key for a given (extended) private key.</dd><dt><a class="struct" href="struct.DerivationPath.html" title="struct bip32::DerivationPath">Derivation<wbr>Path</a></dt><dd>Derivation paths within a hierarchical keyspace.</dd><dt><a class="struct" href="struct.ExtendedKey.html" title="struct bip32::ExtendedKey">Extended<wbr>Key</a></dt><dd>Serialized extended key (e.g. <code>xprv</code> and <code>xpub</code>).</dd><dt><a class="struct" href="struct.ExtendedKeyAttrs.html" title="struct bip32::ExtendedKeyAttrs">Extended<wbr>KeyAttrs</a></dt><dd>Extended key attributes: fields common to extended keys including depth,
+fingerprints, child numbers, and chain codes.</dd><dt><a class="struct" href="struct.ExtendedPrivateKey.html" title="struct bip32::ExtendedPrivateKey">Extended<wbr>Private<wbr>Key</a></dt><dd>Extended private keys derived using BIP32.</dd><dt><a class="struct" href="struct.ExtendedPublicKey.html" title="struct bip32::ExtendedPublicKey">Extended<wbr>Public<wbr>Key</a></dt><dd>Extended public keys derived using BIP32.</dd><dt><a class="struct" href="struct.Prefix.html" title="struct bip32::Prefix">Prefix</a></dt><dd>BIP32 extended key prefixes a.k.a. “versions” (e.g. <code>xpub</code>, <code>xprv</code>)</dd></dl><h2 id="enums" class="section-header">Enums<a href="#enums" class="anchor">§</a></h2><dl class="item-table"><dt><a class="enum" href="enum.Error.html" title="enum bip32::Error">Error</a></dt><dd>Error type.</dd></dl><h2 id="constants" class="section-header">Constants<a href="#constants" class="anchor">§</a></h2><dl class="item-table"><dt><a class="constant" href="constant.KEY_SIZE.html" title="constant bip32::KEY_SIZE">KEY_<wbr>SIZE</a></dt><dd>Size of input key material and derived keys.</dd></dl><h2 id="traits" class="section-header">Traits<a href="#traits" class="anchor">§</a></h2><dl class="item-table"><dt><a class="trait" href="trait.PrivateKey.html" title="trait bip32::PrivateKey">Private<wbr>Key</a></dt><dd>Trait for key types which can be derived using BIP32.</dd><dt><a class="trait" href="trait.PublicKey.html" title="trait bip32::PublicKey">Public<wbr>Key</a></dt><dd>Trait for key types which can be derived using BIP32.</dd></dl><h2 id="types" class="section-header">Type Aliases<a href="#types" class="anchor">§</a></h2><dl class="item-table"><dt><a class="type" href="type.ChainCode.html" title="type bip32::ChainCode">Chain<wbr>Code</a></dt><dd>Chain code: extension for both private and public keys which provides an
+additional 256-bits of entropy.</dd><dt><a class="type" href="type.Depth.html" title="type bip32::Depth">Depth</a></dt><dd>Derivation depth.</dd><dt><a class="type" href="type.KeyFingerprint.html" title="type bip32::KeyFingerprint">KeyFingerprint</a></dt><dd>BIP32 key fingerprints.</dd><dt><a class="type" href="type.PrivateKeyBytes.html" title="type bip32::PrivateKeyBytes">Private<wbr>KeyBytes</a></dt><dd>Bytes which represent a private key.</dd><dt><a class="type" href="type.PublicKeyBytes.html" title="type bip32::PublicKeyBytes">Public<wbr>KeyBytes</a></dt><dd>Bytes which represent a public key.</dd><dt><a class="type" href="type.Result.html" title="type bip32::Result">Result</a></dt><dd>Result type.</dd><dt><a class="type" href="type.Version.html" title="type bip32::Version">Version</a></dt><dd>BIP32 “versions”: integer representation of the key prefix.</dd><dt><a class="type" href="type.XPrv.html" title="type bip32::XPrv">XPrv</a></dt><dd>Extended private secp256k1 ECDSA signing key.</dd><dt><a class="type" href="type.XPub.html" title="type bip32::XPub">XPub</a></dt><dd>Extended public secp256k1 ECDSA verification key.</dd></dl></section></div></main></body></html>

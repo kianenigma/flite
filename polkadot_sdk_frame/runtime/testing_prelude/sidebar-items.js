@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["Storage"],"trait":["BuildStorage"]};
+window.SIDEBAR_ITEMS = {"enum":["DispatchError"],"struct":["Storage"],"trait":["BuildStorage"]};

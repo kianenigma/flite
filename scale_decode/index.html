@@ -1,0 +1,122 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="`parity-scale-codec` provides a `Decode` trait which allows bytes to be scale decoded into types based on the shape of those types. This crate builds on this, and allows bytes to be decoded into types based on type information, rather than the shape of the target type. At a high level, this crate just aims to do the reverse of the `scale-encode` crate."><title>scale_decode - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-84e720fa.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="scale_decode" data-themes="" data-resource-suffix="" data-rustdoc-version="1.89.0-nightly (1bbd62e54 2025-05-29)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-5514c975.js" ><script src="../static.files/storage-4e99c027.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-fd3af306.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../scale_decode/index.html">scale_<wbr>decode</a><span class="version">0.14.0</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#motivation" title="Motivation">Motivation</a></li></ul><h3><a href="#reexports">Crate Items</a></h3><ul class="block"><li><a href="#reexports" title="Re-exports">Re-exports</a></li><li><a href="#modules" title="Modules">Modules</a></li><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#traits" title="Traits">Traits</a></li><li><a href="#derives" title="Derive Macros">Derive Macros</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Crate <span>scale_decode</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/scale_decode/lib.rs.html#16-320">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p><code>parity-scale-codec</code> provides a <code>Decode</code> trait which allows bytes to be scale decoded into types based on the shape of those
+types. This crate builds on this, and allows bytes to be decoded into types based on type information, rather than the shape
+of the target type. At a high level, this crate just aims to do the reverse of the <code>scale-encode</code> crate.</p>
+<p>This crate exposes four traits:</p>
+<ul>
+<li>A <a href="visitor/trait.Visitor.html" title="trait scale_decode::visitor::Visitor"><code>visitor::Visitor</code></a> trait which when implemented on some type, can be used in conjunction with <a href="visitor/fn.decode_with_visitor.html" title="fn scale_decode::visitor::decode_with_visitor"><code>visitor::decode_with_visitor</code></a>
+to decode SCALE encoded bytes based on some type information into some arbitrary type.</li>
+<li>An <a href="trait.IntoVisitor.html" title="trait scale_decode::IntoVisitor"><code>IntoVisitor</code></a> trait which can be used to obtain the <a href="visitor/trait.Visitor.html" title="trait scale_decode::visitor::Visitor"><code>visitor::Visitor</code></a> implementation for some type.</li>
+<li>A <a href="trait.DecodeAsType.html" title="trait scale_decode::DecodeAsType"><code>DecodeAsType</code></a> trait which is implemented for types which implement <a href="trait.IntoVisitor.html" title="trait scale_decode::IntoVisitor"><code>IntoVisitor</code></a>, and provides a high level interface for
+decoding SCALE encoded bytes into some type with the help of a type ID and a <a href="trait.TypeResolver.html" title="trait scale_decode::TypeResolver"><code>scale_type_resolver::TypeResolver</code></a>.</li>
+<li>A <a href="trait.DecodeAsFields.html" title="trait scale_decode::DecodeAsFields"><code>DecodeAsFields</code></a> trait which when implemented on some type, describes how SCALE encoded bytes can be decoded
+into it with the help of an iterator of <a href="struct.Field.html" title="struct scale_decode::Field"><code>Field</code></a>s and a type registry describing the shape of the encoded bytes. This is
+generally only implemented for tuples and structs, since we need a set of fields to map to the provided slices.</li>
+</ul>
+<p>Implementations for many built-in types are also provided for each trait, and the <a href="derive.DecodeAsType.html" title="derive scale_decode::DecodeAsType"><code>DecodeAsType</code></a> macro can be used to
+generate the relevant impls on new struct and enum types such that they get a <a href="trait.DecodeAsType.html" title="trait scale_decode::DecodeAsType"><code>DecodeAsType</code></a> impl.</p>
+<p>The <a href="trait.DecodeAsType.html" title="trait scale_decode::DecodeAsType"><code>DecodeAsType</code></a> and <a href="trait.DecodeAsFields.html" title="trait scale_decode::DecodeAsFields"><code>DecodeAsFields</code></a> traits are basically the mirror of <code>scale-encode</code>’s <code>EncodeAsType</code> and <code>EncodeAsFields</code>
+traits in terms of their interface.</p>
+<h2 id="motivation"><a class="doc-anchor" href="#motivation">§</a>Motivation</h2>
+<p>By de-coupling the shape of a type from how bytes are decoded into it, we make it much more likely that the decoding will succeed,
+and are no longer reliant on types having a precise layout in order to be decoded into correctly. Some examples of this follow.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>codec::Encode;
+<span class="kw">use </span>scale_decode::DecodeAsType;
+<span class="kw">use </span>scale_info::{PortableRegistry, TypeInfo};
+<span class="kw">use </span>std::fmt::Debug;
+
+<span class="comment">// We normally expect to have type information to hand, but for our examples
+// we construct type info from any type that implements `TypeInfo`.
+</span><span class="kw">fn </span>get_type_info&lt;T: TypeInfo + <span class="lifetime">'static</span>&gt;() -&gt; (u32, PortableRegistry) {
+    <span class="kw">let </span>m = scale_info::MetaType::new::&lt;T&gt;();
+    <span class="kw">let </span><span class="kw-2">mut </span>types = scale_info::Registry::new();
+    <span class="kw">let </span>ty = types.register_type(<span class="kw-2">&amp;</span>m);
+    <span class="kw">let </span>portable_registry: PortableRegistry = types.into();
+    (ty.id, portable_registry)
+}
+
+<span class="comment">// Encode the left value statically.
+// Decode those bytes into the right type via `DecodeAsType`.
+// Assert that the decoded bytes are identical to the right value.
+</span><span class="kw">fn </span>assert_decodes_to&lt;A, B&gt;(a: A, b: B)
+<span class="kw">where
+    </span>A: Encode + TypeInfo + <span class="lifetime">'static</span>,
+    B: DecodeAsType + PartialEq + Debug,
+{
+    <span class="kw">let </span>(type_id, types) = get_type_info::&lt;A&gt;();
+    <span class="kw">let </span>a_bytes = a.encode();
+    <span class="kw">let </span>new_b = B::decode_as_type(<span class="kw-2">&amp;mut &amp;*</span>a_bytes, type_id, <span class="kw-2">&amp;</span>types).unwrap();
+    <span class="macro">assert_eq!</span>(b, new_b);
+}
+
+<span class="comment">// Start simple; a u8 can DecodeAsType into a u64 and vice versa. Numbers will all
+// try to convert into the desired output size, failing if this isn't possible:
+</span>assert_decodes_to(<span class="number">123u64</span>, <span class="number">123u8</span>);
+assert_decodes_to(<span class="number">123u8</span>, <span class="number">123u64</span>);
+
+<span class="comment">// Compact decoding is also handled "under the hood" by DecodeAsType, so no "compact"
+// annotations are needed on values.
+</span>assert_decodes_to(codec::Compact(<span class="number">123u64</span>), <span class="number">123u64</span>);
+
+<span class="comment">// Enum variants are lined up by variant name, so no explicit "index" annotation are
+// needed either; DecodeAsType will take care of it.
+</span><span class="attr">#[derive(Encode, TypeInfo)]
+</span><span class="kw">enum </span>Foo {
+    <span class="attr">#[codec(index = <span class="number">10</span>)]
+    </span>Something(u64),
+}
+<span class="attr">#[derive(DecodeAsType, PartialEq, Debug)]
+</span><span class="kw">enum </span>FooTarget {
+    Something(u128),
+}
+assert_decodes_to(Foo::Something(<span class="number">123</span>), FooTarget::Something(<span class="number">123</span>));
+
+<span class="comment">// DecodeAsType will skip annotated fields and not look for them in the encoded bytes.
+// #[codec(skip)] and #[decode_as_type(skip)] both work.
+</span><span class="attr">#[derive(Encode, TypeInfo)]
+</span><span class="kw">struct </span>Bar {
+    a: bool,
+}
+<span class="attr">#[derive(DecodeAsType, PartialEq, Debug)]
+</span><span class="kw">struct </span>BarTarget {
+    a: bool,
+    <span class="attr">#[decode_as_type(skip)]
+    </span>b: String,
+}
+assert_decodes_to(
+    Bar { a: <span class="bool-val">true </span>},
+    BarTarget { a: <span class="bool-val">true</span>, b: String::new() },
+);
+
+<span class="comment">// DecodeAsType impls will generally skip through any newtype wrappers.
+</span><span class="attr">#[derive(DecodeAsType, Encode, TypeInfo, PartialEq, Debug)]
+</span><span class="kw">struct </span>Wrapper {
+    value: u64
+}
+assert_decodes_to(
+    (Wrapper { value: <span class="number">123 </span>},),
+    <span class="number">123u64
+</span>);
+assert_decodes_to(
+    <span class="number">123u64</span>,
+    (<span class="number">123</span>,)
+);
+
+<span class="comment">// Things like arrays and sequences are generally interchangeable despite the
+// encoding format being slightly different:
+</span>assert_decodes_to([<span class="number">1u8</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>], <span class="macro">vec!</span>[<span class="number">1u64</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]);
+assert_decodes_to(<span class="macro">vec!</span>[<span class="number">1u64</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>], [<span class="number">1u8</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]);</code></pre></div>
+<p>If this high level interface isn’t suitable, you can implement your own <a href="visitor/trait.Visitor.html" title="trait scale_decode::visitor::Visitor"><code>visitor::Visitor</code></a>’s. These can support zero-copy decoding
+(unlike the higher level <a href="trait.DecodeAsType.html" title="trait scale_decode::DecodeAsType"><code>DecodeAsType</code></a> interface), and generally the Visitor construction and execution is zero alloc, allowing
+for efficient type based decoding.</p>
+</div></details><h2 id="reexports" class="section-header">Re-exports<a href="#reexports" class="anchor">§</a></h2><dl class="item-table reexports"><dt id="reexport.Error"><code>pub use crate::error::<a class="struct" href="error/struct.Error.html" title="struct scale_decode::error::Error">Error</a>;</code></dt><dt id="reexport.Visitor"><code>pub use visitor::<a class="trait" href="visitor/trait.Visitor.html" title="trait scale_decode::visitor::Visitor">Visitor</a>;</code></dt></dl><h2 id="modules" class="section-header">Modules<a href="#modules" class="anchor">§</a></h2><dl class="item-table"><dt><a class="mod" href="error/index.html" title="mod scale_decode::error">error</a></dt><dd>An error that is emitted whenever some decoding fails.</dd><dt><a class="mod" href="ext/index.html" title="mod scale_decode::ext">ext</a></dt><dd>Re-exports of external crates.</dd><dt><a class="mod" href="visitor/index.html" title="mod scale_decode::visitor">visitor</a></dt><dd>The <a href="visitor/trait.Visitor.html" title="trait scale_decode::visitor::Visitor"><code>Visitor</code></a> trait and associated types.</dd></dl><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.Field.html" title="struct scale_decode::Field">Field</a></dt><dd>Information about a composite field.</dd></dl><h2 id="traits" class="section-header">Traits<a href="#traits" class="anchor">§</a></h2><dl class="item-table"><dt><a class="trait" href="trait.DecodeAsFields.html" title="trait scale_decode::DecodeAsFields">Decode<wbr>AsFields</a></dt><dd>This is similar to <a href="trait.DecodeAsType.html" title="trait scale_decode::DecodeAsType"><code>DecodeAsType</code></a>, except that it’s instead implemented for types that can be given a list of
+fields denoting the type being decoded from and attempt to do this decoding. This is generally implemented just
+for tuple and struct types, and is automatically implemented via the <a href="derive.DecodeAsType.html" title="derive scale_decode::DecodeAsType"><code>DecodeAsType</code></a> macro.</dd><dt><a class="trait" href="trait.DecodeAsType.html" title="trait scale_decode::DecodeAsType">Decode<wbr>AsType</a></dt><dd>This trait is implemented for any type <code>T</code> where <code>T</code> implements <a href="trait.IntoVisitor.html" title="trait scale_decode::IntoVisitor"><code>IntoVisitor</code></a> and the errors returned
+from this <a href="visitor/trait.Visitor.html" title="trait scale_decode::visitor::Visitor"><code>Visitor</code></a> can be converted into <a href="error/struct.Error.html" title="struct scale_decode::error::Error"><code>Error</code></a>. It’s essentially a convenience wrapper around
+<a href="visitor/fn.decode_with_visitor.html" title="fn scale_decode::visitor::decode_with_visitor"><code>visitor::decode_with_visitor</code></a> that mirrors <code>scale-encode</code>’s <code>EncodeAsType</code>.</dd><dt><a class="trait" href="trait.FieldIter.html" title="trait scale_decode::FieldIter">Field<wbr>Iter</a></dt><dd>An iterator over a set of fields.</dd><dt><a class="trait" href="trait.IntoVisitor.html" title="trait scale_decode::IntoVisitor">Into<wbr>Visitor</a></dt><dd>This trait can be implemented on any type that has an associated <a href="visitor/trait.Visitor.html" title="trait scale_decode::visitor::Visitor"><code>Visitor</code></a> responsible for decoding
+SCALE encoded bytes to it whose error type is <a href="error/struct.Error.html" title="struct scale_decode::error::Error"><code>Error</code></a>. Anything that implements this trait gets a
+<a href="trait.DecodeAsType.html" title="trait scale_decode::DecodeAsType"><code>DecodeAsType</code></a> implementation for free.</dd><dt><a class="trait" href="trait.TypeResolver.html" title="trait scale_decode::TypeResolver">Type<wbr>Resolver</a></dt><dd>This trait can be implemented for any type that is capable of describing how some type (identified
+by a <a href="trait.TypeResolver.html#associatedtype.TypeId" title="associated type scale_decode::TypeResolver::TypeId"><code>TypeResolver::TypeId</code></a>) is represented in terms of SCALE encoded bytes.</dd></dl><h2 id="derives" class="section-header">Derive Macros<a href="#derives" class="anchor">§</a></h2><dl class="item-table"><dt><a class="derive" href="derive.DecodeAsType.html" title="derive scale_decode::DecodeAsType">Decode<wbr>AsType</a></dt><dd>The <code>DecodeAsType</code> derive macro can be used to implement <code>DecodeAsType</code> on structs and enums whose
+fields all implement <code>DecodeAsType</code>. Under the hood, the macro generates <code>scale_decode::visitor::Visitor</code>
+and <code>scale_decode::IntoVisitor</code> implementations for each type (as well as an associated <code>Visitor</code> struct),
+which in turn means that the type will automatically implement <code>scale_decode::DecodeAsType</code>.</dd></dl></section></div></main></body></html>

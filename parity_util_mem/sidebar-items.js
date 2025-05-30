@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"derive":["MallocSizeOf"],"fn":["malloc_size"],"macro":["malloc_size_of_is_0"],"mod":["allocators","ethereum_impls","primitives_impls"],"struct":["MallocSizeOfOps","MemoryAllocationSnapshot","MemoryAllocationTracker","MemoryStatsError"],"trait":["MallocShallowSizeOf","MallocSizeOf"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["verify_receipt_proof"]};

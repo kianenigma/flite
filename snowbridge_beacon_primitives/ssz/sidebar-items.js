@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["hash_tree_root"],"mod":["deneb"],"struct":["SSZBeaconBlockHeader","SSZExecutionPayloadHeader","SSZForkData","SSZSigningData","SSZSyncAggregate","SSZSyncCommittee"]};

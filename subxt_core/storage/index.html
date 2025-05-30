@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Encode storage keys, decode storage values, and validate static storage addresses."><title>subxt_core::storage - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-84e720fa.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subxt_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.89.0-nightly (1bbd62e54 2025-05-29)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-5514c975.js" ><script src="../../static.files/storage-4e99c027.js"></script><script defer src="../sidebar-items.js"></script><script defer src="../../static.files/main-fd3af306.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../subxt_core/index.html">subxt_<wbr>core</a><span class="version">0.38.1</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Module storage</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#example" title="Example">Example</a></li></ul><h3><a href="#modules">Module Items</a></h3><ul class="block"><li><a href="#modules" title="Modules">Modules</a></li><li><a href="#functions" title="Functions">Functions</a></li></ul></section><div id="rustdoc-modnav"><h2 class="in-crate"><a href="../index.html">In crate subxt_<wbr>core</a></h2></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="../index.html">subxt_core</a></div><h1>Module <span>storage</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../src/subxt_core/storage/mod.rs.html#5-142">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Encode storage keys, decode storage values, and validate static storage addresses.</p>
+<h2 id="example"><a class="doc-anchor" href="#example">§</a>Example</h2>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>subxt_signer::sr25519::dev;
+<span class="kw">use </span>subxt_macro::subxt;
+<span class="kw">use </span>subxt_core::storage;
+<span class="kw">use </span>subxt_core::metadata;
+
+<span class="comment">// If we generate types without `subxt`, we need to point to `::subxt_core`:
+</span><span class="attr">#[subxt(
+    <span class="kw">crate </span>= <span class="string">"::subxt_core"</span>,
+    runtime_metadata_path = <span class="string">"../artifacts/polkadot_metadata_small.scale"</span>,
+)]
+</span><span class="kw">pub mod </span>polkadot {}
+
+<span class="comment">// Some metadata we'll use to work with storage entries:
+</span><span class="kw">let </span>metadata_bytes = <span class="macro">include_bytes!</span>(<span class="string">"../../../artifacts/polkadot_metadata_small.scale"</span>);
+<span class="kw">let </span>metadata = metadata::decode_from(<span class="kw-2">&amp;</span>metadata_bytes[..]).unwrap();
+
+<span class="comment">// Build a storage query to access account information.
+</span><span class="kw">let </span>account = dev::alice().public_key().into();
+<span class="kw">let </span>address = polkadot::storage().system().account(<span class="kw-2">&amp;</span>account);
+
+<span class="comment">// We can validate that the address is compatible with the given metadata.
+</span>storage::validate(<span class="kw-2">&amp;</span>address, <span class="kw-2">&amp;</span>metadata).unwrap();
+
+<span class="comment">// Encode the address to bytes. These can be sent to a node to query the value.
+</span>storage::get_address_bytes(<span class="kw-2">&amp;</span>address, <span class="kw-2">&amp;</span>metadata).unwrap();
+
+<span class="comment">// If we were to obtain a value back from the node at that address, we could
+// then decode it using the same address and metadata like so:
+</span><span class="kw">let </span>value_bytes = hex::decode(<span class="string">"00000000000000000100000000000000000064a7b3b6e00d0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000080"</span>).unwrap();
+<span class="kw">let </span>value = storage::decode_value(<span class="kw-2">&amp;mut &amp;*</span>value_bytes, <span class="kw-2">&amp;</span>address, <span class="kw-2">&amp;</span>metadata).unwrap();
+
+<span class="macro">println!</span>(<span class="string">"Alice's account info: {value:?}"</span>);</code></pre></div>
+</div></details><h2 id="modules" class="section-header">Modules<a href="#modules" class="anchor">§</a></h2><dl class="item-table"><dt><a class="mod" href="address/index.html" title="mod subxt_core::storage::address">address</a></dt><dd>Construct addresses to access storage entries with.</dd></dl><h2 id="functions" class="section-header">Functions<a href="#functions" class="anchor">§</a></h2><dl class="item-table"><dt><a class="fn" href="fn.decode_value.html" title="fn subxt_core::storage::decode_value">decode_<wbr>value</a></dt><dd>Given some storage value that we’ve retrieved from a node, the address used to retrieve it, and
+metadata from the node, this function attempts to decode the bytes into the target value specified
+by the address.</dd><dt><a class="fn" href="fn.default_value.html" title="fn subxt_core::storage::default_value">default_<wbr>value</a></dt><dd>Return the default value at a given storage address if one is available, or an error otherwise.</dd><dt><a class="fn" href="fn.get_address_bytes.html" title="fn subxt_core::storage::get_address_bytes">get_<wbr>address_<wbr>bytes</a></dt><dd>Given a storage address and some metadata, this encodes the address into bytes which can be
+handed to a node to retrieve the corresponding value.</dd><dt><a class="fn" href="fn.get_address_root_bytes.html" title="fn subxt_core::storage::get_address_root_bytes">get_<wbr>address_<wbr>root_<wbr>bytes</a></dt><dd>Given a storage address and some metadata, this encodes the root of the address (ie the pallet
+and storage entry part) into bytes. If the entry being addressed is inside a map, this returns
+the bytes needed to iterate over all of the entries within it.</dd><dt><a class="fn" href="fn.validate.html" title="fn subxt_core::storage::validate">validate</a></dt><dd>When the provided <code>address</code> is statically generated via the <code>#[subxt]</code> macro, this validates
+that the shape of the storage value is the same as the shape expected by the static address.</dd></dl></section></div></main></body></html>

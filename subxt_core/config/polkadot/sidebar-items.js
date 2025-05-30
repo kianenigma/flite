@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["PolkadotConfig"],"struct":["H256","U256"],"type":["PolkadotExtrinsicParams","PolkadotExtrinsicParamsBuilder"]};

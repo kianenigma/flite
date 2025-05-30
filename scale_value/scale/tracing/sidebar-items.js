@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["decode_as_type"],"struct":["TraceDecodingError","TraceDecodingVisitor"]};

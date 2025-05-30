@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["v0","v1"]};
+window.SIDEBAR_ITEMS = {"mod":["switch_block_number_provider","v0","v1"]};

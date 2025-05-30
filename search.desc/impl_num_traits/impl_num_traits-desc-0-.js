@@ -1,0 +1,1 @@
+searchState.loadedDescShard("impl_num_traits", 0, "num-traits support for uint.\nAdd num-traits support to an integer created by …")

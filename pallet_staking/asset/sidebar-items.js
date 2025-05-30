@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["deposit_slashed","existential_deposit","free_to_stake","issue","kill_stake","mint_creating","mint_into_existing","slash","stakeable_balance","staked","total_balance","total_issuance","update_stake"]};

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["LoadKind","StoreKind"],"fn":["assemble"]};
+window.SIDEBAR_ITEMS = {"enum":["LoadKind","OpMarker","StoreKind"],"fn":["assemble"]};

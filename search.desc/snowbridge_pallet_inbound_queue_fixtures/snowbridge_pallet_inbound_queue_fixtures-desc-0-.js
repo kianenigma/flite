@@ -1,1 +1,0 @@
-searchState.loadedDescShard("snowbridge_pallet_inbound_queue_fixtures", 0, "")

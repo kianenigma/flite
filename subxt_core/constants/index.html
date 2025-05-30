@@ -1,0 +1,33 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Access constants from metadata."><title>subxt_core::constants - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-84e720fa.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subxt_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.89.0-nightly (1bbd62e54 2025-05-29)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-5514c975.js" ><script src="../../static.files/storage-4e99c027.js"></script><script defer src="../sidebar-items.js"></script><script defer src="../../static.files/main-fd3af306.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../subxt_core/index.html">subxt_<wbr>core</a><span class="version">0.38.1</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Module constants</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#example" title="Example">Example</a></li></ul><h3><a href="#modules">Module Items</a></h3><ul class="block"><li><a href="#modules" title="Modules">Modules</a></li><li><a href="#functions" title="Functions">Functions</a></li></ul></section><div id="rustdoc-modnav"><h2 class="in-crate"><a href="../index.html">In crate subxt_<wbr>core</a></h2></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="../index.html">subxt_core</a></div><h1>Module <span>constants</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../src/subxt_core/constants/mod.rs.html#5-85">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Access constants from metadata.</p>
+<p>Use <a href="fn.get.html" title="fn subxt_core::constants::get"><code>get</code></a> to retrieve a constant from some metadata, or <a href="fn.validate.html" title="fn subxt_core::constants::validate"><code>validate</code></a> to check that a static
+constant address lines up with the value seen in the metadata.</p>
+<h2 id="example"><a class="doc-anchor" href="#example">§</a>Example</h2>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>subxt_macro::subxt;
+<span class="kw">use </span>subxt_core::constants;
+<span class="kw">use </span>subxt_core::metadata;
+
+<span class="comment">// If we generate types without `subxt`, we need to point to `::subxt_core`:
+</span><span class="attr">#[subxt(
+    <span class="kw">crate </span>= <span class="string">"::subxt_core"</span>,
+    runtime_metadata_path = <span class="string">"../artifacts/polkadot_metadata_small.scale"</span>,
+)]
+</span><span class="kw">pub mod </span>polkadot {}
+
+<span class="comment">// Some metadata we'd like to access constants in:
+</span><span class="kw">let </span>metadata_bytes = <span class="macro">include_bytes!</span>(<span class="string">"../../../artifacts/polkadot_metadata_small.scale"</span>);
+<span class="kw">let </span>metadata = metadata::decode_from(<span class="kw-2">&amp;</span>metadata_bytes[..]).unwrap();
+
+<span class="comment">// We can use a static address to obtain some constant:
+</span><span class="kw">let </span>address = polkadot::constants().balances().existential_deposit();
+
+<span class="comment">// This validates that the address given is in line with the metadata
+// we're trying to access the constant in:
+</span>constants::validate(<span class="kw-2">&amp;</span>address, <span class="kw-2">&amp;</span>metadata).expect(<span class="string">"is valid"</span>);
+
+<span class="comment">// This acquires the constant (and internally also validates it):
+</span><span class="kw">let </span>ed = constants::get(<span class="kw-2">&amp;</span>address, <span class="kw-2">&amp;</span>metadata).expect(<span class="string">"can decode constant"</span>);
+
+<span class="macro">assert_eq!</span>(ed, <span class="number">33_333_333</span>);</code></pre></div>
+</div></details><h2 id="modules" class="section-header">Modules<a href="#modules" class="anchor">§</a></h2><dl class="item-table"><dt><a class="mod" href="address/index.html" title="mod subxt_core::constants::address">address</a></dt><dd>Construct addresses to access constants with.</dd></dl><h2 id="functions" class="section-header">Functions<a href="#functions" class="anchor">§</a></h2><dl class="item-table"><dt><a class="fn" href="fn.get.html" title="fn subxt_core::constants::get">get</a></dt><dd>Fetch a constant out of the metadata given a constant address. If the <code>address</code> has been
+statically generated, this will validate that the constant shape is as expected, too.</dd><dt><a class="fn" href="fn.validate.html" title="fn subxt_core::constants::validate">validate</a></dt><dd>When the provided <code>address</code> is statically generated via the <code>#[subxt]</code> macro, this validates
+that the shape of the constant value is the same as the shape expected by the static address.</dd></dl></section></div></main></body></html>

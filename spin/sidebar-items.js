@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["mutex","relax","rwlock"],"type":["Mutex","RwLock","RwLockUpgradableGuard","RwLockWriteGuard"]};
+window.SIDEBAR_ITEMS = {"mod":["mutex","once","relax","rwlock"],"type":["Mutex","Once","RwLock","RwLockUpgradableGuard","RwLockWriteGuard"]};

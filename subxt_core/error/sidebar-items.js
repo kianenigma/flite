@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["BlockError","Error","ExtrinsicParamsError","MetadataError","StorageAddressError"],"trait":["CustomError"],"type":["ExtrinsicDecodeError"]};

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["historical","migrations","pallet","weights"],"struct":["FindAccountFromAuthorIndex","PeriodicSessions","TestSessionHandler"],"trait":["SessionHandler","SessionManager","ShouldEndSession"]};
+window.SIDEBAR_ITEMS = {"macro":["log"],"mod":["disabling","historical","migrations","pallet","weights"],"struct":["FindAccountFromAuthorIndex","PeriodicSessions","TestSessionHandler"],"trait":["SessionHandler","SessionManager","ShouldEndSession"]};

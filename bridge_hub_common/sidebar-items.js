@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["digest_item","message_queue","xcm_version"]};
+window.SIDEBAR_ITEMS = {"mod":["barriers","digest_item","message_queue","xcm_version"]};

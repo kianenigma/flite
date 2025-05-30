@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Composite","Primitive","ValueDef"],"macro":["value"],"mod":["scale","stringify"],"struct":["BitSequence","Location","Value","Variant"],"trait":["At"]};

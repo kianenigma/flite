@@ -1,0 +1,130 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="`parity-scale-codec` provides an `Encode` trait which allows types to SCALE encode themselves based on their shape. This crate builds on this, and allows types to encode themselves based on type information from a `TypeResolver` implementation (one such implementation being a `scale_info::PortableRegistry`). It exposes two traits:"><title>scale_encode - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-84e720fa.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="scale_encode" data-themes="" data-resource-suffix="" data-rustdoc-version="1.89.0-nightly (1bbd62e54 2025-05-29)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-5514c975.js" ><script src="../static.files/storage-4e99c027.js"></script><script defer src="../crates.js"></script><script defer src="../static.files/main-fd3af306.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc mod crate"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../scale_encode/index.html">scale_<wbr>encode</a><span class="version">0.8.0</span></h2></div><div class="sidebar-elems"><ul class="block"><li><a id="all-types" href="all.html">All Items</a></li></ul><section id="rustdoc-toc"><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#motivation" title="Motivation">Motivation</a></li></ul><h3><a href="#reexports">Crate Items</a></h3><ul class="block"><li><a href="#reexports" title="Re-exports">Re-exports</a></li><li><a href="#modules" title="Modules">Modules</a></li><li><a href="#structs" title="Structs">Structs</a></li><li><a href="#traits" title="Traits">Traits</a></li><li><a href="#derives" title="Derive Macros">Derive Macros</a></li></ul></section><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1>Crate <span>scale_encode</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/scale_encode/lib.rs.html#16-284">Source</a> </span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p><code>parity-scale-codec</code> provides an <code>Encode</code> trait which allows types to SCALE encode themselves based on their shape.
+This crate builds on this, and allows types to encode themselves based on type information from a <a href="trait.TypeResolver.html" title="trait scale_encode::TypeResolver"><code>TypeResolver</code></a>
+implementation (one such implementation being a <code>scale_info::PortableRegistry</code>). It exposes two traits:</p>
+<ul>
+<li>An <a href="trait.EncodeAsType.html" title="trait scale_encode::EncodeAsType"><code>EncodeAsType</code></a> trait which when implemented on some type, describes how it can be SCALE encoded
+with the help of a type ID and type registry describing the expected shape of the encoded bytes.</li>
+<li>An <a href="trait.EncodeAsFields.html" title="trait scale_encode::EncodeAsFields"><code>EncodeAsFields</code></a> trait which when implemented on some type, describes how it can be SCALE encoded
+with the help of an iterator over <a href="struct.Field.html" title="struct scale_encode::Field"><code>Field</code></a>s and a type registry describing the expected shape of the
+encoded bytes. This is generally only implemented for tuples and structs, since we need a set of fields
+to map to the provided iterator.</li>
+</ul>
+<p>Implementations for many built-in types are also provided for each trait, and the <a href="derive.EncodeAsType.html" title="derive scale_encode::EncodeAsType"><code>EncodeAsType</code></a>
+macro makes it easy to generate implementations for new structs and enums.</p>
+<h2 id="motivation"><a class="doc-anchor" href="#motivation">§</a>Motivation</h2>
+<p>By de-coupling the shape of a type from how it’s encoded, we make it much more likely that encoding some type will succeed,
+and are no longer reliant on types having a precise layout in order to encode correctly. Some examples of this follow.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>codec::Encode;
+<span class="kw">use </span>scale_encode::EncodeAsType;
+<span class="kw">use </span>scale_info::{PortableRegistry, TypeInfo};
+
+<span class="comment">// We are commonly provided type information, but for our examples we construct type info from
+// any type that implements `TypeInfo`.
+</span><span class="kw">fn </span>get_type_info&lt;T: TypeInfo + <span class="lifetime">'static</span>&gt;() -&gt; (u32, PortableRegistry) {
+    <span class="kw">let </span>m = scale_info::MetaType::new::&lt;T&gt;();
+    <span class="kw">let </span><span class="kw-2">mut </span>types = scale_info::Registry::new();
+    <span class="kw">let </span>ty = types.register_type(<span class="kw-2">&amp;</span>m);
+    <span class="kw">let </span>portable_registry: PortableRegistry = types.into();
+    (ty.id, portable_registry)
+}
+
+<span class="comment">// Encode the left value via EncodeAsType into the shape of the right value.
+// Encode the right value statically.
+// Assert that both outputs are identical.
+</span><span class="kw">fn </span>assert_encodes_to&lt;A, B&gt;(a: A, b: B)
+<span class="kw">where
+    </span>A: EncodeAsType,
+    B: TypeInfo + Encode + <span class="lifetime">'static</span>,
+{
+    <span class="kw">let </span>(type_id, types) = get_type_info::&lt;B&gt;();
+    <span class="kw">let </span>a_bytes = a.encode_as_type(type_id, <span class="kw-2">&amp;</span>types).unwrap();
+    <span class="kw">let </span>b_bytes = b.encode();
+    <span class="macro">assert_eq!</span>(a_bytes, b_bytes);
+}
+
+<span class="comment">// Start simple; a u8 can EncodeAsType into a u64 and vice versa. Numbers will all
+// try to convert into the desired output size, failing if this isn't possible:
+</span>assert_encodes_to(<span class="number">123u8</span>, <span class="number">123u64</span>);
+assert_encodes_to(<span class="number">123u64</span>, <span class="number">123u8</span>);
+
+<span class="comment">// Compact encoding is also handled "under the hood" by EncodeAsType, so no "compact"
+// annotations are needed on values.
+</span>assert_encodes_to(<span class="number">123u64</span>, codec::Compact(<span class="number">123u64</span>));
+
+<span class="comment">// Enum variants are lined up by variant name, so no explicit "index" annotation are
+// needed either; EncodeAsType will take care of it.
+</span><span class="attr">#[derive(EncodeAsType)]
+</span><span class="kw">enum </span>Foo {
+    Something(u64),
+}
+<span class="attr">#[derive(Encode, TypeInfo)]
+</span><span class="kw">enum </span>FooTarget {
+    <span class="attr">#[codec(index = <span class="number">10</span>)]
+    </span>Something(u128),
+}
+assert_encodes_to(Foo::Something(<span class="number">123</span>), FooTarget::Something(<span class="number">123</span>));
+
+<span class="comment">// EncodeAstype will just ignore named fields that aren't needed:
+</span><span class="attr">#[derive(EncodeAsType)]
+</span><span class="kw">struct </span>Bar {
+    a: bool,
+    b: String,
+}
+<span class="attr">#[derive(Encode, TypeInfo)]
+</span><span class="kw">struct </span>BarTarget {
+    a: bool,
+}
+assert_encodes_to(
+    Bar { a: <span class="bool-val">true</span>, b: <span class="string">"hello"</span>.to_string() },
+    BarTarget { a: <span class="bool-val">true </span>},
+);
+
+<span class="comment">// EncodeAsType will attempt to remove any newtype wrappers and such on either
+// side, so that they can be omitted without any issue.
+</span><span class="attr">#[derive(EncodeAsType, Encode, TypeInfo)]
+</span><span class="kw">struct </span>Wrapper {
+    value: u64
+}
+assert_encodes_to(
+    (Wrapper { value: <span class="number">123 </span>},),
+    <span class="number">123u64
+</span>);
+assert_encodes_to(
+    <span class="number">123u64</span>,
+    (Wrapper { value: <span class="number">123 </span>},)
+);
+
+<span class="comment">// Things like arrays and sequences are generally interchangeable despite the
+// encoding format being slightly different:
+</span>assert_encodes_to([<span class="number">1u8</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>], <span class="macro">vec!</span>[<span class="number">1u64</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]);
+assert_encodes_to(<span class="macro">vec!</span>[<span class="number">1u64</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>], [<span class="number">1u8</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]);
+
+<span class="comment">// BTreeMap, as a slightly special case, can encode to the same shape as either
+// a sequence or a struct, depending on what's asked for:
+</span><span class="kw">use </span>std::collections::BTreeMap;
+<span class="attr">#[derive(TypeInfo, Encode)]
+</span><span class="kw">struct </span>MapOutput {
+    a: u64,
+    b: u64
+}
+assert_encodes_to(
+    BTreeMap::from_iter([(<span class="string">"a"</span>, <span class="number">1u64</span>), (<span class="string">"b"</span>, <span class="number">2u64</span>)]),
+    <span class="macro">vec!</span>[<span class="number">1u64</span>,<span class="number">2</span>]
+);
+assert_encodes_to(
+    BTreeMap::from_iter([(<span class="string">"a"</span>, <span class="number">1u64</span>), (<span class="string">"b"</span>, <span class="number">2u64</span>), (<span class="string">"c"</span>, <span class="number">3u64</span>)]),
+    MapOutput { a: <span class="number">1</span>, b: <span class="number">2 </span>}
+);</code></pre></div>
+</div></details><h2 id="reexports" class="section-header">Re-exports<a href="#reexports" class="anchor">§</a></h2><dl class="item-table reexports"><dt id="reexport.Error"><code>pub use error::<a class="struct" href="error/struct.Error.html" title="struct scale_encode::error::Error">Error</a>;</code></dt></dl><h2 id="modules" class="section-header">Modules<a href="#modules" class="anchor">§</a></h2><dl class="item-table"><dt><a class="mod" href="error/index.html" title="mod scale_encode::error">error</a></dt><dd>An error that is emitted whenever some encoding fails.</dd><dt><a class="mod" href="ext/index.html" title="mod scale_encode::ext">ext</a></dt><dd>Re-exports of external crates.</dd></dl><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.Composite.html" title="struct scale_encode::Composite">Composite</a></dt><dd>This type represents named or unnamed composite values, and can be used to help generate
+<code>EncodeAsType</code> impls. It’s primarily used by the exported macros to do just that.</dd><dt><a class="struct" href="struct.CompositeField.html" title="struct scale_encode::CompositeField">Composite<wbr>Field</a></dt><dd>A struct representing a single composite field. To be used in conjunction
+with the <a href="struct.Composite.html" title="struct scale_encode::Composite"><code>Composite</code></a> struct to construct generic composite shaped types.
+this basically takes a type which implements <a href="trait.EncodeAsType.html" title="trait scale_encode::EncodeAsType"><code>EncodeAsType</code></a> and turns it
+into something object safe.</dd><dt><a class="struct" href="struct.Field.html" title="struct scale_encode::Field">Field</a></dt><dd>Information about a composite field.</dd><dt><a class="struct" href="struct.Variant.html" title="struct scale_encode::Variant">Variant</a></dt><dd>This type represents named or unnamed composite values, and can be used
+to help generate <code>EncodeAsType</code> impls. It’s primarily used by the exported
+macros to do just that.</dd></dl><h2 id="traits" class="section-header">Traits<a href="#traits" class="anchor">§</a></h2><dl class="item-table"><dt><a class="trait" href="trait.EncodeAsFields.html" title="trait scale_encode::EncodeAsFields">Encode<wbr>AsFields</a></dt><dd>This is similar to <a href="trait.EncodeAsType.html" title="trait scale_encode::EncodeAsType"><code>EncodeAsType</code></a>, except that it can be implemented on types that can be encoded
+to bytes given a list of fields instead of a single type ID. This is generally implemented just for
+tuple and struct types, and is automatically implemented via the <a href="derive.EncodeAsType.html" title="derive scale_encode::EncodeAsType"><code>EncodeAsType</code></a> macro.</dd><dt><a class="trait" href="trait.EncodeAsType.html" title="trait scale_encode::EncodeAsType">Encode<wbr>AsType</a></dt><dd>This trait signals that some static type can possibly be SCALE encoded given some
+<code>type_id</code> and a corresponding <a href="trait.TypeResolver.html" title="trait scale_encode::TypeResolver"><code>TypeResolver</code></a> which tells us about the expected encoding.</dd><dt><a class="trait" href="trait.FieldIter.html" title="trait scale_encode::FieldIter">Field<wbr>Iter</a></dt><dd>An iterator over a set of fields.</dd><dt><a class="trait" href="trait.TypeResolver.html" title="trait scale_encode::TypeResolver">Type<wbr>Resolver</a></dt><dd>This trait can be implemented for any type that is capable of describing how some type (identified
+by a <a href="trait.TypeResolver.html#associatedtype.TypeId" title="associated type scale_encode::TypeResolver::TypeId"><code>TypeResolver::TypeId</code></a>) is represented in terms of SCALE encoded bytes.</dd></dl><h2 id="derives" class="section-header">Derive Macros<a href="#derives" class="anchor">§</a></h2><dl class="item-table"><dt><a class="derive" href="derive.EncodeAsType.html" title="derive scale_encode::EncodeAsType">Encode<wbr>AsType</a></dt><dd>The <code>EncodeAsType</code> derive macro can be used to implement <code>EncodeAsType</code>
+on structs and enums whose fields all implement <code>EncodeAsType</code>.</dd></dl></section></div></main></body></html>

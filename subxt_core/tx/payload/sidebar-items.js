@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["dynamic"],"struct":["DefaultPayload","ValidationDetails"],"trait":["Payload"],"type":["DynamicPayload","StaticPayload"]};

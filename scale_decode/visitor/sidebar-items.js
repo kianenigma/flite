@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["DecodeAsTypeResult","DecodeError","Unexpected"],"fn":["decode_with_visitor"],"mod":["types"],"struct":["IgnoreVisitor","VisitorWithCrateError"],"trait":["DecodeItemIterator","Visitor"],"type":["TypeIdFor"]};

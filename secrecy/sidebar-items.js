@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"derive":["Zeroize"],"struct":["Secret"],"trait":["CloneableSecret","DebugSecret","ExposeSecret","Zeroize"],"type":["SecretBox","SecretString","SecretVec"]};
+window.SIDEBAR_ITEMS = {"struct":["SecretBox"],"trait":["CloneableSecret","ExposeSecret","ExposeSecretMut"],"type":["SecretSlice","SecretString"]};

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"macro":["prepare_visitor","static_assert"],"mod":["abi","assembler","elf","operation","program","regmap","utils","varint","writer","zygote"]};
+window.SIDEBAR_ITEMS = {"macro":["build_static_dispatch_table","static_assert"],"mod":["abi","assembler","cast","elf","hasher","operation","program","regmap","utils","varint","writer","zygote"]};

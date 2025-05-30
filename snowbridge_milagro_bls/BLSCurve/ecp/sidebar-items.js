@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["AESKEY","CURVETYPE","CURVE_PAIRING_TYPE","HASH_TYPE","SEXTIC_TWIST","SIGN_OF_X"],"enum":["CurveType"],"struct":["ECP"]};

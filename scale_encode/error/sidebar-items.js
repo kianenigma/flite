@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ErrorKind","Kind"],"struct":["Context","Error","Location"],"trait":["CustomError"]};

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["InitialPayment"],"mod":["pallet"],"struct":["ChargeAssetTxPayment","SwapAssetAdapter"],"trait":["OnChargeAssetTransaction"]};
+window.SIDEBAR_ITEMS = {"enum":["InitialPayment","Pre","Val"],"mod":["pallet","weights"],"struct":["ChargeAssetTxPayment","SwapAssetAdapter"],"trait":["OnChargeAssetTransaction"]};

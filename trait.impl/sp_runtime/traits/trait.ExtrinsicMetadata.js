@@ -1,9 +1,9 @@
 (function() {
-    var implementors = Object.fromEntries([["polkadot_sdk_frame",[]],["sp_runtime",[]]]);
+    var implementors = Object.fromEntries([["pallet_revive",[["impl&lt;Address, Signature, E: <a class=\"trait\" href=\"pallet_revive/evm/runtime/trait.EthExtra.html\" title=\"trait pallet_revive::evm::runtime::EthExtra\">EthExtra</a>&gt; <a class=\"trait\" href=\"sp_runtime/traits/trait.ExtrinsicMetadata.html\" title=\"trait sp_runtime::traits::ExtrinsicMetadata\">ExtrinsicMetadata</a> for <a class=\"struct\" href=\"pallet_revive/evm/runtime/struct.UncheckedExtrinsic.html\" title=\"struct pallet_revive::evm::runtime::UncheckedExtrinsic\">UncheckedExtrinsic</a>&lt;Address, Signature, E&gt;"]]],["polkadot_sdk_frame",[]],["sp_runtime",[]]]);
     if (window.register_implementors) {
         window.register_implementors(implementors);
     } else {
         window.pending_implementors = implementors;
     }
 })()
-//{"start":57,"fragment_lengths":[25,18]}
+//{"start":57,"fragment_lengths":[557,26,18]}

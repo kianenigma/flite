@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["bagging_peaks_hashes"],"struct":["AncestryProof","NodeMerkleProof"]};
+window.SIDEBAR_ITEMS = {"fn":["bagging_peaks_hashes","expected_ancestry_proof_size"],"struct":["AncestryProof","NodeMerkleProof"]};

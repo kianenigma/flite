@@ -1,0 +1,77 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Decode an extrinsic, returning information about it."><title>decode_extrinsic in frame_decode::extrinsics - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-84e720fa.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="frame_decode" data-themes="" data-resource-suffix="" data-rustdoc-version="1.89.0-nightly (1bbd62e54 2025-05-29)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-5514c975.js" ><script src="../../static.files/storage-4e99c027.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../static.files/main-fd3af306.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc fn"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../frame_decode/index.html">frame_<wbr>decode</a><span class="version">0.5.1</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">decode_<wbr>extrinsic</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#example" title="Example">Example</a></li></ul></section><div id="rustdoc-modnav"><h2><a href="index.html">In frame_<wbr>decode::<wbr>extrinsics</a></h2></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="../index.html">frame_decode</a>::<wbr><a href="index.html">extrinsics</a></div><h1>Function <span class="fn">decode_extrinsic</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../src/frame_decode/decoding/extrinsic_decoder.rs.html#527-715">Source</a> </span></div><pre class="rust item-decl"><code>pub fn decode_extrinsic&lt;'info, Info, Resolver&gt;(
+    cursor: &amp;mut &amp;[<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>],
+    info: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;'info Info</a>,
+    type_resolver: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;Resolver</a>,
+) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="struct.Extrinsic.html" title="struct frame_decode::extrinsics::Extrinsic">Extrinsic</a>&lt;'info, Info::<a class="associatedtype" href="trait.ExtrinsicTypeInfo.html#associatedtype.TypeId" title="type frame_decode::extrinsics::ExtrinsicTypeInfo::TypeId">TypeId</a>&gt;, <a class="enum" href="enum.ExtrinsicDecodeError.html" title="enum frame_decode::extrinsics::ExtrinsicDecodeError">ExtrinsicDecodeError</a>&gt;<div class="where">where
+    Info: <a class="trait" href="trait.ExtrinsicTypeInfo.html" title="trait frame_decode::extrinsics::ExtrinsicTypeInfo">ExtrinsicTypeInfo</a>,
+    Info::<a class="associatedtype" href="trait.ExtrinsicTypeInfo.html#associatedtype.TypeId" title="type frame_decode::extrinsics::ExtrinsicTypeInfo::TypeId">TypeId</a>: <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a>,
+    Resolver: <a class="trait" href="../../scale_type_resolver/trait.TypeResolver.html" title="trait scale_type_resolver::TypeResolver">TypeResolver</a>&lt;TypeId = Info::<a class="associatedtype" href="trait.ExtrinsicTypeInfo.html#associatedtype.TypeId" title="type frame_decode::extrinsics::ExtrinsicTypeInfo::TypeId">TypeId</a>&gt;,</div></code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Decode an extrinsic, returning information about it.</p>
+<p>This information can be used to then decode the various parts of the extrinsic (address,
+signature, transaction extensions and call data) to concrete types.</p>
+<h2 id="example"><a class="doc-anchor" href="#example">§</a>Example</h2>
+<p>Here, we decode all of the extrinsics in a block to a [<code>scale_value::Value</code>] type.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>frame_decode::extrinsics::decode_extrinsic;
+<span class="kw">use </span>frame_decode::helpers::decode_with_visitor;
+<span class="kw">use </span>frame_metadata::RuntimeMetadata;
+<span class="kw">use </span>parity_scale_codec::Decode;
+<span class="kw">use </span>scale_value::scale::ValueVisitor;
+
+<span class="kw">let </span>metadata_bytes = std::fs::read(<span class="string">"artifacts/metadata_10000000_9180.scale"</span>).unwrap();
+<span class="kw">let </span>RuntimeMetadata::V14(metadata) = RuntimeMetadata::decode(<span class="kw-2">&amp;mut &amp;*</span>metadata_bytes).unwrap() <span class="kw">else </span>{ <span class="kw">return </span>};
+
+<span class="kw">let </span>extrinsics_bytes = std::fs::read(<span class="string">"artifacts/exts_10000000_9180.json"</span>).unwrap();
+<span class="kw">let </span>extrinsics_hex: Vec&lt;String&gt; = serde_json::from_slice(<span class="kw-2">&amp;</span>extrinsics_bytes).unwrap();
+
+<span class="kw">for </span>ext_hex <span class="kw">in </span>extrinsics_hex {
+    <span class="kw">let </span>ext_bytes = hex::decode(ext_hex.trim_start_matches(<span class="string">"0x"</span>)).unwrap();
+
+    <span class="comment">// Decode the extrinsic, returning information about it:
+    </span><span class="kw">let </span>ext_info = decode_extrinsic(<span class="kw-2">&amp;mut &amp;*</span>ext_bytes, <span class="kw-2">&amp;</span>metadata, <span class="kw-2">&amp;</span>metadata.types).unwrap();
+
+    <span class="comment">// Decode the signature details to scale_value::Value's.
+    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(sig) = ext_info.signature_payload() {
+        <span class="kw">let </span>address_bytes =  <span class="kw-2">&amp;</span>ext_bytes[sig.address_range()];
+        <span class="kw">let </span>address_value = decode_with_visitor(
+            <span class="kw-2">&amp;mut &amp;*</span>address_bytes,
+            <span class="kw-2">*</span>sig.address_type(),
+            <span class="kw-2">&amp;</span>metadata.types,
+            ValueVisitor::new()
+        ).unwrap();
+
+        <span class="kw">let </span>signature_bytes = <span class="kw-2">&amp;</span>ext_bytes[sig.signature_range()];
+        <span class="kw">let </span>signature_value = decode_with_visitor(
+            <span class="kw-2">&amp;mut &amp;*</span>signature_bytes,
+            <span class="kw-2">*</span>sig.signature_type(),
+            <span class="kw-2">&amp;</span>metadata.types,
+            ValueVisitor::new()
+        ).unwrap();
+    }
+
+    <span class="comment">// Decode the transaction extensions to scale_value::Value's.
+    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(exts) = ext_info.transaction_extension_payload() {
+        <span class="kw">for </span>ext <span class="kw">in </span>exts.iter() {
+            <span class="kw">let </span>ext_name = ext.name();
+            <span class="kw">let </span>ext_bytes = <span class="kw-2">&amp;</span>ext_bytes[ext.range()];
+            <span class="kw">let </span>ext_value = decode_with_visitor(
+                <span class="kw-2">&amp;mut &amp;*</span>ext_bytes,
+                <span class="kw-2">*</span>ext.ty(),
+                <span class="kw-2">&amp;</span>metadata.types,
+                ValueVisitor::new()
+            ).unwrap();
+        }
+    }
+
+    <span class="comment">// Decode the call data args to scale_value::Value's.
+    </span><span class="kw">for </span>arg <span class="kw">in </span>ext_info.call_data() {
+        <span class="kw">let </span>arg_name = arg.name();
+        <span class="kw">let </span>arg_bytes = <span class="kw-2">&amp;</span>ext_bytes[arg.range()];
+        <span class="kw">let </span>arg_value = decode_with_visitor(
+            <span class="kw-2">&amp;mut &amp;*</span>arg_bytes,
+            <span class="kw-2">*</span>arg.ty(),
+            <span class="kw-2">&amp;</span>metadata.types,
+            ValueVisitor::new()
+        ).unwrap();
+    }
+}</code></pre></div>
+</div></details></section></div></main></body></html>

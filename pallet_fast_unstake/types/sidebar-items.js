@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["MaxChecking","UnstakeRequest"]};
+window.SIDEBAR_ITEMS = {"struct":["MaxChecking","UnstakeRequest"],"type":["BalanceOf"]};

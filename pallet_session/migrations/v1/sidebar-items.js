@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["migrate","post_migrate","pre_migrate"]};
+window.SIDEBAR_ITEMS = {"struct":["InitOffenceSeverity","VersionUncheckedMigrateV0ToV1"],"trait":["MigrateDisabledValidators"],"type":["MigrateV0ToV1"]};

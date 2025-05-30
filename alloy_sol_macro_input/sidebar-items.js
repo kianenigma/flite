@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["CasingStyle","SolInputKind"],"fn":["derives_mapped","docs_str","mk_doc","parse_derives"],"struct":["SolAttrs","SolInput"],"trait":["ContainsSolAttrs","SolInputExpander"]};

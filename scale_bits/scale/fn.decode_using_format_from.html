@@ -1,0 +1,28 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="SCALE decode a bit sequence using the given format, handing back an iterator of booleans."><title>decode_using_format_from in scale_bits::scale - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-84e720fa.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="scale_bits" data-themes="" data-resource-suffix="" data-rustdoc-version="1.89.0-nightly (1bbd62e54 2025-05-29)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-5514c975.js" ><script src="../../static.files/storage-4e99c027.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../static.files/main-fd3af306.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc fn"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../scale_bits/index.html">scale_<wbr>bits</a><span class="version">0.6.0</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">decode_<wbr>using_<wbr>format_<wbr>from</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#example" title="Example">Example</a></li></ul></section><div id="rustdoc-modnav"><h2><a href="index.html">In scale_<wbr>bits::<wbr>scale</a></h2></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="../index.html">scale_bits</a>::<wbr><a href="index.html">scale</a></div><h1>Function <span class="fn">decode_using_format_from</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../src/scale_bits/scale/mod.rs.html#137-170">Source</a> </span></div><pre class="rust item-decl"><code>pub fn decode_using_format_from(
+    bytes: &amp;[<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>],
+    format: <a class="struct" href="format/struct.Format.html" title="struct scale_bits::scale::format::Format">Format</a>,
+) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="struct.Decoder.html" title="struct scale_bits::scale::Decoder">Decoder</a>&lt;'_&gt;, <a class="struct" href="../../parity_scale_codec/error/struct.Error.html" title="struct parity_scale_codec::error::Error">Error</a>&gt;</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>SCALE decode a bit sequence using the given format, handing back an iterator of booleans.</p>
+<h2 id="example"><a class="doc-anchor" href="#example">§</a>Example</h2>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>scale_bits::scale::{
+    encode_using_format,
+    decode_using_format_from,
+    format::{ Format, StoreFormat, OrderFormat },
+};
+
+<span class="kw">let </span>bits = <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>, <span class="bool-val">true</span>];
+
+<span class="comment">// Encode the bits to have something to decode:
+</span><span class="kw">let </span>encoded = encode_using_format(
+    bits.iter().copied(),
+    Format::new(StoreFormat::U8, OrderFormat::Msb0)
+);
+
+<span class="comment">// Decode them again.
+</span><span class="kw">let </span>decoder = decode_using_format_from(
+    <span class="kw-2">&amp;</span>encoded,
+    Format::new(StoreFormat::U8, OrderFormat::Msb0)
+).unwrap();
+<span class="kw">let </span>new_bits: <span class="prelude-ty">Result</span>&lt;Vec&lt;bool&gt;,<span class="kw">_</span>&gt; = decoder.collect();
+
+<span class="macro">assert_eq!</span>(bits, new_bits.unwrap());</code></pre></div>
+</div></details></section></div></main></body></html>

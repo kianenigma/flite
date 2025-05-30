@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["basic","message_augmentation","proof_of_possession","utils"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["any","literal","none_of","one_of","take","take_till","take_until","take_while"]};

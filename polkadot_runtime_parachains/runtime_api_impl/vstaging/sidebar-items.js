@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["candidates_pending_availability","claim_queue"]};
+window.SIDEBAR_ITEMS = {"fn":["backing_constraints","scheduling_lookahead","validation_code_bomb_limit"]};

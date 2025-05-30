@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["DEV_PHRASE"],"enum":["DeriveJunction","SecretUriError"],"mod":["ecdsa","eth","sr25519"],"struct":["SecretUri"],"trait":["ExposeSecret"],"type":["SecretString"]};

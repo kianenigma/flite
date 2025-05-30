@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["to_string","to_writer","to_writer_custom"],"mod":["custom_formatters"],"struct":["ToWriterBuilder"]};

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["BasicOperatingMode"]};
+window.SIDEBAR_ITEMS = {"enum":["BasicOperatingMode"],"trait":["ExportPausedQuery"]};
