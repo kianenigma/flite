@@ -13,6 +13,9 @@ pub mod demonstrative_pallet {
 	pub trait Config: flite::flite_system::Config {}
 }
 
+/// Export all pallet parts.
+pub use pallet::*;
+
 #[frame::pallet(dev_mode)]
 pub mod pallet {
 	use super::*;

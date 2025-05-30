@@ -162,11 +162,6 @@
 //! to each of the aforementioned pallets.
 //!
 //!
-//! ## Dependencies
-//!
-//! This work is dependent on the following PR(s)
-//! - <https://github.com/paritytech/polkadot-sdk/pull/5246>
-//!
 //! ## Further Ideas
 //!
 //! - Create abstractions over [`polkadot_sdk::pallet_assets`], and the
@@ -186,6 +181,8 @@
 //!
 //! - Everything here is backwards compatible, and a developer who is advance can always fallback
 //!   into the ADVANCE-FRAME-land.
+//! - One of the downsides of this approach is that the flite-based runtime is noticeably slower to
+//!   compile due to the excessive use of macros.
 #![cfg_attr(not(feature = "std"), no_std)]
 
 pub use default_configs::FliteConfigurations;
@@ -280,6 +277,7 @@ pub mod default_configs {
 		type PostTransactions = ();
 		type OnNewAccount = ();
 		type OnKilledAccount = ();
+		type ExtensionsWeightInfo = ();
 
 		// injected
 		#[inject_runtime_type]
@@ -383,6 +381,8 @@ pub mod default_configs {
 		type MaxLocks;
 		type MaxReserves;
 		type MaxFreezes;
+		type RuntimeEvent;
+		type DoneSlashHandler;
 	}
 
 	#[doc(hidden)]
@@ -412,6 +412,10 @@ pub mod default_configs {
 		type MaxLocks = ();
 		type MaxReserves = ();
 		type ReserveIdentifier = ();
+		type DoneSlashHandler = ();
+
+		#[inject_runtime_type]
+		type RuntimeEvent = ();
 	}
 }
 
@@ -438,6 +442,15 @@ pub mod native_currency {
 		+ fungible::Mutate<types::AccountId>
 		+ fungible::InspectHold<types::AccountId, Reason = u8>
 		+ fungible::MutateHold<types::AccountId>
+	{
+	}
+
+	impl<
+			T: fungible::Inspect<types::AccountId, Balance = types::Balance>
+				+ fungible::Mutate<types::AccountId>
+				+ fungible::InspectHold<types::AccountId, Reason = u8>
+				+ fungible::MutateHold<types::AccountId>,
+		> Advance for T
 	{
 	}
 

@@ -3,12 +3,10 @@ name = "simple-pallet"
 version = "0.1.0"
 edition.workspace = true
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 parity-scale-codec = { version = "3.6.12", features = ["derive"], default-features = false}
 scale-info = { version = "2.11.3", default-features = false}
-polkadot-sdk = { git = "https://github.com/paritytech/polkadot-sdk.git", rev = "34e0ff435efad562ca2edc8779f144d9c12f4046", features = ["runtime", "experimental"], default-features = false}
+polkadot-sdk = { version = "2503.0.1", features = ["runtime", "experimental"], default-features = false}
 docify = "0.2.8"
 flite = { path = "../flite", default-features = false }
 

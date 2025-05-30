@@ -6,11 +6,12 @@ edition = "2021"
 [dependencies]
 parity-scale-codec = { version = "3.6.12", features = ["derive"], default-features = false}
 scale-info = { version = "2.11.3", default-features = false}
-polkadot-sdk = { git = "https://github.com/paritytech/polkadot-sdk.git", rev = "34e0ff435efad562ca2edc8779f144d9c12f4046", features = ["runtime-full", "experimental"], default-features = false }
+polkadot-sdk = { version = "2503.0.1", features = ["runtime-full", "experimental"], default-features = false }
 flite = { path = "../flite", default-features = false }
+simple-pallet = { path = "../simple-pallet", default-features = false }
 
 [build-dependencies]
-polkadot-sdk = { git = "https://github.com/paritytech/polkadot-sdk.git", rev = "34e0ff435efad562ca2edc8779f144d9c12f4046", optional = true, features = ["substrate-wasm-builder"], default-features = false }
+polkadot-sdk = { version = "2503.0.1", optional = true, features = ["substrate-wasm-builder"], default-features = false }
 
 [features]
 default = ["std"]
@@ -18,6 +19,6 @@ std = [
 	"polkadot-sdk/std",
 	"parity-scale-codec/std",
 	"scale-info/std",
-
 	"flite/std",
+	"simple-pallet/std",
 ]

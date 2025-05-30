@@ -2,19 +2,13 @@
 
 extern crate alloc;
 use alloc::{vec, vec::Vec};
-// TODO: remove and simplify after https://github.com/paritytech/polkadot-sdk/pull/5155/files si merged.
 use polkadot_sdk::{
-	frame_support::genesis_builder_helper::*,
 	polkadot_sdk_frame::{
 		self as frame,
-		prelude::*,
-		runtime::{
-			apis::{self, *},
-			prelude::*,
-		},
+		runtime::{apis, prelude::*},
 	},
 	sp_genesis_builder,
-	sp_weights::constants::WEIGHT_REF_TIME_PER_MILLIS,
+	sp_weights::constants::{WEIGHT_PROOF_SIZE_PER_MB, WEIGHT_REF_TIME_PER_MILLIS},
 };
 
 #[polkadot_sdk::frame_support::runtime]
@@ -26,12 +20,12 @@ pub mod runtime {
 		RuntimeEvent,
 		RuntimeError,
 		RuntimeOrigin,
-		RuntimeTask
+		RuntimeTask,
 		// Note that we don't need some of these, so we don't ask them to be generated for simplicity.
-		// RuntimeFreezeReason,
-		// RuntimeHoldReason,
-		// RuntimeSlashReason,
-		// RuntimeLockId,
+		RuntimeFreezeReason,
+		RuntimeHoldReason,
+		RuntimeSlashReason,
+		RuntimeLockId,
 	)]
 	pub struct Runtime;
 
@@ -49,13 +43,28 @@ pub mod runtime {
 
 	#[runtime::pallet_index(4)]
 	pub type Balances = polkadot_sdk::pallet_balances;
+
+	#[runtime::pallet_index(5)]
+	pub type SimplePallet = simple_pallet;
 }
+
+#[runtime_version]
+pub const VERSION: RuntimeVersion = RuntimeVersion {
+	spec_name: alloc::borrow::Cow::Borrowed("flite-test-runtime"),
+	impl_name: alloc::borrow::Cow::Borrowed("flite-test-runtime"),
+	authoring_version: 1,
+	spec_version: 265,
+	impl_version: 1,
+	apis: RUNTIME_API_VERSIONS,
+	transaction_version: 1,
+	system_version: 1,
+};
 
 parameter_types! {
 	pub const BlockTime: flite::types::Moment = 6000;
 	pub const BlockWeight: Weight = Weight::from_parts(
-		BlockTime::get() / 2 * WEIGHT_REF_TIME_PER_MILLIS,
-		0
+		BlockTime::get() / 6 * WEIGHT_REF_TIME_PER_MILLIS,
+		WEIGHT_PROOF_SIZE_PER_MB * 2,
 	);
 	pub const Version: RuntimeVersion = VERSION;
 }
@@ -79,58 +88,31 @@ impl frame_system::Config for Runtime {
 impl flite::flite_system::Config for Runtime {}
 
 use flite::default_configs::{FliteTimestamp, FliteTimestampDefaultConfig};
+#[derive_impl(FliteTimestamp<Configuration>)]
 impl polkadot_sdk::pallet_timestamp::Config for Runtime {
 	type OnTimestampSet = Aura;
-
-	// macro.
-	type Moment = <FliteTimestamp<Configuration> as FliteTimestampDefaultConfig>::Moment;
-	type MinimumPeriod =
-		<FliteTimestamp<Configuration> as FliteTimestampDefaultConfig>::MinimumPeriod;
-	type WeightInfo = <FliteTimestamp<Configuration> as FliteTimestampDefaultConfig>::WeightInfo;
 }
 
 use flite::default_configs::{FliteAura, FliteAuraDefaultConfig};
-impl polkadot_sdk::pallet_aura::Config for Runtime {
-	type AuthorityId = <FliteAura<Configuration> as FliteAuraDefaultConfig>::AuthorityId;
-	type MaxAuthorities = <FliteAura<Configuration> as FliteAuraDefaultConfig>::MaxAuthorities;
-	type DisabledValidators =
-		<FliteAura<Configuration> as FliteAuraDefaultConfig>::DisabledValidators;
-	type AllowMultipleBlocksPerSlot =
-		<FliteAura<Configuration> as FliteAuraDefaultConfig>::AllowMultipleBlocksPerSlot;
-	type SlotDuration = <FliteAura<Configuration> as FliteAuraDefaultConfig>::SlotDuration;
-}
+#[derive_impl(FliteAura<Configuration>)]
+impl polkadot_sdk::pallet_aura::Config for Runtime {}
 
 use flite::default_configs::{FliteBalances, FliteBalancesDefaultConfig};
-impl polkadot_sdk::pallet_balances::Config for Runtime {
-	// inject identical
 
-	type RuntimeEvent = RuntimeEvent;
+#[derive_impl(FliteBalances<Configuration>)]
+impl polkadot_sdk::pallet_balances::Config for Runtime {
 	// special inject
 	type AccountStore = System;
 	type FreezeIdentifier = Self::RuntimeFreezeReason;
-
-	// macro should handle.
-	type RuntimeHoldReason =
-		<FliteBalances<Configuration> as FliteBalancesDefaultConfig>::RuntimeHoldReason;
-	type RuntimeFreezeReason =
-		<FliteBalances<Configuration> as FliteBalancesDefaultConfig>::RuntimeFreezeReason;
-	type WeightInfo = <FliteBalances<Configuration> as FliteBalancesDefaultConfig>::WeightInfo;
-	type Balance = <FliteBalances<Configuration> as FliteBalancesDefaultConfig>::Balance;
-	type ExistentialDeposit =
-		<FliteBalances<Configuration> as FliteBalancesDefaultConfig>::ExistentialDeposit;
-	type DustRemoval = <FliteBalances<Configuration> as FliteBalancesDefaultConfig>::DustRemoval;
-	type MaxFreezes = <FliteBalances<Configuration> as FliteBalancesDefaultConfig>::MaxFreezes;
-
-	type MaxLocks = <FliteBalances<Configuration> as FliteBalancesDefaultConfig>::MaxLocks;
-	type MaxReserves = <FliteBalances<Configuration> as FliteBalancesDefaultConfig>::MaxReserves;
-	type ReserveIdentifier =
-		<FliteBalances<Configuration> as FliteBalancesDefaultConfig>::ReserveIdentifier;
 }
 
-// TODO: mixing the two will work? not sure.
+impl simple_pallet::Config for Runtime {
+	type AdvanceCurrency = Balances;
+}
+
 type SignedExtensions = (
-	frame::runtime::types_common::SystemSignedExtensionsOf<Runtime>, /* More Signed extensions
-	                                                                  * from the user */
+	// more extensions can be added by the user.
+	frame::runtime::types_common::SystemTransactionExtensionsOf<Runtime>,
 );
 
 type Block = flite::types::BlockOf<Runtime, SignedExtensions>;
@@ -140,18 +122,6 @@ type RuntimeExecutive =
 	Executive<Runtime, Block, frame_system::ChainContext<Runtime>, Runtime, AllPalletsWithSystem>;
 type AccountId = <Runtime as frame_system::Config>::AccountId;
 type Nonce = <Runtime as frame_system::Config>::Nonce;
-
-#[runtime_version]
-pub const VERSION: RuntimeVersion = RuntimeVersion {
-	spec_name: create_runtime_str!("flite-test-runtime"),
-	impl_name: create_runtime_str!("flite-test-runtime"),
-	authoring_version: 1,
-	spec_version: 265,
-	impl_version: 1,
-	apis: RUNTIME_API_VERSIONS,
-	transaction_version: 1,
-	state_version: 1,
-};
 
 impl_runtime_apis! {
 	impl apis::Core<Block> for Runtime {
@@ -237,7 +207,7 @@ impl_runtime_apis! {
 	}
 
 	impl sp_genesis_builder::GenesisBuilder<Block> for Runtime {
-		fn build_state(config: Vec<u8>) -> sp_genesis_builder::Result {
+		fn build_state(config: Vec<u8>) -> GenesisBuilderResult {
 			build_state::<RuntimeGenesisConfig>(config)
 		}
 
