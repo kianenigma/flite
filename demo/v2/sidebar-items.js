@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["PalletV3"],"trait":["Config","SharedConfig"]};
