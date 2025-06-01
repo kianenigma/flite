@@ -18,6 +18,8 @@ pub use pallet::*;
 
 #[frame::pallet(dev_mode)]
 pub mod pallet {
+	use polkadot_sdk::{pallet_balances, pallet_timestamp};
+
 	use super::*;
 
 	#[pallet::pallet]

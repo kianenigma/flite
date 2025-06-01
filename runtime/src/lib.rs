@@ -2,6 +2,10 @@
 
 extern crate alloc;
 use alloc::{vec, vec::Vec};
+use flite::default_configs::{
+	FliteAura, FliteAuraDefaultConfig, FliteBalances, FliteBalancesDefaultConfig, FliteTimestamp,
+	FliteTimestampDefaultConfig,
+};
 use polkadot_sdk::{
 	polkadot_sdk_frame::{
 		self as frame,
@@ -87,17 +91,13 @@ impl frame_system::Config for Runtime {
 
 impl flite::flite_system::Config for Runtime {}
 
-use flite::default_configs::{FliteTimestamp, FliteTimestampDefaultConfig};
 #[derive_impl(FliteTimestamp<Configuration>)]
 impl polkadot_sdk::pallet_timestamp::Config for Runtime {
 	type OnTimestampSet = Aura;
 }
 
-use flite::default_configs::{FliteAura, FliteAuraDefaultConfig};
 #[derive_impl(FliteAura<Configuration>)]
 impl polkadot_sdk::pallet_aura::Config for Runtime {}
-
-use flite::default_configs::{FliteBalances, FliteBalancesDefaultConfig};
 
 #[derive_impl(FliteBalances<Configuration>)]
 impl polkadot_sdk::pallet_balances::Config for Runtime {
