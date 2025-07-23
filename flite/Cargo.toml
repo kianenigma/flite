@@ -6,7 +6,7 @@ edition.workspace = true
 [dependencies]
 parity-scale-codec = { version = "3.6.12", features = ["derive"], default-features = false}
 scale-info = { version = "2.11.3", default-features = false}
-polkadot-sdk = { version = "2503.0.1", features = ["runtime", "experimental"], default-features = false }
+polkadot-sdk = { version = "2503.0.1", features = ["runtime", "experimental", "pallet-balances", "pallet-timestamp", "pallet-aura"], default-features = false }
 docify = "0.2.8"
 
 [features]
